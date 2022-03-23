@@ -1,0 +1,23 @@
+@import "../../scss/variables";
+
+.submenuItem {
+	padding-left: 70px;
+	padding-top: 8px;
+	padding-bottom: 8px;
+
+	&:hover {
+		color: $accent-color;
+		background: $navigation-secondary-color;
+	}
+
+	&.active {
+		background: linear-gradient(
+			to right,
+			$accent-color 0px,
+			$accent-color 2px,
+			$navigation-secondary-color 2px,
+			$navigation-secondary-color 250px
+		) !important;
+		color: $accent-color;
+	}
+}

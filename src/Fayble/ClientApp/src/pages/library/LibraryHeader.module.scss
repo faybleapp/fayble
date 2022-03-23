@@ -1,0 +1,46 @@
+@import "../../scss/variables";
+
+.libraryHeader {
+	display: flex;
+	margin-bottom: 30px;
+	:global(.dropdown-toggle) {
+		color: $icon-button-color;
+		padding: 0px;
+		&:hover {
+			color: $accent-color;
+			cursor: pointer;
+		}
+	}
+}
+
+.toolbar {
+	margin-left: auto;
+	display: flex;
+}
+
+.libraryHeaderButton {
+	padding-right: 15px;
+	margin-top: auto;
+	margin-bottom: auto;
+	cursor: pointer;
+	color: $accent-color;
+}
+
+.libraryHeaderIcon:hover {
+	color: $accent-color;
+}
+
+.libraryHeaderIcon {
+	font-size: 20px;
+	font-weight: 0;
+	color: $icon-button-color;
+	&:hover {
+		color: $accent-color;
+		cursor: pointer;
+	}
+}
+
+.libraryHeaderMenu {
+	margin-bottom: auto;
+	margin-top: auto;	
+}

@@ -1,0 +1,20 @@
+@import "../../scss/variables";
+
+.emptyLibraryImageContainer {
+	display: flex;    
+	justify-content: center;
+	align-items: center;
+	text-align: center;
+	min-height: 70vh;        
+}
+
+.emptyLibraryImage {
+    width: 100%;
+    max-width: 400px;
+}
+.emptyLibraryText {
+    color: $secondary-font-color;
+    margin-top: 15px;
+	font-size: 15px;
+}
+

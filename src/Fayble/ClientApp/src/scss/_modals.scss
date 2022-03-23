@@ -1,0 +1,27 @@
+@import "variables";
+
+.btn-primary {
+	color: #fff;
+	background-color: $primary-button-color;
+	border-color: #1861ac;
+}
+
+.modal-content {
+	background-color: $primary-color;
+}
+
+.modal-header {
+	color: $heading-font-color;
+	height: 55px;
+	padding-top: 10px;
+	border: none;
+}
+
+.modal-title {
+	font-size: 20px;
+    color: $primary-font-color
+}
+
+.modal-footer {
+	border-top: none !important;
+}

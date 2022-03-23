@@ -1,0 +1,23 @@
+@import "../../scss/variables";
+
+.tabs {
+	background-color: $secondary-color;
+	border: 0px !important;
+	margin: -1rem;
+	margin-bottom: 20px !important;
+
+	button {
+		color: white;
+		border: none !important;
+		border-radius: 0px !important;
+
+		&:hover {
+			color: $accent-color;
+		}
+
+		&:global(.active) {
+			background-color: $accent-color !important;			
+			color: white !important;
+		}
+	}
+}

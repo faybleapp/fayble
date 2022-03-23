@@ -1,0 +1,35 @@
+@import "../../scss/variables";
+
+.backgroundTaskSidebar {
+	background-color: $secondary-color !important;
+
+	button {
+		color: $primary-font-color !important;
+	}
+}
+
+.header {
+	color: $primary-font-color;
+}
+
+.taskHeading {
+	color: white;
+	margin-bottom: 15px;
+}
+
+.taskSection {
+	margin-bottom: 40px;
+}
+
+.taskDescription {
+	& div:first-of-type {
+		width: 0.8rem;
+		height: 0.8rem;
+		border-width: 0.15rem;
+		margin-left: 5px;
+	}
+}
+
+.body {
+	color: $secondary-font-color;
+}

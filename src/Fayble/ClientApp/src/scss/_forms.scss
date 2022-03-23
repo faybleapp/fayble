@@ -1,0 +1,16 @@
+@import "variables";
+
+
+.form-label, .form-check-label {
+    color: $secondary-font-color !important;
+}
+
+.form-check-input {
+	background-color: $secondary-color !important;	
+}
+
+.form-control {
+	color: $primary-font-color !important;	
+	border: 0px !important;
+	background-color: $secondary-color !important;	
+}

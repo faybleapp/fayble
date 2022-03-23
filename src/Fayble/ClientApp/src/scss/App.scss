@@ -1,0 +1,20 @@
+@import "~bootstrap/scss/bootstrap";
+@import "react-toastify/dist/ReactToastify";
+
+@import "variables";
+@import "modals";
+@import "themes";
+@import "forms";
+
+body {
+	font-size: 14px !important;
+  font-family:  "Open Sans",-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Oxygen-Sans,Ubuntu,Cantarell,Helvetica Neue,sans-serif;  
+}
+html, body, #root {
+  height: 100%;
+  
+  
+}
+:root {
+  color-scheme: dark;  
+}

@@ -1,0 +1,64 @@
+@import "../../scss/variables";
+
+.series {
+	margin-right: 25px !important;
+	width: 140px;
+}
+
+.coverContainer {
+	position: relative;
+	cursor: pointer;
+
+	&:hover {
+		.overlay {
+			opacity: 1;
+		}
+
+		.coverImage {
+			filter: blur(1px) brightness(70%);
+			transition: 0.3s;
+		}
+	}
+}
+
+.coverImage {
+	border-radius: 4px;
+	width: 140px;
+	max-height: 230px !important;
+}
+
+.caption {
+	padding-left: 4px;
+	font-size: 13px !important;
+
+	.title {
+		color: $primary-font-color;
+		text-overflow: ellipsis;
+		overflow: hidden;
+		white-space: nowrap;
+		text-decoration: none;
+		&:hover {
+			color: $accent-color;
+		}
+	}
+
+	.subtitle {
+		color: $secondary-font-color;
+		text-overflow: ellipsis;
+		overflow: hidden;
+		white-space: nowrap;
+	}
+}
+
+.overlay {
+	position: absolute;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 100%;
+	opacity: 0;
+}
+
+.link {
+	text-decoration: none;
+}

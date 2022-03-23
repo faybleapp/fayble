@@ -1,0 +1,51 @@
+@import "../../scss/variables";
+
+.sidebar {
+	height: 100%;
+	position: fixed;
+	z-index: 1;
+	top: 0;
+	padding-top: 56px;
+	left: 0;
+	background: $primary-color;
+	overflow-x: hidden;
+	padding-top: 60px;
+	transition: 0.5s;	
+	color: $primary-font-color;
+
+	ul {
+		padding-left: 0px;
+	}
+}
+
+.sidebar.open {
+	width: $sidebar-open-width;
+}
+
+.sidebar.closed {
+	width: $sidebar-closed-width;
+}
+
+.mainContent {
+	padding: 20px;
+}
+
+.content {
+	&.open {
+		margin-left: $sidebar-open-width;
+	}
+	&.closed {
+		margin-left: $sidebar-closed-width + 10px;
+	}
+}
+
+.nonActivatable {
+	padding-left: 70px;
+	padding-top: 8px;
+	padding-bottom: 8px;
+
+	&:hover {
+		color: $accent-color;
+		background: $navigation-secondary-color;
+	}
+}

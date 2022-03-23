@@ -1,0 +1,35 @@
+@import "../../scss/variables";
+
+.navMenu {	
+	top: "0";
+	right: "0";
+	
+	background: rgba(0,0,0,.15) !important;
+	box-shadow: none !important;	
+	:global(.dropdown-toggle:after) {
+		display: none;
+	}
+}
+
+.navMenuIcon {
+	color: $icon-button-color;
+	&:hover {
+		color: $accent-color;
+		cursor: pointer;
+	}
+}
+
+.active {
+	color: $accent-color
+}
+
+.search {
+	width: 350px !important;
+	background-color: #2A4151 !important;
+	border: none !important;
+	height: 30px !important;
+	margin-left: 15px;
+	border-radius: 20px !important;
+	color: white !important;
+}
+

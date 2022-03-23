@@ -1,0 +1,31 @@
+//https://codyhouse.co/blog/post/css-custom-properties-vs-sass-variables
+
+:root {
+	--primary-color: #262f3d;
+	--accent-color: #297efe;		
+	--accent-color-darker: #1363dc;
+
+	--secondary-color: #2e394a;
+	--background-color: linear-gradient(28deg, rgba(27,34,50,1) 0%, rgba(37,55,71,1) 36%, rgba(48,77,92,1) 100%);;
+
+	//Fonts	
+	--primary-font-color: rgba(255,255,255);
+	--secondary-font-color: rgba(255,255,255,0.45);
+	
+	// --heading-font-color: #ffffff;
+
+	--navigation-primary-color: #262f3d;
+	--navigation-secondary-color: #262f3d;
+
+	//Buttons
+	--primary-button-color: #1b6ec2;
+
+	//Icons
+	--icon-button-color: #d1d3e2;
+}
+
+[data-theme="light"] {
+}
+
+[data-theme="dark"] {
+}

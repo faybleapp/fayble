@@ -1,0 +1,31 @@
+@import "./themes";
+
+$primary-color: var(--primary-color);
+$secondary-color: var(--secondary-color);
+
+$background-color: var(--background-color);
+
+//$primary-fonts: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+
+//Accent
+$accent-color: var(--accent-color);
+$accent-color-darker: var(--accent-color-darker);
+
+//Navigation
+$navigation-primary-color: var(--navigation-primary-color);
+$navigation-secondary-color: var(--navigation-secondary-color);
+
+//Fonts
+$primary-font-color: var(--primary-font-color);
+$secondary-font-color: var(--secondary-font-color);
+$heading-font-color: var(--heading-font-color);
+
+//Buttons
+$primary-button-color: var(--primary-button-color);
+
+//Icons
+$icon-button-color: var(--icon-button-color);
+
+// Sidebar
+$sidebar-open-width: 250px;
+$sidebar-closed-width: 55px;
