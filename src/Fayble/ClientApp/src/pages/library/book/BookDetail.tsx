@@ -39,7 +39,11 @@ export const BookDetail = (props: BookDetailProps) => {
 			/>
 			<div className={styles.detailsPanel}>
 				<div className={styles.detailsTitle}>
-					<h4>{!!book.title ? book.title : `Issue #${book?.number.padStart(3, "0")}`}</h4>
+					<h4>
+						{!!book.title
+							? book.title
+							: `Issue #${book?.number.padStart(3, "0")}`}
+					</h4>
 
 					<div className={styles.rating}>
 						<Rating
@@ -64,34 +68,41 @@ export const BookDetail = (props: BookDetailProps) => {
 				</div>
 
 				<hr />
-				{book?.number && (
-					<div className={styles.detailProperty}>
-						<div className={styles.detailsHeading}>Number</div>
-						<div>{book?.number}</div>
-					</div>
-				)}
+				<div className={styles.detailSection}>
+					{book?.number && (
+						<div className={styles.detailProperty}>
+							<div className={styles.detailsHeading}>Number</div>
+							<div>{book?.number}</div>
+						</div>
+					)}
 
-				{book?.storeDate && (
-					<div className={styles.detailProperty}>
-						<div className={styles.detailsHeading}>Store Date</div>
-						<div>{book?.number}</div>
-					</div>
-				)}
+					{book?.storeDate && (
+						<div className={styles.detailProperty}>
+							<div className={styles.detailsHeading}>
+								Store Date
+							</div>
+							<div>{book?.number}</div>
+						</div>
+					)}
 
-				{book?.coverDate && (
-					<div className={styles.detailProperty}>
-						<div className={styles.detailsHeading}>Cover Date</div>
-						<div>{book?.coverDate}</div>
-					</div>
-				)}
+					{book?.coverDate && (
+						<div className={styles.detailProperty}>
+							<div className={styles.detailsHeading}>
+								Cover Date
+							</div>
+							<div>{book?.coverDate}</div>
+						</div>
+					)}
 
-				{book?.publisher && (
-					<div className={styles.detailProperty}>
-						<div className={styles.detailsHeading}>Publisher</div>
-						<div>{book?.publisher}</div>
-					</div>
-				)}
-	
+					{book?.publisher && (
+						<div className={styles.detailProperty}>
+							<div className={styles.detailsHeading}>
+								Publisher
+							</div>
+							<div>{book?.publisher}</div>
+						</div>
+					)}
+				</div>
 				<div className={styles.summary}>
 					<ShowMoreText
 						lines={3}

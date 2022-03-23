@@ -1,3 +1,4 @@
+import { BookModal } from "components/bookModal";
 import { Container } from "components/container";
 import { BreadcrumbItem, LibraryView } from "models/ui-models";
 import React, { useState } from "react";
@@ -43,8 +44,12 @@ export const Book = () => {
 						navItems={breadCrumbItems}
 						openEditModal={() => setShowBookModal(true)}
 					/>
-
 					<BookDetail book={book} />
+					<BookModal
+						show={showBookModal}
+						book={book}
+						close={() => setShowBookModal(false)}
+					/>
 				</>
 			)}
 		</Container>

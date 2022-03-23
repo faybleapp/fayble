@@ -1,50 +1,32 @@
 ﻿
 namespace Fayble.Models.Book;
+
 public class Book
 {
     public Guid Id { get; private set; }
     public string Title { get; private set; }
-
     public string Summary { get; private set; }
-
     public string Notes { get; private set; }
-
     public int? PageCount { get; private set; }
-
     public string MediaPath { get; private set; }
-
     public string Filename { get; private set; }
-
     public string FileFormat { get; private set; }
-
-    public string? FilePath { get; private set; }
-
+    public string FilePath { get; private set; }
     public bool Locked { get; private set; }
-
     public decimal Rating { get; private set; }
-
+    public string Review { get; private set;  }
     public Media Media { get; private set; }
-
     public Publisher.Publisher? Publisher { get; private set; }
-
     public bool Read { get; private set; }
-
     public DateTimeOffset Created { get; private set; }
-
     public DateTimeOffset Modified { get; private set; }
-
     public string Number { get; private set; }
-
+    public string Language { get; private set; }
     public Series.Series? Series { get; private set; }
-
     public Library.Library? Library { get; private set; }
-
     public string? CoverDate { get; private set; }
-
     public string? StoreDate { get; private set; }
-
     public DateTimeOffset LastMetadataUpdate { get; private set; }
-
     public string MediaType { get; private set; }
 
     public Book(
@@ -64,8 +46,10 @@ public class Book
         Series.Series? series,
         Library.Library? library,
         string mediaType,
-        string? coverDate,
-        string? storeDate
+        string coverDate,
+        string storeDate,
+        string language,
+        string review
     )
     {
         Id = id;
@@ -86,6 +70,8 @@ public class Book
         MediaType = mediaType;
         CoverDate = coverDate;
         StoreDate = storeDate;
+        Language = language;
+        Review = review;
         Media = new Media(mediaPath);
     }
 }

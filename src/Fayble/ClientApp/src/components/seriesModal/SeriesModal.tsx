@@ -4,7 +4,7 @@ import { TextField } from "components/form/textField";
 import { ModalTabs } from "components/modalTabs";
 import { useFormik } from "formik";
 import { Series } from "models/api-models";
-import React, { useState } from "react";
+import React from "react";
 import { Button, Col, Form, Modal, Row, Spinner, Tab } from "react-bootstrap";
 import { useParams } from "react-router-dom";
 import { useLibrarySeries, usePublishers, useUpdateSeries } from "services";
@@ -20,8 +20,6 @@ interface SeriesModalProps {
 
 export const SeriesModal = ({ series, show, close }: SeriesModalProps) => {
 	const { libraryId } = useParams<{ libraryId: string }>();
-
-	const [updatedSeries, setUpdatedSeries] = useState<Series>();
 
 	const updateSeries = useUpdateSeries();
 

@@ -37,6 +37,7 @@
 		.detailProperty {
 			display: flex;
 			line-height: 25px;
+			
 
 			.detailsHeading {
 				flex: 0 0 150px;
@@ -54,11 +55,15 @@
 
 		.summary {
 			max-width: 750px;
-			margin-top: 15px;
+			margin-top: 30px;
 		}
 	}
 }
 
 .rating {
-	padding-top: 5px;
+	padding-top: 6px;
+}
+
+.detailSection {
+	margin-top: 25px;
 }

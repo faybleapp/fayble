@@ -89,7 +89,7 @@ public class ComicLibraryService : IComicLibraryService
                     0,
                     false,
                     null,
-                    reviewImportedIssue,
+                    null,
                     DateOnly.TryParseExact(
                         $"{newFile.ComicInfoXml?.Year}-{newFile.ComicInfoXml?.Month}-{newFile.ComicInfoXml?.Day}",
                         "yyyy-M-dd",
