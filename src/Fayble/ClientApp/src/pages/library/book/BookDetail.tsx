@@ -81,7 +81,7 @@ export const BookDetail = (props: BookDetailProps) => {
 							<div className={styles.detailsHeading}>
 								Store Date
 							</div>
-							<div>{book?.number}</div>
+							<div>{book?.storeDate}</div>
 						</div>
 					)}
 
