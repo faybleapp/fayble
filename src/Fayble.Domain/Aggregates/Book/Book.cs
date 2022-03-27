@@ -64,6 +64,7 @@ public class Book : AuditableEntity<Guid>, IAggregateRoot
 
     public virtual IReadOnlyCollection<ReadHistory> ReadHistory => _readHistory;
 
+    public ICollection<Tag.Tag> Tags { get; set; }
 
     public Book()
     {

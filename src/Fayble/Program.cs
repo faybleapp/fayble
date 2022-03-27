@@ -13,10 +13,12 @@ using Fayble.Infrastructure.Repositories;
 using Fayble.Security;
 using Fayble.Services.Book;
 using Fayble.Services.ComicLibrary;
+using Fayble.Services.FileSystem;
 using Fayble.Services.FileSystemService;
 using Fayble.Services.Library;
 using Fayble.Services.Publisher;
 using Fayble.Services.Series;
+using Fayble.Services.Tag;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Identity;
@@ -71,6 +73,7 @@ builder.Services.AddScoped<IConfigurationRepository, ConfigurationRepository>();
 builder.Services.AddScoped<IFileTypeRepository, FileTypeRepository>();
 builder.Services.AddScoped<IRefreshTokenRepository, RefreshTokenRepository>();
 builder.Services.AddScoped<IPublisherRepository, PublisherRepository>();
+builder.Services.AddScoped<ITagRepository, TagRepository>();
 
 // Register Services
 builder.Services.AddScoped<ILibraryService, LibraryService>();
@@ -81,6 +84,7 @@ builder.Services.AddScoped<IComicBookFileSystemService, ComicBookComicBookFileSy
 builder.Services.AddScoped<IAuthenticationService, AuthenticationService>();
 builder.Services.AddScoped<IPublisherService, PublisherService>();
 builder.Services.AddScoped<IBookService, BookService>();
+builder.Services.AddScoped<ITagService, TagService>();
 
 // Register Background Services
 builder.Services.AddSingleton<IBackgroundTaskQueue, BackgroundTaskQueue>();

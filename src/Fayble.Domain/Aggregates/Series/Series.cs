@@ -42,6 +42,8 @@ public class Series : AuditableEntity<Guid>, IAggregateRoot
 
     public DateTimeOffset? LastMetadataUpdate { get; private set; }
 
+    public ICollection<Tag.Tag> Tags { get; private set; }
+
     private Series()
     {
     }
