@@ -1,0 +1,8 @@
+@import "../../../scss/variables";
+
+
+.readOnlyField {
+    border: none !important;
+    background-color: transparent !important;
+    color: $primary-font-color !important
+}

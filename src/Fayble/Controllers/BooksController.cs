@@ -20,4 +20,10 @@ public class BooksController : ControllerBase
     {
         return await _bookService.Get(id);
     }
+
+    [HttpPatch("{id}")]
+    public async Task<ActionResult<Book>> Update(Guid id, [FromBody] UpdateBook series)
+    {
+        return await _bookService.Update(id, series);
+    }
 }

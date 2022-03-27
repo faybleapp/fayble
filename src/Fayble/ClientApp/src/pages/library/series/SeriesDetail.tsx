@@ -62,36 +62,38 @@ export const SeriesDetail = (props: SeriesDetailProps) => {
 						/>
 					</div>
 				</div>
-
 				<hr />
-				{series?.year && (
-					<div className={styles.detailProperty}>
-						<div className={styles.detailsHeading}>Year</div>
-						<div>{series?.year}</div>
-					</div>
-				)}
+				<div className={styles.detailSection}>
+					{series?.year && (
+						<div className={styles.detailProperty}>
+							<div className={styles.detailsHeading}>Year</div>
+							<div>{series?.year}</div>
+						</div>
+					)}
 
-				<div className={styles.detailProperty}>
-					<div className={styles.detailsHeading}>Issues</div>
-					<div className={styles.detailsValue}>
-						{series?.bookCount}
+					<div className={styles.detailProperty}>
+						<div className={styles.detailsHeading}>Issues</div>
+						<div className={styles.detailsValue}>
+							{series?.bookCount}
+						</div>
 					</div>
+
+					{series?.volume && (
+						<div className={styles.detailProperty}>
+							<div className={styles.detailsHeading}>Volume</div>
+							<div>{series?.volume}</div>
+						</div>
+					)}
+
+					{series?.publisher && (
+						<div className={styles.detailProperty}>
+							<div className={styles.detailsHeading}>
+								Publisher
+							</div>
+							<div>{series?.publisher?.name}</div>
+						</div>
+					)}
 				</div>
-
-				{series?.volume && (
-					<div className={styles.detailProperty}>
-						<div className={styles.detailsHeading}>Volume</div>
-						<div>{series?.volume}</div>
-					</div>
-				)}
-
-				{series?.publisher && (
-					<div className={styles.detailProperty}>
-						<div className={styles.detailsHeading}>Publisher</div>
-						<div>{series?.publisher?.name}</div>
-					</div>
-				)}
-
 				<div className={styles.summary}>
 					<ShowMoreText
 						lines={3}

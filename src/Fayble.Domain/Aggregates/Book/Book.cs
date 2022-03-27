@@ -58,7 +58,7 @@ public class Book : AuditableEntity<Guid>, IAggregateRoot
 
     public DateTimeOffset? LastMetadataUpdate { get; private set; }
 
-    public bool? Review { get; private set; }
+    public string Review { get; private set; }
 
     private readonly List<ReadHistory> _readHistory = new ();
 
@@ -99,7 +99,7 @@ public class Book : AuditableEntity<Guid>, IAggregateRoot
         decimal rating,
         bool locked,
         string language,
-        bool review,
+        string review,
         DateOnly? coverDate,
         DateOnly? storeDate)
     {

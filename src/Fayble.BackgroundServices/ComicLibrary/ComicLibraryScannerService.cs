@@ -131,7 +131,7 @@ public class ComicLibraryScannerService : IComicLibraryScannerService
                     0,
                     false,
                     null,
-                    reviewImportedIssue,
+                    null,
                     DateOnly.TryParseExact(
                         $"{newFile.ComicInfoXml?.Year}-{newFile.ComicInfoXml?.Month}-{newFile.ComicInfoXml?.Day}",
                         "yyyy-M-dd",

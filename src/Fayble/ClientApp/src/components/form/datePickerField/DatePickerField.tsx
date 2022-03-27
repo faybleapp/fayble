@@ -2,35 +2,33 @@ import cn from "classnames";
 import React from "react";
 import { Form } from "react-bootstrap";
 
-interface TextAreaFieldProps {
+interface DatePickerFieldProps {
 	name: string;
 	label: string;
 	className?: string;
-	rows: number;
 	error?: string | false | undefined;
 	value?: string;
-	onChange: (event: React.ChangeEvent<unknown>) => void;
+	onChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
 }
 
-export const TextAreaField: React.FC<TextAreaFieldProps> = ({
+export const DatePickerField = ({
 	name,
 	label,
 	className,
-	rows,
 	error,
 	value,
 	onChange,
-}) => {
+}: DatePickerFieldProps) => {	
 	return (
 		<Form.Group className={cn(className, "mb-3")}>
 			<Form.Label>{label}</Form.Label>
 			<Form.Control
 				name={name}
-				rows={rows}				
-				as="textarea"
+                max="9999-12-31"                
+				type="date"
 				isInvalid={!!error}
 				value={value}
-				onChange={onChange}				
+				onChange={onChange}
 			/>
 			<Form.Control.Feedback type="invalid">
 				{error}

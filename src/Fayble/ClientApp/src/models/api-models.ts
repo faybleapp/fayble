@@ -47,15 +47,17 @@ export interface Book {
     mediaPath: string;
     filename: string;
     fileFormat: string;
-    filePath: string | undefined;
+    filePath: string;
     locked: boolean;
     rating: number;
+    review: string;
     media: Media;
     publisher: Publisher | undefined;
     read: boolean;
     created: Date;
     modified: Date;
     number: string;
+    language: string;
     series: Series | undefined;
     library: Library | undefined;
     coverDate: string | undefined;
@@ -107,6 +109,20 @@ export interface Library {
 
 export interface LibrarySettings {
     reviewOnImport: boolean;
+}
+
+export interface UpdateBook {
+    id: string;
+    title: string | undefined;
+    summary: string | undefined;
+    notes: string | undefined;
+    locked: boolean;
+    rating: number;
+    number: string | undefined;
+    coverDate: string | undefined;
+    storeDate: string | undefined;
+    language: string | undefined;
+    review: string | undefined;
 }
 
 export interface UpdateSeries {
