@@ -26,7 +26,7 @@ export const BookModal = ({ book, show, close }: BookModalProps) => {
 					close();
 				},
 			});
-		},	
+		},
 		validateOnMount: true,
 	});
 
@@ -43,7 +43,7 @@ export const BookModal = ({ book, show, close }: BookModalProps) => {
 						<BookDetailsTab book={book} formik={formik} />
 					</Tab>
 					<Tab eventKey="fileInfo" title="File Info">
-						<BookFileInfo book={book}/>
+						<BookFileInfo book={book} />
 					</Tab>
 				</ModalTabs>
 			</Modal.Body>

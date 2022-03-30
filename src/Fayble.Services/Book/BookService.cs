@@ -10,12 +10,18 @@ public class BookService : IBookService
     private readonly ILogger _logger;
     private readonly IBookRepository _bookRepository;
     private readonly IUnitOfWork _unitOfWork;
+    private readonly ITagRepository _tagRepository;
 
-    public BookService(ILogger<BookService> logger, IBookRepository bookRepository, IUnitOfWork unitOfWork)
+    public BookService(
+        ILogger<BookService> logger,
+        IBookRepository bookRepository,
+        IUnitOfWork unitOfWork,
+        ITagRepository tagRepository)
     {
         _logger = logger;
         _bookRepository = bookRepository;
         _unitOfWork = unitOfWork;
+        _tagRepository = tagRepository;
     }
 
     public async Task<Models.Book.Book?> Get(Guid id)
@@ -27,6 +33,24 @@ public class BookService : IBookService
     {
         var entity = await _bookRepository.Get(id);
 
+        var tags = new List<Domain.Aggregates.Tag.Tag>();
+
+        foreach (var tag in book.Tags)
+        {
+            var tagEntity = (await _tagRepository.Get(t => t.Name.ToLower() == tag.ToLower())).FirstOrDefault();
+
+            if (tagEntity != null)
+            {
+                tags.Add(tagEntity);
+            }
+            else
+            {
+                var newTag = new Domain.Aggregates.Tag.Tag(Guid.NewGuid(), tag);
+                _tagRepository.Add(newTag);
+                tags.Add(newTag);
+            }
+        }
+
         entity.Update(
             book.Title,
             book.Number,
@@ -37,7 +61,8 @@ public class BookService : IBookService
             book.Language,
             book.Review,
             DateOnly.TryParseExact(book.CoverDate, "yyyy-MM-dd", out var coverDate) ? coverDate : null,
-            DateOnly.TryParseExact(book.StoreDate, "yyyy-MM-dd", out var storeDate) ? storeDate : null);
+            DateOnly.TryParseExact(book.StoreDate, "yyyy-MM-dd", out var storeDate) ? storeDate : null,
+            tags);
 
         await _unitOfWork.Commit();
 

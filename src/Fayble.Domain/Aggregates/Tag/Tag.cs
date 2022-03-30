@@ -11,6 +11,8 @@ public class Tag : IdentifiableEntity<Guid>, IAggregateRoot
 
     public ICollection<Series.Series> Series { get; private set; }
 
+    public Tag() {}
+
     public Tag(Guid id, string name) : base(id)
     {
         Name = name;

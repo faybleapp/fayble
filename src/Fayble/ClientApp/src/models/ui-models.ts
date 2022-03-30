@@ -27,6 +27,6 @@ export enum BackgroundTaskStatus {
 }
 
 export interface SelectFieldOption {
-	value: string | null;
+	value: string ;
 	label: string;
 }

@@ -11,7 +11,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Fayble.Infrastructure.Migrations
 {
     [DbContext(typeof(FaybleDbContext))]
-    [Migration("20220327094542_Initial")]
+    [Migration("20220330101921_Initial")]
     partial class Initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
