@@ -5,10 +5,11 @@ using Fayble.Core.Helpers;
 using Fayble.Domain.Aggregates.Library;
 using Fayble.Domain.Repositories;
 using Fayble.Models.FileSystem;
+using Fayble.Services.FileSystemService;
 using Microsoft.Extensions.Logging;
 using SharpCompress.Archives;
 
-namespace Fayble.Services.FileSystemService;
+namespace Fayble.Services.FileSystem;
 
 public class ComicBookComicBookFileSystemService : IComicBookFileSystemService
 {

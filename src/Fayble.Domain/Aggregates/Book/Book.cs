@@ -64,6 +64,7 @@ public class Book : AuditableEntity<Guid>, IAggregateRoot
 
     public virtual IReadOnlyCollection<ReadHistory> ReadHistory => _readHistory;
 
+    public ICollection<Tag.Tag> Tags { get; set; }
 
     public Book()
     {
@@ -101,7 +102,8 @@ public class Book : AuditableEntity<Guid>, IAggregateRoot
         string language,
         string review,
         DateOnly? coverDate,
-        DateOnly? storeDate)
+        DateOnly? storeDate,
+        ICollection<Tag.Tag> tags)
     {
         Title = title;
         Number = number;
@@ -113,6 +115,7 @@ public class Book : AuditableEntity<Guid>, IAggregateRoot
         Review = review;
         CoverDate = coverDate;
         StoreDate = storeDate;
+        Tags = tags;
     }
 
     public void UpdateMediaPath(string mediaPath)

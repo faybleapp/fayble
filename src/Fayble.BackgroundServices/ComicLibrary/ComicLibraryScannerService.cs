@@ -140,6 +140,7 @@ public class ComicLibraryScannerService : IComicLibraryScannerService
                         out var coverDate)
                         ? coverDate
                         : null,
+                    null, 
                     null);
 
             try

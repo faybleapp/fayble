@@ -64,6 +64,7 @@ export interface Book {
     storeDate: string | undefined;
     lastMetadataUpdate: Date;
     mediaType: string;
+    tags: string[];
 }
 
 export interface Media {
@@ -123,6 +124,7 @@ export interface UpdateBook {
     storeDate: string | undefined;
     language: string | undefined;
     review: string | undefined;
+    tags: string[];
 }
 
 export interface UpdateSeries {
@@ -135,6 +137,11 @@ export interface UpdateSeries {
     rating: number;
     publisherId: string | undefined;
     parentSeriesId: string | undefined;
+}
+
+export interface Tag {
+    id: string;
+    name: string;
 }
 
 export interface FileResponse {

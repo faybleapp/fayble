@@ -17,6 +17,21 @@ namespace Fayble.Infrastructure.Migrations
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "6.0.1");
 
+            modelBuilder.Entity("BookTag", b =>
+                {
+                    b.Property<Guid>("BooksId")
+                        .HasColumnType("TEXT");
+
+                    b.Property<Guid>("TagsId")
+                        .HasColumnType("TEXT");
+
+                    b.HasKey("BooksId", "TagsId");
+
+                    b.HasIndex("TagsId");
+
+                    b.ToTable("BookTag");
+                });
+
             modelBuilder.Entity("Fayble.Domain.Aggregates.BackgroundTask.BackgroundTask", b =>
                 {
                     b.Property<Guid>("Id")
@@ -115,8 +130,8 @@ namespace Fayble.Infrastructure.Migrations
                     b.Property<decimal>("Rating")
                         .HasColumnType("TEXT");
 
-                    b.Property<bool?>("Review")
-                        .HasColumnType("INTEGER");
+                    b.Property<string>("Review")
+                        .HasColumnType("TEXT");
 
                     b.Property<Guid?>("SeriesId")
                         .HasColumnType("TEXT");
@@ -406,6 +421,20 @@ namespace Fayble.Infrastructure.Migrations
                     b.ToTable("Series", (string)null);
                 });
 
+            modelBuilder.Entity("Fayble.Domain.Aggregates.Tag.Tag", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Name")
+                        .HasColumnType("TEXT");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Tag", (string)null);
+                });
+
             modelBuilder.Entity("Fayble.Domain.Aggregates.User.User", b =>
                 {
                     b.Property<Guid>("Id")
@@ -598,6 +627,21 @@ namespace Fayble.Infrastructure.Migrations
                     b.HasKey("UserId", "LoginProvider", "Name");
 
                     b.ToTable("UserToken", (string)null);
+                });
+
+            modelBuilder.Entity("BookTag", b =>
+                {
+                    b.HasOne("Fayble.Domain.Aggregates.Book.Book", null)
+                        .WithMany()
+                        .HasForeignKey("BooksId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Fayble.Domain.Aggregates.Tag.Tag", null)
+                        .WithMany()
+                        .HasForeignKey("TagsId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("Fayble.Domain.Aggregates.Book.Book", b =>

@@ -27,7 +27,8 @@ public static class Mappings
             entity.MediaType.ToString(),
             entity.CoverDate?.ToString("yyyy-MM-dd"),
             entity.StoreDate?.ToString("yyyy-MM-dd"),
-            entity.Language, 
-            entity.Review);
+            entity.Language,
+            entity.Review,
+            entity.Tags?.Select(t => t.Name).OrderBy(t => t));
     }
 }

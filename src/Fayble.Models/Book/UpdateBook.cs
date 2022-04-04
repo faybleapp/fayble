@@ -16,6 +16,7 @@ public class
     public string? StoreDate { get; }
     public string? Language { get; }
     public string? Review { get; }
+    public string[] Tags { get; }
 
     public UpdateBook(
         Guid id,
@@ -28,7 +29,8 @@ public class
         string? summary,
         string? title,
         string? language,
-        string? review)
+        string? review,
+        string[] tags)
     {
         CoverDate = coverDate;
         Id = id;
@@ -41,6 +43,8 @@ public class
         Title = title;
         Language = language;
         Review = review;
+        Tags = tags;
     }
+
 
 }

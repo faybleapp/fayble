@@ -110,6 +110,18 @@ namespace Fayble.Infrastructure.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "Tag",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "TEXT", nullable: false),
+                    Name = table.Column<string>(type: "TEXT", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Tag", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "User",
                 columns: table => new
                 {
@@ -376,7 +388,7 @@ namespace Fayble.Infrastructure.Migrations
                     PublisherId = table.Column<Guid>(type: "TEXT", nullable: true),
                     FormatId = table.Column<Guid>(type: "TEXT", nullable: true),
                     LastMetadataUpdate = table.Column<DateTimeOffset>(type: "TEXT", nullable: true),
-                    Review = table.Column<bool>(type: "INTEGER", nullable: true),
+                    Review = table.Column<string>(type: "TEXT", nullable: true),
                     Created = table.Column<DateTimeOffset>(type: "TEXT", nullable: false),
                     CreatedBy = table.Column<Guid>(type: "TEXT", nullable: false),
                     LastModified = table.Column<DateTimeOffset>(type: "TEXT", nullable: false),
@@ -411,6 +423,30 @@ namespace Fayble.Infrastructure.Migrations
                         name: "FK_Book_Series_SeriesId",
                         column: x => x.SeriesId,
                         principalTable: "Series",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "BookTag",
+                columns: table => new
+                {
+                    BooksId = table.Column<Guid>(type: "TEXT", nullable: false),
+                    TagsId = table.Column<Guid>(type: "TEXT", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_BookTag", x => new { x.BooksId, x.TagsId });
+                    table.ForeignKey(
+                        name: "FK_BookTag_Book_BooksId",
+                        column: x => x.BooksId,
+                        principalTable: "Book",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_BookTag_Tag_TagsId",
+                        column: x => x.TagsId,
+                        principalTable: "Tag",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
@@ -465,6 +501,11 @@ namespace Fayble.Infrastructure.Migrations
                 name: "IX_Book_SeriesId",
                 table: "Book",
                 column: "SeriesId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_BookTag_TagsId",
+                table: "BookTag",
+                column: "TagsId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_LibraryPath_LibraryId",
@@ -555,6 +596,9 @@ namespace Fayble.Infrastructure.Migrations
                 name: "BackgroundTask");
 
             migrationBuilder.DropTable(
+                name: "BookTag");
+
+            migrationBuilder.DropTable(
                 name: "Configuration");
 
             migrationBuilder.DropTable(
@@ -583,6 +627,9 @@ namespace Fayble.Infrastructure.Migrations
 
             migrationBuilder.DropTable(
                 name: "UserToken");
+
+            migrationBuilder.DropTable(
+                name: "Tag");
 
             migrationBuilder.DropTable(
                 name: "Book");

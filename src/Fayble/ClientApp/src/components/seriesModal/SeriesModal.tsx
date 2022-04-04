@@ -114,8 +114,7 @@ export const SeriesModal = ({ series, show, close }: SeriesModalProps) => {
 											clearable
 											searchable
 											value={formik.values.publisherId}
-											onChange={(selectedValue) => {
-												console.log(selectedValue);
+											onChange={(selectedValue) => {												
 												formik.setFieldValue(
 													"publisherId",
 													selectedValue as string

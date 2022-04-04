@@ -27,7 +27,9 @@ public class Book
     public string? CoverDate { get; private set; }
     public string? StoreDate { get; private set; }
     public DateTimeOffset LastMetadataUpdate { get; private set; }
-    public string MediaType { get; private set; }
+    public string MediaType { get; private set; }    
+    public IEnumerable<string> Tags {get; private set;}
+
 
     public Book(
         Guid id,
@@ -49,7 +51,9 @@ public class Book
         string coverDate,
         string storeDate,
         string language,
-        string review
+        string review,
+        IEnumerable<string> tags
+        
     )
     {
         Id = id;
@@ -72,6 +76,7 @@ public class Book
         StoreDate = storeDate;
         Language = language;
         Review = review;
+        Tags = tags;
         Media = new Media(mediaPath);
     }
 }

@@ -28,7 +28,6 @@ export const TextField = ({
 				isInvalid={!!error}
 				value={value}
 				onChange={onChange}
-				readOnly
 			/>
 			<Form.Control.Feedback type="invalid">
 				{error}
