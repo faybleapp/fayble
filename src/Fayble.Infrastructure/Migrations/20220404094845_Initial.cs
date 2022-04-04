@@ -428,30 +428,6 @@ namespace Fayble.Infrastructure.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "SeriesTag",
-                columns: table => new
-                {
-                    SeriesId = table.Column<Guid>(type: "TEXT", nullable: false),
-                    TagsId = table.Column<Guid>(type: "TEXT", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_SeriesTag", x => new { x.SeriesId, x.TagsId });
-                    table.ForeignKey(
-                        name: "FK_SeriesTag_Series_SeriesId",
-                        column: x => x.SeriesId,
-                        principalTable: "Series",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_SeriesTag_Tag_TagsId",
-                        column: x => x.TagsId,
-                        principalTable: "Tag",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
                 name: "BookTag",
                 columns: table => new
                 {
@@ -583,11 +559,6 @@ namespace Fayble.Infrastructure.Migrations
                 column: "PublisherId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_SeriesTag_TagsId",
-                table: "SeriesTag",
-                column: "TagsId");
-
-            migrationBuilder.CreateIndex(
                 name: "EmailIndex",
                 table: "User",
                 column: "NormalizedEmail");
@@ -643,9 +614,6 @@ namespace Fayble.Infrastructure.Migrations
                 name: "RefreshToken");
 
             migrationBuilder.DropTable(
-                name: "SeriesTag");
-
-            migrationBuilder.DropTable(
                 name: "UserClaim");
 
             migrationBuilder.DropTable(
@@ -661,10 +629,10 @@ namespace Fayble.Infrastructure.Migrations
                 name: "UserToken");
 
             migrationBuilder.DropTable(
-                name: "Book");
+                name: "Tag");
 
             migrationBuilder.DropTable(
-                name: "Tag");
+                name: "Book");
 
             migrationBuilder.DropTable(
                 name: "Role");

@@ -11,7 +11,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Fayble.Infrastructure.Migrations
 {
     [DbContext(typeof(FaybleDbContext))]
-    [Migration("20220330101921_Initial")]
+    [Migration("20220404094845_Initial")]
     partial class Initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -631,21 +631,6 @@ namespace Fayble.Infrastructure.Migrations
                     b.ToTable("UserToken", (string)null);
                 });
 
-            modelBuilder.Entity("SeriesTag", b =>
-                {
-                    b.Property<Guid>("SeriesId")
-                        .HasColumnType("TEXT");
-
-                    b.Property<Guid>("TagsId")
-                        .HasColumnType("TEXT");
-
-                    b.HasKey("SeriesId", "TagsId");
-
-                    b.HasIndex("TagsId");
-
-                    b.ToTable("SeriesTag");
-                });
-
             modelBuilder.Entity("BookTag", b =>
                 {
                     b.HasOne("Fayble.Domain.Aggregates.Book.Book", null)
@@ -822,21 +807,6 @@ namespace Fayble.Infrastructure.Migrations
                     b.HasOne("Fayble.Domain.Aggregates.User.User", null)
                         .WithMany()
                         .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-                });
-
-            modelBuilder.Entity("SeriesTag", b =>
-                {
-                    b.HasOne("Fayble.Domain.Aggregates.Series.Series", null)
-                        .WithMany()
-                        .HasForeignKey("SeriesId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("Fayble.Domain.Aggregates.Tag.Tag", null)
-                        .WithMany()
-                        .HasForeignKey("TagsId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });

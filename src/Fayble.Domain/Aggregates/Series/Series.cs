@@ -41,9 +41,7 @@ public class Series : AuditableEntity<Guid>, IAggregateRoot
     public bool Locked { get; private set; }
 
     public DateTimeOffset? LastMetadataUpdate { get; private set; }
-
-    public ICollection<Tag.Tag> Tags { get; private set; }
-
+    
     private Series()
     {
     }

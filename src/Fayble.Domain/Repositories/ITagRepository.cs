@@ -5,4 +5,5 @@ namespace Fayble.Domain.Repositories;
 
 public interface ITagRepository : IRepositoryBase<Tag, Guid>
 {
+    Task<Tag?> GetByName(string name);
 }

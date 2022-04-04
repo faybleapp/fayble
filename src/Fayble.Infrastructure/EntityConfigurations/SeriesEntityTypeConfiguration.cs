@@ -22,8 +22,5 @@ public class SeriesEntityTypeConfiguration : IEntityTypeConfiguration<Series>
         builder.HasOne(e => e.Publisher)
             .WithMany()
             .HasForeignKey(e => e.PublisherId);
-
-        builder.HasMany(e => e.Tags)
-            .WithMany(e => e.Series);
     }
 }
