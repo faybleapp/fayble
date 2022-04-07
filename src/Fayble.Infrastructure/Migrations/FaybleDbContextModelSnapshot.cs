@@ -17,7 +17,7 @@ namespace Fayble.Infrastructure.Migrations
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "6.0.1");
 
-            modelBuilder.Entity("BookTag", b =>
+            modelBuilder.Entity("BookBookTag", b =>
                 {
                     b.Property<Guid>("BooksId")
                         .HasColumnType("TEXT");
@@ -29,7 +29,7 @@ namespace Fayble.Infrastructure.Migrations
 
                     b.HasIndex("TagsId");
 
-                    b.ToTable("BookTag");
+                    b.ToTable("BookBookTag");
                 });
 
             modelBuilder.Entity("Fayble.Domain.Aggregates.BackgroundTask.BackgroundTask", b =>
@@ -421,7 +421,7 @@ namespace Fayble.Infrastructure.Migrations
                     b.ToTable("Series", (string)null);
                 });
 
-            modelBuilder.Entity("Fayble.Domain.Aggregates.Tag.Tag", b =>
+            modelBuilder.Entity("Fayble.Domain.Aggregates.Tag.BookTag", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -432,7 +432,7 @@ namespace Fayble.Infrastructure.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Tag", (string)null);
+                    b.ToTable("BookTag", (string)null);
                 });
 
             modelBuilder.Entity("Fayble.Domain.Aggregates.User.User", b =>
@@ -629,7 +629,7 @@ namespace Fayble.Infrastructure.Migrations
                     b.ToTable("UserToken", (string)null);
                 });
 
-            modelBuilder.Entity("BookTag", b =>
+            modelBuilder.Entity("BookBookTag", b =>
                 {
                     b.HasOne("Fayble.Domain.Aggregates.Book.Book", null)
                         .WithMany()
@@ -637,7 +637,7 @@ namespace Fayble.Infrastructure.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("Fayble.Domain.Aggregates.Tag.Tag", null)
+                    b.HasOne("Fayble.Domain.Aggregates.Tag.BookTag", null)
                         .WithMany()
                         .HasForeignKey("TagsId")
                         .OnDelete(DeleteBehavior.Cascade)

@@ -1,5 +1,6 @@
 ﻿using System.Runtime.CompilerServices;
 using Fayble.Domain;
+using Fayble.Domain.Aggregates.Tag;
 using Fayble.Domain.Repositories;
 using Fayble.Models.Book;
 using Fayble.Services.Tag;
@@ -12,13 +13,13 @@ public class BookService : IBookService
     private readonly ILogger _logger;
     private readonly IBookRepository _bookRepository;
     private readonly IUnitOfWork _unitOfWork;
-    private readonly ITagRepository _tagRepository;
+    private readonly IBookTagRepository _tagRepository;
 
     public BookService(
         ILogger<BookService> logger,
         IBookRepository bookRepository,
         IUnitOfWork unitOfWork,
-        ITagRepository tagRepository)
+        IBookTagRepository tagRepository)
     {
         _logger = logger;
         _bookRepository = bookRepository;
@@ -57,9 +58,9 @@ public class BookService : IBookService
         return entity.ToModel();
     }
 
-    private async Task<ICollection<Domain.Aggregates.Tag.Tag>> UpdateTags(IEnumerable<string> newTags)
+    private async Task<ICollection<BookTag>> UpdateTags(IEnumerable<string> newTags)
     {
-        var tags = new List<Domain.Aggregates.Tag.Tag>();
+        var tags = new List<BookTag>();
 
         foreach (var tag in newTags)
         {
@@ -71,7 +72,7 @@ public class BookService : IBookService
             }
             else
             {
-                var newTag = new Domain.Aggregates.Tag.Tag(Guid.NewGuid(), tag);
+                var newTag = new BookTag(Guid.NewGuid(), tag);
                 _tagRepository.Add(newTag);
                 tags.Add(newTag);
             }

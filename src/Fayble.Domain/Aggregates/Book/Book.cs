@@ -1,4 +1,5 @@
 ﻿using Fayble.Domain.Aggregates.Library;
+using Fayble.Domain.Aggregates.Tag;
 using Fayble.Domain.Entities;
 using Fayble.Domain.Enums;
 
@@ -64,7 +65,7 @@ public class Book : AuditableEntity<Guid>, IAggregateRoot
 
     public virtual IReadOnlyCollection<ReadHistory> ReadHistory => _readHistory;
 
-    public ICollection<Tag.Tag> Tags { get; set; }
+    public ICollection<BookTag> Tags { get; set; }
 
     public Book()
     {
@@ -103,7 +104,7 @@ public class Book : AuditableEntity<Guid>, IAggregateRoot
         string review,
         DateOnly? coverDate,
         DateOnly? storeDate,
-        ICollection<Tag.Tag> tags)
+        ICollection<BookTag> tags)
     {
         Title = title;
         Number = number;

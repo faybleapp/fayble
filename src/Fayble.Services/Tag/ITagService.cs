@@ -2,5 +2,5 @@
 
 public interface ITagService
 {
-    Task<IEnumerable<Models.Tag.Tag>?> GetAll();
+    Task<IEnumerable<Models.Tag.Tag>?> GetAllBookTags();
 }

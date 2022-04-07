@@ -73,7 +73,7 @@ builder.Services.AddScoped<IConfigurationRepository, ConfigurationRepository>();
 builder.Services.AddScoped<IFileTypeRepository, FileTypeRepository>();
 builder.Services.AddScoped<IRefreshTokenRepository, RefreshTokenRepository>();
 builder.Services.AddScoped<IPublisherRepository, PublisherRepository>();
-builder.Services.AddScoped<ITagRepository, TagRepository>();
+builder.Services.AddScoped<IBookTagRepository, BookTagRepository>();
 
 // Register Services
 builder.Services.AddScoped<ILibraryService, LibraryService>();

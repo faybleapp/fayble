@@ -1,6 +1,4 @@
-﻿using Fayble.Models.Publisher;
-using Fayble.Models.Tag;
-using Fayble.Services.Publisher;
+﻿using Fayble.Models.Tag;
 using Fayble.Services.Tag;
 using Microsoft.AspNetCore.Mvc;
 
@@ -17,9 +15,9 @@ public class TagsController : ControllerBase
         _tagService = tagService;
     }
 
-    [HttpGet]
-    public async Task<IEnumerable<Tag>?> GetAll()
+    [HttpGet("booktags")]
+    public async Task<IEnumerable<Tag>?> BookTags()
     {
-        return await _tagService.GetAll();
+        return await _tagService.GetAllBookTags();
     }
 }
