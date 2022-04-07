@@ -5,18 +5,18 @@ namespace Fayble.Services.Tag;
 
 public class TagService : ITagService
 {
-    private readonly ITagRepository _tagRepository;
+    private readonly IBookTagRepository _bookTagRepository;
     private readonly IUnitOfWork _unitOfWork;
 
-    public TagService(ITagRepository tagRepository, IUnitOfWork unitOfWork)
+    public TagService(IBookTagRepository bookTagRepository, IUnitOfWork unitOfWork)
     {
-        _tagRepository = tagRepository;
+        _bookTagRepository = bookTagRepository;
         _unitOfWork = unitOfWork;
     }
 
-    public async Task<IEnumerable<Models.Tag.Tag>?> GetAll()
+    public async Task<IEnumerable<Models.Tag.Tag>?> GetAllBookTags()
     {
-        return (await _tagRepository.Get())?.Select(t => t.ToModel());
+        return (await _bookTagRepository.Get())?.Select(t => t.ToModel());
     }
 
 }

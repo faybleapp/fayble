@@ -34,7 +34,7 @@ public class FaybleDbContext : IdentityDbContext<User, UserRole, Guid>, IFaybleD
     public DbSet<Publisher> Publishers { get; set; }
     public DbSet<Configuration> Configuration { get; set; }
     public DbSet<BackgroundTask> BackgroundTasks { get; set; }
-    public DbSet<Tag> Tags { get; set; }
+    public DbSet<BookTag> BookTags { get; set; }
 
     private readonly IUserIdentity _userIdentity;
 

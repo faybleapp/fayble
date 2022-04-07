@@ -5,7 +5,7 @@ import { FormikProps } from "formik";
 import { Book, Tag } from "models/api-models";
 import React from "react";
 import { Col, Container, Form, Row } from "react-bootstrap";
-import { useTags } from "services/tag";
+import { useBookTags } from "services/tag";
 import { TextAreaField } from "textAreaField";
 
 interface BookDetailsTabProps {
@@ -14,7 +14,7 @@ interface BookDetailsTabProps {
 }
 
 export const BookDetailsTab = ({ formik }: BookDetailsTabProps) => {
-	const tags = useTags();
+	const tags = useBookTags();
 	var tagList = Array.from(
 		new Set(
 			tags?.data

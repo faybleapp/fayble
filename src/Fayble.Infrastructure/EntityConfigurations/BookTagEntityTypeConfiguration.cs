@@ -5,11 +5,11 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace Fayble.Infrastructure.EntityConfigurations;
 
-public class TagPathEntityTypeConfiguration : IEntityTypeConfiguration<Tag>
+public class BookTagEntityTypeConfiguration : IEntityTypeConfiguration<BookTag>
 {
-    public void Configure(EntityTypeBuilder<Tag> builder)
+    public void Configure(EntityTypeBuilder<BookTag> builder)
     {
-        builder.ToTable("Tag");
+        builder.ToTable("BookTag");
         builder.HasKey(x => x.Id);
     }
 }
