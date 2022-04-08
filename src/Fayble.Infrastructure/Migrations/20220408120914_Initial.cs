@@ -377,16 +377,16 @@ namespace Fayble.Infrastructure.Migrations
                     Language = table.Column<string>(type: "TEXT", nullable: true),
                     FileFormat = table.Column<string>(type: "TEXT", nullable: true),
                     FilePath = table.Column<string>(type: "TEXT", nullable: true),
+                    Volume = table.Column<string>(type: "TEXT", nullable: true),
                     Locked = table.Column<bool>(type: "INTEGER", nullable: false),
                     Rating = table.Column<decimal>(type: "TEXT", nullable: false),
+                    ReleaseDate = table.Column<DateOnly>(type: "TEXT", nullable: true),
                     CoverDate = table.Column<DateOnly>(type: "TEXT", nullable: true),
-                    StoreDate = table.Column<DateOnly>(type: "TEXT", nullable: true),
                     MediaType = table.Column<string>(type: "TEXT", nullable: false),
                     SeriesId = table.Column<Guid>(type: "TEXT", nullable: true),
                     LibraryId = table.Column<Guid>(type: "TEXT", nullable: true),
                     LibraryPathId = table.Column<Guid>(type: "TEXT", nullable: true),
                     PublisherId = table.Column<Guid>(type: "TEXT", nullable: true),
-                    FormatId = table.Column<Guid>(type: "TEXT", nullable: true),
                     LastMetadataUpdate = table.Column<DateTimeOffset>(type: "TEXT", nullable: true),
                     Review = table.Column<string>(type: "TEXT", nullable: true),
                     Created = table.Column<DateTimeOffset>(type: "TEXT", nullable: false),
@@ -397,11 +397,6 @@ namespace Fayble.Infrastructure.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Book", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_Book_Format_FormatId",
-                        column: x => x.FormatId,
-                        principalTable: "Format",
-                        principalColumn: "Id");
                     table.ForeignKey(
                         name: "FK_Book_Library_LibraryId",
                         column: x => x.LibraryId,
@@ -476,11 +471,6 @@ namespace Fayble.Infrastructure.Migrations
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Book_FormatId",
-                table: "Book",
-                column: "FormatId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Book_LibraryId",

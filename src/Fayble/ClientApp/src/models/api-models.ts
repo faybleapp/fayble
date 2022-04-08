@@ -90,6 +90,8 @@ export interface Series {
     bookCount: number | undefined;
     parentSeriesId: string | undefined;
     parentSeries: Series | undefined;
+    publisherId: string | undefined;
+    publisher: Publisher | undefined;
     rating: number;
     library: Library | undefined;
     read: boolean;

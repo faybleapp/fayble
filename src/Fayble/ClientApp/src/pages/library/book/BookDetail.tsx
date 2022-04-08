@@ -76,12 +76,12 @@ export const BookDetail = (props: BookDetailProps) => {
 						</div>
 					)}
 
-					{book?.storeDate && (
+					{book?.releaseDate && (
 						<div className={styles.detailProperty}>
 							<div className={styles.detailsHeading}>
 								Store Date
 							</div>
-							<div>{book?.storeDate}</div>
+							<div>{book?.releaseDate}</div>
 						</div>
 					)}
 

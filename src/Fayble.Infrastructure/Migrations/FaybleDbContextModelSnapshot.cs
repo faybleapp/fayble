@@ -84,9 +84,6 @@ namespace Fayble.Infrastructure.Migrations
                     b.Property<string>("Filename")
                         .HasColumnType("TEXT");
 
-                    b.Property<Guid?>("FormatId")
-                        .HasColumnType("TEXT");
-
                     b.Property<string>("Language")
                         .HasColumnType("TEXT");
 
@@ -130,13 +127,13 @@ namespace Fayble.Infrastructure.Migrations
                     b.Property<decimal>("Rating")
                         .HasColumnType("TEXT");
 
+                    b.Property<DateOnly?>("ReleaseDate")
+                        .HasColumnType("TEXT");
+
                     b.Property<string>("Review")
                         .HasColumnType("TEXT");
 
                     b.Property<Guid?>("SeriesId")
-                        .HasColumnType("TEXT");
-
-                    b.Property<DateOnly?>("StoreDate")
                         .HasColumnType("TEXT");
 
                     b.Property<string>("Summary")
@@ -145,9 +142,10 @@ namespace Fayble.Infrastructure.Migrations
                     b.Property<string>("Title")
                         .HasColumnType("TEXT");
 
-                    b.HasKey("Id");
+                    b.Property<string>("Volume")
+                        .HasColumnType("TEXT");
 
-                    b.HasIndex("FormatId");
+                    b.HasKey("Id");
 
                     b.HasIndex("LibraryId");
 
@@ -646,10 +644,6 @@ namespace Fayble.Infrastructure.Migrations
 
             modelBuilder.Entity("Fayble.Domain.Aggregates.Book.Book", b =>
                 {
-                    b.HasOne("Fayble.Domain.Aggregates.Format.Format", "Format")
-                        .WithMany()
-                        .HasForeignKey("FormatId");
-
                     b.HasOne("Fayble.Domain.Aggregates.Library.Library", "Library")
                         .WithMany("Books")
                         .HasForeignKey("LibraryId")
@@ -668,8 +662,6 @@ namespace Fayble.Infrastructure.Migrations
                         .WithMany("Books")
                         .HasForeignKey("SeriesId")
                         .OnDelete(DeleteBehavior.Cascade);
-
-                    b.Navigation("Format");
 
                     b.Navigation("Library");
 

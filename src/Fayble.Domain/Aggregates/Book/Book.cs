@@ -74,7 +74,6 @@ public class Book : AuditableEntity<Guid>, IAggregateRoot
         bool locked,
         string language,
         string review,
-        string volume,
         DateOnly? releaseDate,
         DateOnly? coverDate,
         ICollection<BookTag> tags)
@@ -87,7 +86,6 @@ public class Book : AuditableEntity<Guid>, IAggregateRoot
         Locked = locked;
         Language = language;
         Review = review;
-        Volume = volume;
         ReleaseDate = releaseDate;
         CoverDate = coverDate;
         Tags = tags;
