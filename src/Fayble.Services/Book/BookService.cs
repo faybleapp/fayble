@@ -46,8 +46,8 @@ public class BookService : IBookService
             book.Locked,
             book.Language,
             book.Review,
+            DateOnly.TryParseExact(book.ReleaseDate, "yyyy-MM-dd", out var releaseDate) ? releaseDate: null,
             DateOnly.TryParseExact(book.CoverDate, "yyyy-MM-dd", out var coverDate) ? coverDate : null,
-            DateOnly.TryParseExact(book.StoreDate, "yyyy-MM-dd", out var storeDate) ? storeDate : null,
             tags);
 
         await _unitOfWork.Commit();

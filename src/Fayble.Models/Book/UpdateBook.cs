@@ -12,33 +12,33 @@ public class
     public bool Locked { get; }
     public decimal Rating { get; }
     public string? Number { get; }
+    public string? ReleaseDate { get; }
     public string? CoverDate { get; }
-    public string? StoreDate { get; }
     public string? Language { get; }
     public string? Review { get; }
     public string[] Tags { get; }
 
     public UpdateBook(
         Guid id,
-        string? coverDate,
         bool locked,
         string? notes,
         string? number,
         decimal rating,
-        string? storeDate,
+        string? releaseDate,
+        string? coverDate,
         string? summary,
         string? title,
         string? language,
         string? review,
         string[] tags)
     {
-        CoverDate = coverDate;
         Id = id;
         Locked = locked;
         Notes = notes;
         Number = number;
         Rating = rating;
-        StoreDate = storeDate;
+        ReleaseDate = releaseDate;
+        CoverDate = coverDate;
         Summary = summary;
         Title = title;
         Language = language;

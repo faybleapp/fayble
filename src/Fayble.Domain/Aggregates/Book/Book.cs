@@ -8,61 +8,33 @@ namespace Fayble.Domain.Aggregates.Book;
 public class Book : AuditableEntity<Guid>, IAggregateRoot
 {
     public string Title { get; private set; }
-
     public string Summary { get; private set; }
-
     public string Notes { get; private set; }
-
     public string Number { get; private set; }
-
     public int? PageCount { get; private set; }
-
     public string MediaPath { get; private set; }
-
     public string Filename { get; private set; }
-
     public string Language { get; private set; }
-
     public string FileFormat { get; private set; }
-
     public string FilePath { get; private set; }
-
+    public string Volume { get; private set; }
     public bool Locked { get; private set; }
-
     public decimal Rating { get; private set; }
-
+    public DateOnly? ReleaseDate { get; private set; }
     public DateOnly? CoverDate { get; private set; }
-
-    public DateOnly? StoreDate { get; private set; }
-
     public MediaType MediaType { get; private set; }
-
     public Guid? SeriesId { get; set; }
-
     public virtual Series.Series Series { get; set; }
-
     public Guid? LibraryId { get; private set; }
-
     public virtual Library.Library Library { get; private set; }
-
     public Guid? LibraryPathId { get; private set; }
-
     public virtual LibraryPath LibraryPath { get; private set; }
-
     public Guid? PublisherId { get; private set; }
-
     public virtual Publisher.Publisher Publisher { get; private set; }
-
-    public Guid? FormatId { get; private set; }
-
-    public virtual Format.Format Format { get; private set; }
-
     public DateTimeOffset? LastMetadataUpdate { get; private set; }
-
     public string Review { get; private set; }
 
     private readonly List<ReadHistory> _readHistory = new ();
-
     public virtual IReadOnlyCollection<ReadHistory> ReadHistory => _readHistory;
 
     public ICollection<BookTag> Tags { get; set; }
@@ -102,8 +74,9 @@ public class Book : AuditableEntity<Guid>, IAggregateRoot
         bool locked,
         string language,
         string review,
+        string volume,
+        DateOnly? releaseDate,
         DateOnly? coverDate,
-        DateOnly? storeDate,
         ICollection<BookTag> tags)
     {
         Title = title;
@@ -114,8 +87,9 @@ public class Book : AuditableEntity<Guid>, IAggregateRoot
         Locked = locked;
         Language = language;
         Review = review;
+        Volume = volume;
+        ReleaseDate = releaseDate;
         CoverDate = coverDate;
-        StoreDate = storeDate;
         Tags = tags;
     }
 
