@@ -25,8 +25,8 @@ public static class Mappings
             entity.Series?.ToModel(userId),
             entity.Library?.ToModel(),
             entity.MediaType.ToString(),
+            entity.ReleaseDate?.ToString("yyyy-MM-dd"),
             entity.CoverDate?.ToString("yyyy-MM-dd"),
-            entity.StoreDate?.ToString("yyyy-MM-dd"),
             entity.Language,
             entity.Review,
             entity.Tags?.Select(t => t.Name).OrderBy(t => t));

@@ -37,22 +37,18 @@ export const BookDetailsTab = ({ formik }: BookDetailsTabProps) => {
 				<Row>
 					<Col>
 						<DatePickerField
-							name="coverDate"
-							label="Cover Date"
+							name="releaseDate"
+							label="Release Date"
 							onChange={formik.handleChange}
-							value={formik.values.coverDate}
+							value={formik.values.releaseDate}
 						/>
 					</Col>
 					<Col>
 						<DatePickerField
-							name="storeDate"
-							label="Store Date"
-							error={
-								formik.touched.storeDate &&
-								formik.errors.storeDate
-							}
+							name="coverDate"
+							label="Cover Date"
 							onChange={formik.handleChange}
-							value={formik.values.storeDate}
+							value={formik.values.coverDate}
 						/>
 					</Col>
 				</Row>

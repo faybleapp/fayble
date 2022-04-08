@@ -60,8 +60,8 @@ export interface Book {
     language: string;
     series: Series | undefined;
     library: Library | undefined;
+    releaseDate: string | undefined;
     coverDate: string | undefined;
-    storeDate: string | undefined;
     lastMetadataUpdate: Date;
     mediaType: string;
     tags: string[];
@@ -90,8 +90,6 @@ export interface Series {
     bookCount: number | undefined;
     parentSeriesId: string | undefined;
     parentSeries: Series | undefined;
-    publisherId: string | undefined;
-    publisher: Publisher | undefined;
     rating: number;
     library: Library | undefined;
     read: boolean;
@@ -120,8 +118,8 @@ export interface UpdateBook {
     locked: boolean;
     rating: number;
     number: string | undefined;
+    releaseDate: string | undefined;
     coverDate: string | undefined;
-    storeDate: string | undefined;
     language: string | undefined;
     review: string | undefined;
     tags: string[];

@@ -132,6 +132,7 @@ public class ComicLibraryScannerService : IComicLibraryScannerService
                     false,
                     null,
                     null,
+                    null,
                     DateOnly.TryParseExact(
                         $"{newFile.ComicInfoXml?.Year}-{newFile.ComicInfoXml?.Month}-{newFile.ComicInfoXml?.Day}",
                         "yyyy-M-dd",
@@ -140,8 +141,8 @@ public class ComicLibraryScannerService : IComicLibraryScannerService
                         out var coverDate)
                         ? coverDate
                         : null,
-                    null, 
-                    null);
+                    null
+                    );
 
             try
             {

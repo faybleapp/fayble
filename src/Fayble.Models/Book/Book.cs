@@ -24,8 +24,8 @@ public class Book
     public string Language { get; private set; }
     public Series.Series? Series { get; private set; }
     public Library.Library? Library { get; private set; }
+    public string? ReleaseDate { get; private set; }
     public string? CoverDate { get; private set; }
-    public string? StoreDate { get; private set; }
     public DateTimeOffset LastMetadataUpdate { get; private set; }
     public string MediaType { get; private set; }    
     public IEnumerable<string> Tags {get; private set;}
@@ -48,12 +48,11 @@ public class Book
         Series.Series? series,
         Library.Library? library,
         string mediaType,
-        string coverDate,
-        string storeDate,
+        string? releaseDate,
+        string? coverDate,
         string language,
         string review,
         IEnumerable<string> tags
-        
     )
     {
         Id = id;
@@ -72,8 +71,8 @@ public class Book
         Series = series;
         Library = library;
         MediaType = mediaType;
+        ReleaseDate = releaseDate;
         CoverDate = coverDate;
-        StoreDate = storeDate;
         Language = language;
         Review = review;
         Tags = tags;
