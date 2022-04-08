@@ -8,6 +8,7 @@ interface DatePickerFieldProps {
 	className?: string;
 	error?: string | false | undefined;
 	value?: string;
+	type?: "date" | "month";
 	onChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
 }
 
@@ -17,6 +18,7 @@ export const DatePickerField = ({
 	className,
 	error,
 	value,
+	type,
 	onChange,
 }: DatePickerFieldProps) => {	
 	return (
@@ -25,7 +27,7 @@ export const DatePickerField = ({
 			<Form.Control
 				name={name}
                 max="9999-12-31"                
-				type="date"
+				type={type ?? "date"}
 				isInvalid={!!error}
 				value={value}
 				onChange={onChange}

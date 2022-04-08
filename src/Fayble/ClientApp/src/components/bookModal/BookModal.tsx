@@ -30,8 +30,10 @@ export const BookModal = ({ book, show, close }: BookModalProps) => {
 		validateOnMount: true,
 	});
 
+	const onExited = () => formik.resetForm()
+
 	return (
-		<Modal size="lg" show={show} onHide={close}>
+		<Modal size="lg" show={show} onHide={close} onExited={onExited}>
 			<Modal.Header closeButton>
 				<Modal.Title>
 					Edit {book.mediaType.replace(/([A-Z])/g, " $1").trim()}

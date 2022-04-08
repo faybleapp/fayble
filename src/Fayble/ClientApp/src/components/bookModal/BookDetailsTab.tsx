@@ -47,6 +47,7 @@ export const BookDetailsTab = ({ formik }: BookDetailsTabProps) => {
 						<DatePickerField
 							name="coverDate"
 							label="Cover Date"
+							type="month"
 							onChange={formik.handleChange}
 							value={formik.values.coverDate}
 						/>
