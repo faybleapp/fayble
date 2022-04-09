@@ -102,17 +102,11 @@ namespace Fayble.Infrastructure.Migrations
                     b.Property<Guid?>("LibraryPathId")
                         .HasColumnType("TEXT");
 
-                    b.Property<bool>("Locked")
-                        .HasColumnType("INTEGER");
-
                     b.Property<string>("MediaPath")
                         .HasColumnType("TEXT");
 
                     b.Property<string>("MediaType")
                         .IsRequired()
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("Notes")
                         .HasColumnType("TEXT");
 
                     b.Property<string>("Number")
@@ -130,9 +124,6 @@ namespace Fayble.Infrastructure.Migrations
                     b.Property<DateOnly?>("ReleaseDate")
                         .HasColumnType("TEXT");
 
-                    b.Property<string>("Review")
-                        .HasColumnType("TEXT");
-
                     b.Property<Guid?>("SeriesId")
                         .HasColumnType("TEXT");
 
@@ -140,9 +131,6 @@ namespace Fayble.Infrastructure.Migrations
                         .HasColumnType("TEXT");
 
                     b.Property<string>("Title")
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("Volume")
                         .HasColumnType("TEXT");
 
                     b.HasKey("Id");

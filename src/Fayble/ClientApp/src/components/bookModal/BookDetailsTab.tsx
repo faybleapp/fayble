@@ -1,9 +1,11 @@
 import { DatePickerField } from "components/form/datePickerField";
 import { MultiSelectField } from "components/form/multiSelectField";
+import { SelectField } from "components/form/selectField";
 import { TextField } from "components/form/textField";
 import { FormikProps } from "formik";
+import { languageSelectOptions } from "helpers/languageHelpers";
 import { Book, Tag } from "models/api-models";
-import React from "react";
+import React, { useEffect } from "react";
 import { Col, Container, Form, Row } from "react-bootstrap";
 import { useBookTags } from "services/tag";
 import { TextAreaField } from "textAreaField";
@@ -24,6 +26,10 @@ export const BookDetailsTab = ({ formik }: BookDetailsTabProps) => {
 	);
 
 	// var test = Array.from(new Set([tagList]));
+	
+	useEffect(() => {
+		console.log(formik.values);
+	},[formik.values])
 
 	return (
 		<Container>
@@ -34,6 +40,32 @@ export const BookDetailsTab = ({ formik }: BookDetailsTabProps) => {
 					value={formik.values.title}
 					onChange={formik.handleChange}
 				/>
+				<Row>
+					<Col>
+						<TextField
+							name="number"
+							label="Number"
+							value={formik.values.number}
+							onChange={formik.handleChange}
+						/>
+					</Col>
+					<Col>
+						<SelectField
+							name="language"
+							label="Language"
+							clearable
+							searchable
+							value={formik.values.language}
+							options={languageSelectOptions}
+							onChange={(selectedValue) => {												
+								formik.setFieldValue(
+									"language",
+									selectedValue as string
+								);
+							}}
+						/>
+					</Col>
+				</Row>
 				<Row>
 					<Col>
 						<DatePickerField
@@ -57,21 +89,6 @@ export const BookDetailsTab = ({ formik }: BookDetailsTabProps) => {
 					name="summary"
 					label="Summary"
 					value={formik.values.summary}
-					onChange={formik.handleChange}
-					rows={3}
-				/>
-
-				<TextAreaField
-					name="review"
-					label="Review"
-					value={formik.values.review}
-					onChange={formik.handleChange}
-					rows={3}
-				/>
-				<TextAreaField
-					name="notes"
-					label="Notes"
-					value={formik.values.notes}
 					onChange={formik.handleChange}
 					rows={3}
 				/>
