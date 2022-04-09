@@ -6,15 +6,12 @@ public class Book
     public Guid Id { get; private set; }
     public string Title { get; private set; }
     public string Summary { get; private set; }
-    public string Notes { get; private set; }
     public int? PageCount { get; private set; }
     public string MediaPath { get; private set; }
     public string Filename { get; private set; }
     public string FileFormat { get; private set; }
     public string FilePath { get; private set; }
-    public bool Locked { get; private set; }
     public decimal Rating { get; private set; }
-    public string Review { get; private set;  }
     public Media Media { get; private set; }
     public Publisher.Publisher? Publisher { get; private set; }
     public bool Read { get; private set; }
@@ -35,12 +32,10 @@ public class Book
         Guid id,
         string title,
         string summary,
-        string notes,
         int? pageCount,
         string mediaPath,
         string filename,
         string fileFormat,
-        bool locked,
         decimal rating,
         Publisher.Publisher? publisher,
         bool read,
@@ -51,19 +46,16 @@ public class Book
         string? releaseDate,
         string? coverDate,
         string language,
-        string review,
         IEnumerable<string> tags
     )
     {
         Id = id;
         Title = title;
         Summary = summary;
-        Notes = notes;
         PageCount = pageCount;
         MediaPath = mediaPath;
         Filename = filename;
         FileFormat = fileFormat;
-        Locked = locked;
         Rating = rating;
         Publisher = publisher;
         Read = read;
@@ -74,7 +66,6 @@ public class Book
         ReleaseDate = releaseDate;
         CoverDate = coverDate;
         Language = language;
-        Review = review;
         Tags = tags;
         Media = new Media(mediaPath);
     }

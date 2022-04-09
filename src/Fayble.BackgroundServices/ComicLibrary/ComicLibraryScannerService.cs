@@ -127,10 +127,8 @@ public class ComicLibraryScannerService : IComicLibraryScannerService
                     newFile.ComicInfoXml.Title,
                     newFile.ComicInfoXml?.Number ?? newFile.Number,
                     newFile.ComicInfoXml?.Summary,
-                    newFile.ComicInfoXml?.Notes,
                     0,
                     false,
-                    null,
                     null,
                     null,
                     DateOnly.TryParseExact(

@@ -84,8 +84,7 @@ public class ComicLibraryService : IComicLibraryService
                 comicIssue.Update(
                     newFile.ComicInfoXml.Title,
                     newFile.ComicInfoXml?.Number ?? newFile.Number,
-                    newFile.ComicInfoXml?.Summary,
-                    newFile.ComicInfoXml?.Notes,
+                   newFile.ComicInfoXml?.Summary,
                     0,
                     false,
                     null,
@@ -98,9 +97,8 @@ public class ComicLibraryService : IComicLibraryService
                         out var coverDate)
                         ? coverDate
                         : null,
-                    null,
                     null
-                );
+                    );
 
             try
             {

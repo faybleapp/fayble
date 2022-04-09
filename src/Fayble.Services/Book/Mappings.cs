@@ -12,12 +12,10 @@ public static class Mappings
             entity.Id,
             entity.Title,
             entity.Summary,
-            entity.Notes,
             entity.PageCount,
             entity.MediaPath,
             entity.Filename,
             entity.FileFormat,
-            entity.Locked,
             entity.Rating,
             entity.Publisher?.ToModel(),
             userId != null && entity.IsRead((Guid) userId),
@@ -28,7 +26,6 @@ public static class Mappings
             entity.ReleaseDate?.ToString("yyyy-MM-dd"),
             entity.CoverDate?.ToString("yyyy-MM"),
             entity.Language,
-            entity.Review,
             entity.Tags?.Select(t => t.Name).OrderBy(t => t));
     }
 }

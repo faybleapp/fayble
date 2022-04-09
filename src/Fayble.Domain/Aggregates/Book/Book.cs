@@ -9,7 +9,6 @@ public class Book : AuditableEntity<Guid>, IAggregateRoot
 {
     public string Title { get; private set; }
     public string Summary { get; private set; }
-    public string Notes { get; private set; }
     public string Number { get; private set; }
     public int? PageCount { get; private set; }
     public string MediaPath { get; private set; }
@@ -17,8 +16,6 @@ public class Book : AuditableEntity<Guid>, IAggregateRoot
     public string Language { get; private set; }
     public string FileFormat { get; private set; }
     public string FilePath { get; private set; }
-    public string Volume { get; private set; }
-    public bool Locked { get; private set; }
     public decimal Rating { get; private set; }
     public DateOnly? ReleaseDate { get; private set; }
     public DateOnly? CoverDate { get; private set; }
@@ -32,7 +29,6 @@ public class Book : AuditableEntity<Guid>, IAggregateRoot
     public Guid? PublisherId { get; private set; }
     public virtual Publisher.Publisher Publisher { get; private set; }
     public DateTimeOffset? LastMetadataUpdate { get; private set; }
-    public string Review { get; private set; }
 
     private readonly List<ReadHistory> _readHistory = new ();
     public virtual IReadOnlyCollection<ReadHistory> ReadHistory => _readHistory;
@@ -62,18 +58,15 @@ public class Book : AuditableEntity<Guid>, IAggregateRoot
         MediaType = mediaType;
         PageCount = pageCount;
         Number = number;
-        Locked = false;
     }
 
     public void Update(
         string title,
         string number,
         string summary,
-        string notes,
         decimal rating,
         bool locked,
         string language,
-        string review,
         DateOnly? releaseDate,
         DateOnly? coverDate,
         ICollection<BookTag> tags)
@@ -81,11 +74,8 @@ public class Book : AuditableEntity<Guid>, IAggregateRoot
         Title = title;
         Number = number;
         Summary = summary;
-        Notes = notes;
         Rating = rating;
-        Locked = locked;
         Language = language;
-        Review = review;
         ReleaseDate = releaseDate;
         CoverDate = coverDate;
         Tags = tags;

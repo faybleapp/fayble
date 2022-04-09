@@ -41,11 +41,9 @@ public class BookService : IBookService
             book.Title,
             book.Number,
             book.Summary,
-            book.Notes,
             book.Rating,
             book.Locked,
             book.Language,
-            book.Review,
             DateOnly.TryParseExact(book.ReleaseDate, "yyyy-MM-dd", out var releaseDate) ? releaseDate: null,
             DateOnly.TryParseExact(book.CoverDate, "yyyy-MM", out var coverDate) ? coverDate : null,
             tags);

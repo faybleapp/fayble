@@ -42,15 +42,12 @@ export interface Book {
     id: string;
     title: string;
     summary: string;
-    notes: string;
     pageCount: number | undefined;
     mediaPath: string;
     filename: string;
     fileFormat: string;
     filePath: string;
-    locked: boolean;
     rating: number;
-    review: string;
     media: Media;
     publisher: Publisher | undefined;
     read: boolean;
