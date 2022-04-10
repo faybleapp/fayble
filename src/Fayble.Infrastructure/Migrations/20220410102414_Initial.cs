@@ -55,7 +55,7 @@ namespace Fayble.Infrastructure.Migrations
                 {
                     Id = table.Column<Guid>(type: "TEXT", nullable: false),
                     FileExtension = table.Column<string>(type: "TEXT", nullable: true),
-                    LibraryType = table.Column<string>(type: "TEXT", nullable: false)
+                    MediaType = table.Column<string>(type: "TEXT", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -372,10 +372,7 @@ namespace Fayble.Infrastructure.Migrations
                     Number = table.Column<string>(type: "TEXT", nullable: true),
                     PageCount = table.Column<int>(type: "INTEGER", nullable: true),
                     MediaPath = table.Column<string>(type: "TEXT", nullable: true),
-                    Filename = table.Column<string>(type: "TEXT", nullable: true),
                     Language = table.Column<string>(type: "TEXT", nullable: true),
-                    FileFormat = table.Column<string>(type: "TEXT", nullable: true),
-                    FilePath = table.Column<string>(type: "TEXT", nullable: true),
                     Rating = table.Column<decimal>(type: "TEXT", nullable: false),
                     ReleaseDate = table.Column<DateOnly>(type: "TEXT", nullable: true),
                     CoverDate = table.Column<DateOnly>(type: "TEXT", nullable: true),
@@ -443,6 +440,29 @@ namespace Fayble.Infrastructure.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "BookFile",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "TEXT", nullable: false),
+                    FileName = table.Column<string>(type: "TEXT", nullable: true),
+                    FilePath = table.Column<string>(type: "TEXT", nullable: true),
+                    FileSize = table.Column<long>(type: "INTEGER", nullable: false),
+                    FileType = table.Column<string>(type: "TEXT", nullable: true),
+                    FileLastModifiedDate = table.Column<DateTimeOffset>(type: "TEXT", nullable: false),
+                    BookId = table.Column<Guid>(type: "TEXT", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_BookFile", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_BookFile_Book_BookId",
+                        column: x => x.BookId,
+                        principalTable: "Book",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "ReadHistory",
                 columns: table => new
                 {
@@ -492,6 +512,12 @@ namespace Fayble.Infrastructure.Migrations
                 name: "IX_BookBookTag_TagsId",
                 table: "BookBookTag",
                 column: "TagsId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_BookFile_BookId",
+                table: "BookFile",
+                column: "BookId",
+                unique: true);
 
             migrationBuilder.CreateIndex(
                 name: "IX_LibraryPath_LibraryId",
@@ -583,6 +609,9 @@ namespace Fayble.Infrastructure.Migrations
 
             migrationBuilder.DropTable(
                 name: "BookBookTag");
+
+            migrationBuilder.DropTable(
+                name: "BookFile");
 
             migrationBuilder.DropTable(
                 name: "Configuration");

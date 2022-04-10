@@ -12,14 +12,12 @@ public class Book : AuditableEntity<Guid>, IAggregateRoot
     public string Number { get; private set; }
     public int? PageCount { get; private set; }
     public string MediaPath { get; private set; }
-    public string Filename { get; private set; }
     public string Language { get; private set; }
-    public string FileFormat { get; private set; }
-    public string FilePath { get; private set; }
     public decimal Rating { get; private set; }
     public DateOnly? ReleaseDate { get; private set; }
     public DateOnly? CoverDate { get; private set; }
     public MediaType MediaType { get; private set; }
+    public BookFile File { get; private set; }
     public Guid? SeriesId { get; set; }
     public virtual Series.Series Series { get; set; }
     public Guid? LibraryId { get; private set; }
@@ -27,7 +25,7 @@ public class Book : AuditableEntity<Guid>, IAggregateRoot
     public Guid? LibraryPathId { get; private set; }
     public virtual LibraryPath LibraryPath { get; private set; }
     public Guid? PublisherId { get; private set; }
-    public virtual Publisher.Publisher Publisher { get; private set; }
+    public Publisher.Publisher Publisher { get; private set; }
     public DateTimeOffset? LastMetadataUpdate { get; private set; }
 
     private readonly List<ReadHistory> _readHistory = new ();
@@ -41,23 +39,20 @@ public class Book : AuditableEntity<Guid>, IAggregateRoot
 
     public Book(
         Guid id,
-        string fileFormat,
-        string filename,
-        string filePath,
         Guid libraryPathId,
         Guid libraryId,
         MediaType mediaType,
         int? pageCount,
-        string number) : base(id)
+        string number,
+        BookFile file) : base(id)
     {
-        FileFormat = fileFormat;
-        Filename = filename;
-        FilePath = filePath;
+       
         LibraryPathId = libraryPathId;
         LibraryId = libraryId;
         MediaType = mediaType;
         PageCount = pageCount;
         Number = number;
+        File = file;
     }
 
     public void Update(
@@ -65,7 +60,6 @@ public class Book : AuditableEntity<Guid>, IAggregateRoot
         string number,
         string summary,
         decimal rating,
-        bool locked,
         string language,
         DateOnly? releaseDate,
         DateOnly? coverDate,

@@ -3,6 +3,7 @@ using System.Xml;
 using System.Xml.Serialization;
 using Fayble.Core.Helpers;
 using Fayble.Domain.Aggregates.Library;
+using Fayble.Domain.Enums;
 using Fayble.Domain.Repositories;
 using Fayble.Models.FileSystem;
 using Fayble.Services.FileSystemService;
@@ -11,14 +12,14 @@ using SharpCompress.Archives;
 
 namespace Fayble.Services.FileSystem;
 
-public class ComicBookComicBookFileSystemService : IComicBookFileSystemService
+public class ComicBookFileSystemService : IComicBookFileSystemService
 {
     private readonly IFileTypeRepository _fileTypeRepository;
     private readonly ILogger _logger;
 
-    public ComicBookComicBookFileSystemService(
+    public ComicBookFileSystemService(
         IFileTypeRepository fileTypeRepository,
-        ILogger<ComicBookComicBookFileSystemService> logger)
+        ILogger<ComicBookFileSystemService> logger)
     {
         _fileTypeRepository = fileTypeRepository;
         _logger = logger;
@@ -27,7 +28,7 @@ public class ComicBookComicBookFileSystemService : IComicBookFileSystemService
     public async Task<IEnumerable<ComicFile>> ScanDirectory(string directory)
     {
         var extensions =
-            (await _fileTypeRepository.Get(x => x.LibraryType == LibraryType.ComicBook))
+            (await _fileTypeRepository.Get(x => x.MediaType == MediaType.ComicBook))
             .Select(x => x.FileExtension).ToList();
 
         _logger.LogDebug("Scanning path: {Directory}", directory);
@@ -54,18 +55,33 @@ public class ComicBookComicBookFileSystemService : IComicBookFileSystemService
 
     public ComicFile Parse(string filePath)
     {
+        var file = new FileInfo(filePath);
+
         var pageCount = GetPageCount(filePath);
         var fileName = Path.GetFileName(filePath);
-
+        var fileSize = file.Length;
+        var lastModified = file.LastAccessTimeUtc;
 
         var series = ParseSeries(fileName).Trim();
         var number = ParseIssueNumber(fileName);
         var volume = ParseVolume(fileName).VolumeNumber;
         var year = CleanNumeric(ParseYear(fileName));
-        var fileFormat = Path.GetExtension(fileName);
+        var fileFormat = Path.GetExtension(fileName).Replace(".", string.Empty).ToLower();
         var comicInfoXml = ParseComicInfoXml(filePath);
+
         var comicFile = new ComicFile(
-            series, number, year, volume, fileFormat, filePath, null, fileName, pageCount, comicInfoXml);
+            series,
+            number,
+            year,
+            volume,
+            fileFormat,
+            filePath,
+            null,
+            fileName,
+            pageCount,
+            fileSize,
+            lastModified,
+            comicInfoXml);
 
         //TODO: Check library settings to see if ComicInfo should be checked.
 

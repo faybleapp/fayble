@@ -3,6 +3,7 @@ using Fayble.Domain.Aggregates.Configuration;
 using Fayble.Domain.Aggregates.FileType;
 using Fayble.Domain.Aggregates.Library;
 using Fayble.Domain.Aggregates.Publisher;
+using Fayble.Domain.Enums;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
@@ -37,10 +38,10 @@ public static class SeedDb
         {
             context.FileTypes.AddRange(new List<FileType>
                 {
-                    new("cbr", LibraryType.ComicBook),
-                    new("cbz", LibraryType.ComicBook),
-                    new("epub", LibraryType.Book),
-                    new("mobi", LibraryType.Book)
+                    new("cbr", MediaType.ComicBook),
+                    new("cbz", MediaType.ComicBook),
+                    new("epub", MediaType.Book),
+                    new("mobi", MediaType.Book)
                 });
         }
 
@@ -57,10 +58,10 @@ public static class SeedDb
         {
             var publishers = new List<Publisher>
                 {
-                    new Publisher("Marvel"),
-                    new Publisher("DC Comics"),
-                    new Publisher("Image Comics"),
-                    new Publisher("IDW Publishing")
+                    new ("Marvel"),
+                    new ("DC Comics"),
+                    new ("Image Comics"),
+                    new ("IDW Publishing")
                 };
 
             publishers.ForEach(p => p.SetMediaPath(ApplicationHelpers.GetMediaDirectory(p.GetType().Name, p.Id)));

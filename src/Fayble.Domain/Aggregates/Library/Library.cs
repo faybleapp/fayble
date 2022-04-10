@@ -1,11 +1,12 @@
 ﻿using Fayble.Domain.Entities;
+using Fayble.Domain.Enums;
 
 namespace Fayble.Domain.Aggregates.Library;
 
 public class Library : AuditableEntity<Guid>, IAggregateRoot
 {
     public string Name { get; private set; }
-    public LibraryType Type { get; private init; }
+    public MediaType Type { get; private init; }
     public virtual IEnumerable<Series.Series> Series { get; private set; }
     public virtual IReadOnlyCollection<Book.Book> Books { get; private set; }
 
@@ -22,7 +23,7 @@ public class Library : AuditableEntity<Guid>, IAggregateRoot
     public Library(
         Guid id,
         string name,
-        LibraryType type,
+        MediaType type,
         IEnumerable<string> paths,
         IEnumerable<LibrarySetting> settings) : base(id)
     {

@@ -1,5 +1,6 @@
 ﻿using Fayble.Domain;
 using Fayble.Domain.Aggregates.Library;
+using Fayble.Domain.Enums;
 using Fayble.Domain.Repositories;
 using Fayble.Services.Series;
 using Microsoft.Extensions.Logging;
@@ -43,7 +44,7 @@ public class LibraryService : ILibraryService
         var entity = new Domain.Aggregates.Library.Library(
             Guid.NewGuid(),
             library.Name,
-            Enum.Parse<LibraryType>(library.LibraryType),
+            Enum.Parse<MediaType>(library.LibraryType),
             library.Paths, library.Settings.ToEntity());
 
         var libraryEntity = _libraryRepository.Add(entity);

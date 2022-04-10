@@ -6,11 +6,13 @@ public class ComicFile
     public string? Number { get; }
     public string? Year { get; }
     public string? Volume { get; }
-    public string? FileFormat { get;  }
+    public string? FileType { get;  }
     public string FilePath { get; }
     public string? CoverImage { get; }
     public string FileName { get; }
     public int PageCount { get; }
+    public long FileSize { get; }
+    public DateTimeOffset FileLastModifiedDate { get; }
     public ComicInfoXml? ComicInfoXml { get; }
 
     public ComicFile(
@@ -18,22 +20,26 @@ public class ComicFile
         string? number,
         string? year,
         string? volume,
-        string? fileFormat,
+        string? fileType,
         string filePath,
         string? coverImage,
         string fileName,
         int pageCount,
+        long fileSize,
+        DateTimeOffset fileLastModifiedDate,
         ComicInfoXml? comicInfoXml)
     {
         Series = series;
         Number = number;
         Year = year;
         Volume = volume;
-        FileFormat = fileFormat;
+        FileType = fileType;
         FilePath = filePath;
         CoverImage = coverImage;
         FileName = fileName;
         PageCount = pageCount;
+        FileSize = fileSize;
+        FileLastModifiedDate = fileLastModifiedDate;
         ComicInfoXml = comicInfoXml;
     }
 }
