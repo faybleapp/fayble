@@ -1,4 +1,4 @@
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
 using System.Net;
 using Fayble.BackgroundServices;
 using Fayble.BackgroundServices.ComicLibrary;
@@ -155,7 +155,9 @@ app.MapControllerRoute(
     name: "default",
     pattern: "{controller}/{action=Index}/{id?}");
 
-app.MapFallbackToFile("index.html"); ;
+app.MapFallbackToFile("index.html");
+
+app.MapGet("/api/heartbeat", () => "♥");
 
 
 //Ensure app directory exists
