@@ -44,7 +44,7 @@ export interface Book {
     summary: string;
     pageCount: number | undefined;
     mediaPath: string;
-    filename: string;
+    fileName: string;
     fileType: string;
     filePath: string;
     fileSize: number;

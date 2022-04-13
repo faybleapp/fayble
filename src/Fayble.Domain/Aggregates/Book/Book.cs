@@ -19,11 +19,11 @@ public class Book : AuditableEntity<Guid>, IAggregateRoot
     public MediaType MediaType { get; private set; }
     public BookFile File { get; private set; }
     public Guid? SeriesId { get; set; }
-    public virtual Series.Series Series { get; set; }
+    public Series.Series Series { get; set; }
     public Guid? LibraryId { get; private set; }
-    public virtual Library.Library Library { get; private set; }
+    public Library.Library Library { get; private set; }
     public Guid? LibraryPathId { get; private set; }
-    public virtual LibraryPath LibraryPath { get; private set; }
+    public LibraryPath LibraryPath { get; private set; }
     public Guid? PublisherId { get; private set; }
     public Publisher.Publisher Publisher { get; private set; }
     public DateTimeOffset? LastMetadataUpdate { get; private set; }

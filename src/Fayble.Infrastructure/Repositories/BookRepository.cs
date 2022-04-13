@@ -16,7 +16,10 @@ public class BookRepository : RepositoryBase<FaybleDbContext, Book, Guid>, IBook
             .Include(b => b.Series)
             .Include(b => b.Library)
             .ThenInclude(l => l.Settings)
-            .Include(b => b.Tags);
+            .Include(b => b.LibraryPath)
+            .Include(b => b.Tags)
+            .Include(b => b.File);
+            
             
 
     }

@@ -45,7 +45,8 @@ public class LibraryService : ILibraryService
             Guid.NewGuid(),
             library.Name,
             Enum.Parse<MediaType>(library.LibraryType),
-            library.Paths, library.Settings.ToEntity());
+            library.Paths,
+            library.Settings.ToEntity());
 
         var libraryEntity = _libraryRepository.Add(entity);
         await _unitOfWork.Commit();

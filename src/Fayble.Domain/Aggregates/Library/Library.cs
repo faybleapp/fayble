@@ -34,7 +34,7 @@ public class Library : AuditableEntity<Guid>, IAggregateRoot
         Type = type;
         _settings = settings.ToList();
 
-        foreach (var path in paths) _paths.Add(new LibraryPath(path, Id));
+        foreach (var path in paths) _paths.Add(new LibraryPath(Guid.NewGuid(), path));
     }
 
     public void Update(string name, IEnumerable<string> paths)
@@ -47,7 +47,7 @@ public class Library : AuditableEntity<Guid>, IAggregateRoot
                 string.Equals(ptr, p.Path, StringComparison.CurrentCultureIgnoreCase)));
 
         _paths.AddRange(newPaths.Except(existingPaths, StringComparer.OrdinalIgnoreCase)
-            .Select(path => new LibraryPath(path, Id)));
+            .Select(path => new LibraryPath(Guid.NewGuid(), path)));
     }
 
     public void UpdateSetting(LibrarySettingKey setting, string value)

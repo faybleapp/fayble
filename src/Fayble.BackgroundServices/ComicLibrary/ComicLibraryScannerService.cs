@@ -111,7 +111,7 @@ public class ComicLibraryScannerService : IComicLibraryScannerService
                 Guid.NewGuid(),
                 newFile.FileName,
                 newFile
-                    .FilePath.ToLower().Replace(libraryPath.Path.ToLower(), "")
+                    .FilePath.Replace(libraryPath.Path.ToLower(), "", StringComparison.InvariantCultureIgnoreCase)
                     .TrimPathSeparators(),
                 newFile.FileSize,
                 newFile.FileType,
