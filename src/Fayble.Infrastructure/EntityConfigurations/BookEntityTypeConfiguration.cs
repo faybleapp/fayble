@@ -28,6 +28,10 @@ public class BookEntityTypeConfiguration : IEntityTypeConfiguration<Book>
         builder.HasMany(e => e.Tags)
             .WithMany(e => e.Books);
 
+        builder.HasOne(e => e.File)
+            .WithOne(e => e.Book)
+            .HasForeignKey<BookFile>(e => e.BookId);
+
         builder.Property(x => x.MediaType)
             .HasConversion(
                 mediaType => mediaType.ToString(),

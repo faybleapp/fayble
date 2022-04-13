@@ -44,9 +44,10 @@ export interface Book {
     summary: string;
     pageCount: number | undefined;
     mediaPath: string;
-    filename: string;
-    fileFormat: string;
+    fileName: string;
+    fileType: string;
     filePath: string;
+    fileSize: number;
     rating: number;
     media: Media;
     publisher: Publisher | undefined;
@@ -114,7 +115,6 @@ export interface UpdateBook {
     title: string | undefined;
     summary: string | undefined;
     notes: string | undefined;
-    locked: boolean;
     rating: number;
     number: string | undefined;
     releaseDate: string | undefined;

@@ -1,11 +1,12 @@
 ﻿using Fayble.Domain.Entities;
+using Fayble.Domain.Enums;
 
 namespace Fayble.Domain.Aggregates.Library;
 
 public class Library : AuditableEntity<Guid>, IAggregateRoot
 {
     public string Name { get; private set; }
-    public LibraryType Type { get; private init; }
+    public MediaType Type { get; private init; }
     public virtual IEnumerable<Series.Series> Series { get; private set; }
     public virtual IReadOnlyCollection<Book.Book> Books { get; private set; }
 
@@ -22,7 +23,7 @@ public class Library : AuditableEntity<Guid>, IAggregateRoot
     public Library(
         Guid id,
         string name,
-        LibraryType type,
+        MediaType type,
         IEnumerable<string> paths,
         IEnumerable<LibrarySetting> settings) : base(id)
     {
@@ -33,7 +34,7 @@ public class Library : AuditableEntity<Guid>, IAggregateRoot
         Type = type;
         _settings = settings.ToList();
 
-        foreach (var path in paths) _paths.Add(new LibraryPath(path, Id));
+        foreach (var path in paths) _paths.Add(new LibraryPath(Guid.NewGuid(), path));
     }
 
     public void Update(string name, IEnumerable<string> paths)
@@ -46,7 +47,7 @@ public class Library : AuditableEntity<Guid>, IAggregateRoot
                 string.Equals(ptr, p.Path, StringComparison.CurrentCultureIgnoreCase)));
 
         _paths.AddRange(newPaths.Except(existingPaths, StringComparer.OrdinalIgnoreCase)
-            .Select(path => new LibraryPath(path, Id)));
+            .Select(path => new LibraryPath(Guid.NewGuid(), path)));
     }
 
     public void UpdateSetting(LibrarySettingKey setting, string value)

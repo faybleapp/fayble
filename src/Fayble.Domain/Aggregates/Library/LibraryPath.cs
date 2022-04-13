@@ -14,9 +14,8 @@ public class LibraryPath : IdentifiableEntity<Guid>
     {
     }
 
-    public LibraryPath(string path, Guid libraryId)
+    public LibraryPath(Guid id, string path) : base(id)
     {
         Path = path;
-        LibraryId = libraryId;
     }
 }

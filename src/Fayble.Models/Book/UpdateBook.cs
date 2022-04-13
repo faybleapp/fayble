@@ -9,7 +9,6 @@ public class
     public string? Title { get; }
     public string? Summary { get; }
     public string? Notes { get; }
-    public bool Locked { get; }
     public decimal Rating { get; }
     public string? Number { get; }
     public string? ReleaseDate { get; }
@@ -20,7 +19,6 @@ public class
 
     public UpdateBook(
         Guid id,
-        bool locked,
         string? notes,
         string? number,
         decimal rating,
@@ -33,7 +31,6 @@ public class
         string[] tags)
     {
         Id = id;
-        Locked = locked;
         Notes = notes;
         Number = number;
         Rating = rating;

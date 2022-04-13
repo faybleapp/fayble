@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using Fayble.Domain.Aggregates.Library;
+using Fayble.Domain.Enums;
 
 namespace Fayble.Domain.Tests.DataBuilders;
 
@@ -12,7 +13,7 @@ public class LibraryBuilder : TestDataBuilder<Library>
         var builder = new LibraryBuilder()
             .WithId(Guid.NewGuid())
             .WithName("Test Library")
-            .WithType(LibraryType.ComicBook)
+            .WithType(MediaType.ComicBook)
             .WithPaths(
                 new[]
                 {
@@ -39,7 +40,7 @@ public class LibraryBuilder : TestDataBuilder<Library>
         return this;
     }
 
-    public LibraryBuilder WithType(LibraryType type)
+    public LibraryBuilder WithType(MediaType type)
     {
         Set(i => i.Type, type);
         return this;

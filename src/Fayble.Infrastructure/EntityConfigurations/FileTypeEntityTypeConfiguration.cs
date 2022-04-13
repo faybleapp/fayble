@@ -1,5 +1,6 @@
 ﻿using Fayble.Domain.Aggregates.FileType;
 using Fayble.Domain.Aggregates.Library;
+using Fayble.Domain.Enums;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
@@ -10,10 +11,10 @@ public class FileTypeConfiguration : IEntityTypeConfiguration<FileType>
     public void Configure(EntityTypeBuilder<FileType> builder)
     {
         builder.ToTable("FileType");
-        builder.Property(x => x.LibraryType)
+        builder.Property(x => x.MediaType)
             .HasConversion(
                 applicationType => applicationType.ToString(),
-                applicationType => (LibraryType)Enum.Parse(typeof(LibraryType), applicationType));
+                applicationType => (MediaType)Enum.Parse(typeof(MediaType), applicationType));
     }
 }
  

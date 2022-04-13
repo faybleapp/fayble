@@ -1,4 +1,5 @@
 ﻿using Fayble.Domain.Aggregates.Library;
+using Fayble.Domain.Enums;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
@@ -31,6 +32,6 @@ public class LibraryEntityTypeConfiguration : IEntityTypeConfiguration<Library>
         builder.Property(x => x.Type)
             .HasConversion(
                 applicationType => applicationType.ToString(),
-                applicationType => (LibraryType) Enum.Parse(typeof(LibraryType), applicationType));
+                applicationType => (MediaType) Enum.Parse(typeof(MediaType), applicationType));
     }
 }

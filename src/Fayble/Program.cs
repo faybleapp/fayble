@@ -80,7 +80,7 @@ builder.Services.AddScoped<ILibraryService, LibraryService>();
 builder.Services.AddScoped<ISeriesService, SeriesService>();
 builder.Services.AddScoped<IComicLibraryService, ComicLibraryService>();
 builder.Services.AddScoped<IComicLibraryScannerService, ComicLibraryScannerService>();
-builder.Services.AddScoped<IComicBookFileSystemService, ComicBookComicBookFileSystemService>();
+builder.Services.AddScoped<IComicBookFileSystemService, ComicBookFileSystemService>();
 builder.Services.AddScoped<IAuthenticationService, AuthenticationService>();
 builder.Services.AddScoped<IPublisherService, PublisherService>();
 builder.Services.AddScoped<IBookService, BookService>();

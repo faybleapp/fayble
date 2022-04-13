@@ -8,9 +8,10 @@ public class Book
     public string Summary { get; private set; }
     public int? PageCount { get; private set; }
     public string MediaPath { get; private set; }
-    public string Filename { get; private set; }
-    public string FileFormat { get; private set; }
+    public string FileName { get; private set; }
+    public string FileType { get; private set; }
     public string FilePath { get; private set; }
+    public double FileSize { get; private set; }
     public decimal Rating { get; private set; }
     public Media Media { get; private set; }
     public Publisher.Publisher? Publisher { get; private set; }
@@ -34,8 +35,10 @@ public class Book
         string summary,
         int? pageCount,
         string mediaPath,
-        string filename,
-        string fileFormat,
+        string fileName,
+        string fileType,
+        double fileSize,
+        string filePath,
         decimal rating,
         Publisher.Publisher? publisher,
         bool read,
@@ -54,8 +57,10 @@ public class Book
         Summary = summary;
         PageCount = pageCount;
         MediaPath = mediaPath;
-        Filename = filename;
-        FileFormat = fileFormat;
+        FileName = fileName;
+        FileType = fileType;
+        FileSize = fileSize;
+        FilePath = filePath;
         Rating = rating;
         Publisher = publisher;
         Read = read;

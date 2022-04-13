@@ -11,7 +11,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Fayble.Infrastructure.Migrations
 {
     [DbContext(typeof(FaybleDbContext))]
-    [Migration("20220409093652_Initial")]
+    [Migration("20220410102414_Initial")]
     partial class Initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -77,15 +77,6 @@ namespace Fayble.Infrastructure.Migrations
                     b.Property<Guid>("CreatedBy")
                         .HasColumnType("TEXT");
 
-                    b.Property<string>("FileFormat")
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("FilePath")
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("Filename")
-                        .HasColumnType("TEXT");
-
                     b.Property<string>("Language")
                         .HasColumnType("TEXT");
 
@@ -148,6 +139,38 @@ namespace Fayble.Infrastructure.Migrations
                     b.ToTable("Book", (string)null);
                 });
 
+            modelBuilder.Entity("Fayble.Domain.Aggregates.Book.BookFile", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("TEXT");
+
+                    b.Property<Guid>("BookId")
+                        .HasColumnType("TEXT");
+
+                    b.Property<DateTimeOffset>("FileLastModifiedDate")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("FileName")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("FilePath")
+                        .HasColumnType("TEXT");
+
+                    b.Property<long>("FileSize")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("FileType")
+                        .HasColumnType("TEXT");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("BookId")
+                        .IsUnique();
+
+                    b.ToTable("BookFile", (string)null);
+                });
+
             modelBuilder.Entity("Fayble.Domain.Aggregates.Book.ReadHistory", b =>
                 {
                     b.Property<Guid>("Id")
@@ -194,7 +217,7 @@ namespace Fayble.Infrastructure.Migrations
                     b.Property<string>("FileExtension")
                         .HasColumnType("TEXT");
 
-                    b.Property<string>("LibraryType")
+                    b.Property<string>("MediaType")
                         .IsRequired()
                         .HasColumnType("TEXT");
 
@@ -662,6 +685,17 @@ namespace Fayble.Infrastructure.Migrations
                     b.Navigation("Series");
                 });
 
+            modelBuilder.Entity("Fayble.Domain.Aggregates.Book.BookFile", b =>
+                {
+                    b.HasOne("Fayble.Domain.Aggregates.Book.Book", "Book")
+                        .WithOne("File")
+                        .HasForeignKey("Fayble.Domain.Aggregates.Book.BookFile", "BookId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Book");
+                });
+
             modelBuilder.Entity("Fayble.Domain.Aggregates.Book.ReadHistory", b =>
                 {
                     b.HasOne("Fayble.Domain.Aggregates.Book.Book", null)
@@ -793,6 +827,8 @@ namespace Fayble.Infrastructure.Migrations
 
             modelBuilder.Entity("Fayble.Domain.Aggregates.Book.Book", b =>
                 {
+                    b.Navigation("File");
+
                     b.Navigation("ReadHistory");
                 });
 

@@ -4,6 +4,7 @@ using Fayble.Core.Helpers;
 using Fayble.Core.Hubs;
 using Fayble.Domain;
 using Fayble.Domain.Aggregates.BackgroundTask;
+using Fayble.Domain.Aggregates.Book;
 using Fayble.Domain.Aggregates.Configuration;
 using Fayble.Domain.Aggregates.Library;
 using Fayble.Domain.Enums;
@@ -106,18 +107,24 @@ public class ComicLibraryScannerService : IComicLibraryScannerService
         {
             _logger.LogDebug("Processing issue: {FilePath}", newFile.FilePath);
 
-            var comicIssue = new Domain.Aggregates.Book.Book(
+            var bookFile = new BookFile(
                 Guid.NewGuid(),
-                newFile.FileFormat,
-                Path.GetFileName(newFile.FilePath),
+                newFile.FileName,
                 newFile
-                    .FilePath?.ToLower().Replace(libraryPath.Path.ToLower(), "")
+                    .FilePath.Replace(libraryPath.Path.ToLower(), "", StringComparison.InvariantCultureIgnoreCase)
                     .TrimPathSeparators(),
+                newFile.FileSize,
+                newFile.FileType,
+                newFile.FileLastModifiedDate);
+
+            var comicIssue = new Book(
+                Guid.NewGuid(),
                 libraryPath.Id,
                 libraryPath.LibraryId,
                 MediaType.ComicBook,
                 newFile.PageCount,
-                newFile.Number);
+                newFile.Number,
+                bookFile);
 
             comicIssue.UpdateMediaPath(
                 ApplicationHelpers.GetMediaDirectory(comicIssue.GetType().Name, comicIssue.Id));
@@ -128,7 +135,6 @@ public class ComicLibraryScannerService : IComicLibraryScannerService
                     newFile.ComicInfoXml?.Number ?? newFile.Number,
                     newFile.ComicInfoXml?.Summary,
                     0,
-                    false,
                     null,
                     null,
                     DateOnly.TryParseExact(
@@ -164,8 +170,8 @@ public class ComicLibraryScannerService : IComicLibraryScannerService
                 new
                 {
                     comicIssue.Id,
-                    comicIssue.FileFormat,
-                    comicIssue.FilePath,
+                    comicIssue.File.FileType,
+                    comicIssue.File.FilePath,
                     comicIssue.LibraryPathId,
                     comicIssue.LibraryId
                 });
@@ -181,7 +187,7 @@ public class ComicLibraryScannerService : IComicLibraryScannerService
         foreach (var file in files)
         {
             var exists = (await _bookRepository.Get(
-                b => b.FilePath.ToLower() ==
+                b => b.File.FilePath.ToLower() ==
                      file.FilePath.ToLower().Replace(path.ToLower(), "").TrimStart('\\'))).Any();
 
             if (!exists)
