@@ -9,9 +9,10 @@ import { BookCoverOverlay } from "./BookCoverOverlay";
 
 interface BookCoverGridProps {
 	books: Book[];
+	title?: string
 }
 
-export const BookCoverGrid = ({ books }: BookCoverGridProps) => {
+export const BookCoverGrid = ({ books, title }: BookCoverGridProps) => {
 	const { libraryId, seriesId } = useParams<{
 		libraryId: string;
 		seriesId: string;
@@ -19,11 +20,13 @@ export const BookCoverGrid = ({ books }: BookCoverGridProps) => {
 
 	const markRead = (id: string) => {};
 
-	const edit = (id: string) => {	
-	};
+	const edit = (id: string) => {};
 
 	return (
 		<>
+			<div className={styles.gridTitle}>
+				<h6>{title}</h6>
+			</div>
 			{books &&
 				books.map((book) => {
 					return (
@@ -54,9 +57,13 @@ export const BookCoverGrid = ({ books }: BookCoverGridProps) => {
 									key={book.id}
 									to={`/library/${libraryId}/series/${seriesId}/book/${book.id}`}>
 									<div className={styles.title}>
-										{book.mediaType === MediaType[MediaType.Book]
+										{book.mediaType ===
+										MediaType[MediaType.Book]
 											? book.title
-											: `Issue #${book.number.padStart(3, '0')}`}
+											: `Issue #${book.number.padStart(
+													3,
+													"0"
+											  )}`}
 									</div>
 									<div className={styles.subtitle}>
 										{book.pageCount} pages

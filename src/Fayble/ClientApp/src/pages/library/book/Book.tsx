@@ -3,8 +3,10 @@ import { Container } from "components/container";
 import { BreadcrumbItem, LibraryView } from "models/ui-models";
 import React, { useState } from "react";
 import { useParams } from "react-router-dom";
+import { useSeriesBooks } from "services";
 import { useBook } from "services/book";
 import { LibraryHeader } from "../LibraryHeader";
+import { BookCoverGrid } from "../series/BookCoverGrid";
 import { BookDetail } from "./BookDetail";
 
 export const Book = () => {
@@ -15,6 +17,9 @@ export const Book = () => {
 	}>();
 
 	const { data: book, isLoading: isLoadingBook } = useBook(bookId!);
+	const { data: books, isLoading: isLoadingBooks } = useSeriesBooks(
+		seriesId!
+	);
 
 	const [showBookModal, setShowBookModal] = useState<boolean>(false);
 
@@ -45,6 +50,12 @@ export const Book = () => {
 						openEditModal={() => setShowBookModal(true)}
 					/>
 					<BookDetail book={book} />
+					<BookCoverGrid
+						books={
+							books?.filter((book) => book.id !== bookId) || []
+						}
+						title="Other issues in series"
+					/>
 					<BookModal
 						show={showBookModal}
 						book={book}

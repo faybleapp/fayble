@@ -43,8 +43,8 @@ export const Series = () => {
 						openEditModal={() => setShowSeriesModal(true)}
 					/>
 					<div className={styles.seriesBody}>
-						<SeriesDetail series={series} />
-						<BookCoverGrid books={books || []} />
+						<SeriesDetail series={series} />						
+						<BookCoverGrid books={books || []} title="Issues" />
 						<SeriesModal
 							show={showSeriesModal}
 							series={series}
