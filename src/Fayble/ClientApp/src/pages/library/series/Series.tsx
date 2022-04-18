@@ -1,10 +1,10 @@
 import { Container } from "components/container";
+import { LibraryHeader } from "components/libraryHeader";
 import { SeriesModal } from "components/seriesModal";
 import { BreadcrumbItem, LibraryView } from "models/ui-models";
 import React, { useState } from "react";
 import { useParams } from "react-router-dom";
 import { useSeries, useSeriesBooks } from "services/series";
-import { LibraryHeader } from "../LibraryHeader";
 import { BookCoverGrid } from "./BookCoverGrid";
 import styles from "./Series.module.scss";
 import { SeriesDetail } from "./SeriesDetail";
