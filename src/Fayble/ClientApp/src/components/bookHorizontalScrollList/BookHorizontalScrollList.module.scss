@@ -1,0 +1,46 @@
+@import "../../scss/variables";
+
+.listHeader {
+	display: flex;
+	margin-bottom: 15px;
+	align-items: center;
+	height: 36px;
+	
+	.listTitle {
+		color: $primary-font-color;
+		
+		h6  {
+			margin-bottom: 0px;
+		}
+		
+	}
+	.scrollButtons {
+		margin-left: auto;
+		color: $primary-font-color;
+
+		.icon {
+			background-color: transparent;
+			border: none;
+			margin-left: 20px;
+			&:hover {
+				color: $accent-color;
+				cursor: pointer;
+			}
+			&:focus {
+				outline: none;
+				box-shadow: none;
+			  }
+		}
+	}
+}
+
+.list {
+	display: flex;
+	overflow-x: scroll;
+	-ms-overflow-style: none; /* IE and Edge */
+	scrollbar-width: none; /* Firefox */
+
+	&::-webkit-scrollbar {
+		display: none;
+	}
+}

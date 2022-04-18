@@ -49,7 +49,7 @@ public class Book
         string? releaseDate,
         string? coverDate,
         string language,
-        IEnumerable<string> tags
+        IEnumerable<string>? tags
     )
     {
         Id = id;

@@ -1,12 +1,12 @@
+import { BookHorizontalScrollList } from "components/bookHorizontalScrollList";
 import { BookModal } from "components/bookModal";
 import { Container } from "components/container";
+import { getBookType } from "helpers/bookHelpers";
 import { BreadcrumbItem, LibraryView } from "models/ui-models";
 import React, { useState } from "react";
 import { useParams } from "react-router-dom";
-import { useSeriesBooks } from "services";
-import { useBook } from "services/book";
+import { useBook, useRelatedBooks } from "services/book";
 import { LibraryHeader } from "../LibraryHeader";
-import { BookCoverGrid } from "../series/BookCoverGrid";
 import { BookDetail } from "./BookDetail";
 
 export const Book = () => {
@@ -17,9 +17,8 @@ export const Book = () => {
 	}>();
 
 	const { data: book, isLoading: isLoadingBook } = useBook(bookId!);
-	const { data: books, isLoading: isLoadingBooks } = useSeriesBooks(
-		seriesId!
-	);
+	const { data: relatedBooks, isLoading: isLoadingRelatedBooks } =
+		useRelatedBooks(bookId!);
 
 	const [showBookModal, setShowBookModal] = useState<boolean>(false);
 
@@ -50,12 +49,44 @@ export const Book = () => {
 						openEditModal={() => setShowBookModal(true)}
 					/>
 					<BookDetail book={book} />
-					<BookCoverGrid
-						books={
-							books?.filter((book) => book.id !== bookId) || []
-						}
-						title="Other issues in series"
-					/>
+					{relatedBooks?.booksInSeries && (
+						<BookHorizontalScrollList
+							title={`Other ${getBookType(
+								book.mediaType
+							)}s in Series`}
+							books={relatedBooks.booksInSeries}
+						/>
+					)}
+					{relatedBooks?.booksByPublisher && (
+						<BookHorizontalScrollList
+							title={`Other ${getBookType(
+								book.mediaType
+							)}s by Publisher`}
+							books={relatedBooks.booksByPublisher}
+						/>
+					)}
+					{relatedBooks?.booksByAuthor && (
+						<BookHorizontalScrollList
+							title={`Other ${getBookType(
+								book.mediaType
+							)}s by author`}
+							books={relatedBooks.booksByAuthor}
+						/>
+					)}
+					{relatedBooks?.booksReleasedSameMonth && (
+						<BookHorizontalScrollList
+							title="Released Same Month"
+							books={relatedBooks.booksReleasedSameMonth}
+						/>
+					)}
+					{relatedBooks?.booksReleasedSameYear && (
+						<BookHorizontalScrollList
+							title="Released Same Year"
+							books={relatedBooks.booksReleasedSameYear}
+						/>
+					)}
+					
+
 					<BookModal
 						show={showBookModal}
 						book={book}

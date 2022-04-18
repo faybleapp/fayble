@@ -124,6 +124,15 @@ export interface UpdateBook {
     tags: string[];
 }
 
+export interface RelatedBooks {
+    booksInSeries: Book[] | undefined;
+    booksByPublisher: Book[] | undefined;
+    booksByAuthor: Book[] | undefined;
+    booksByWriter: Book[] | undefined;
+    booksReleasedSameMonth: Book[] | undefined;
+    booksReleasedSameYear: Book[] | undefined;
+}
+
 export interface UpdateSeries {
     id: string;
     name: string | undefined;

@@ -22,8 +22,15 @@ public class BooksController : ControllerBase
     }
 
     [HttpPatch("{id}")]
-    public async Task<ActionResult<Book>> Update(Guid id, [FromBody] UpdateBook series)
+    public async Task<Book> Update(Guid id, [FromBody] UpdateBook series)
     {
         return await _bookService.Update(id, series);
+    }
+
+    //ignore this action
+    [HttpGet("{id}/related")]
+    public async Task<RelatedBooks> GetRelated(Guid id)
+    {
+        return await _bookService.GetRelated(id);
     }
 }

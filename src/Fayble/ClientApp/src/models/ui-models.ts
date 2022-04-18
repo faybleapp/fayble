@@ -10,8 +10,8 @@ export enum LibraryView {
 }
 
 export enum MediaType {
-	ComicBook,
-	Book,
+	ComicBook = "ComicBook",
+	Book = "Book",
 }
 
 export enum BackgroundTaskType {
@@ -29,4 +29,12 @@ export enum BackgroundTaskStatus {
 export interface SelectFieldOption {
 	value: string ;
 	label: string;
+}
+
+export interface HorizontalListItem {
+	id: string;
+	title: string;
+	subtitle?: string;
+	image: string;
+	link: string;
 }

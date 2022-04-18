@@ -21,7 +21,7 @@ export const Main = () => {
 					sidebarOpen ? styles.sidebaropen : styles.sidebarclosed
 				)}>
 				<Navbar />
-				<div className={styles.pageContent}>
+				<div className={styles.pageContent} id="main-page-content">
 					<Routes>
 						<Route path="/" element={<Home />} />
 						<Route
