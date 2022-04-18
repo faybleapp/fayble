@@ -1,12 +1,12 @@
 import { BookHorizontalScrollList } from "components/bookHorizontalScrollList";
 import { BookModal } from "components/bookModal";
 import { Container } from "components/container";
+import { LibraryHeader } from "components/libraryHeader";
 import { getBookType } from "helpers/bookHelpers";
 import { BreadcrumbItem, LibraryView } from "models/ui-models";
 import React, { useState } from "react";
 import { useParams } from "react-router-dom";
 import { useBook, useRelatedBooks } from "services/book";
-import { LibraryHeader } from "../LibraryHeader";
 import { BookDetail } from "./BookDetail";
 
 export const Book = () => {

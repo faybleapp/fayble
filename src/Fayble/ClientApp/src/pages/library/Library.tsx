@@ -1,5 +1,6 @@
 import Notfound from "assets/notfound2.svg";
 import { Container } from "components/container";
+import { LibraryHeader } from "components/libraryHeader";
 import { LibraryModal } from "components/libraryModal";
 import { BreadcrumbItem, LibraryView } from "models/ui-models";
 import React, { useState } from "react";
@@ -7,7 +8,6 @@ import { Image } from "react-bootstrap";
 import { useParams } from "react-router-dom";
 import { useLibrary, useLibrarySeries } from "services/library";
 import styles from "./Library.module.scss";
-import { LibraryHeader } from "./LibraryHeader";
 import { SeriesCoverGrid } from "./SeriesCoverGrid";
 
 export const Library = () => {
