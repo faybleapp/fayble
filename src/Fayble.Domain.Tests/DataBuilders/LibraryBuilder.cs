@@ -17,7 +17,7 @@ public class LibraryBuilder : TestDataBuilder<Library>
             .WithPaths(
                 new[]
                 {
-                    new LibraryPath(string.Empty, Guid.NewGuid())
+                    new LibraryPath( Guid.NewGuid(), string.Empty)
                 })
             .WithSettings(new []
             {

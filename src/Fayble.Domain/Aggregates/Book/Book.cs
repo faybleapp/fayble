@@ -30,9 +30,11 @@ public class Book : AuditableEntity<Guid>, IAggregateRoot
 
     private readonly List<ReadHistory> _readHistory = new ();
     public virtual IReadOnlyCollection<ReadHistory> ReadHistory => _readHistory;
+    private readonly List<Person.Person> _people= new();
+    public virtual IReadOnlyCollection<Person.Person> People => _people;
 
     public ICollection<BookTag> Tags { get; set; }
-
+    
     public Book()
     {
     }

@@ -25,6 +25,9 @@ public class BookEntityTypeConfiguration : IEntityTypeConfiguration<Book>
             .WithOne()
             .HasForeignKey(x => x.BookId);
 
+        builder.HasMany(e => e.People)
+            .WithMany(p => p.Books);
+
         builder.HasMany(e => e.Tags)
             .WithMany(e => e.Books);
 
