@@ -1,7 +1,7 @@
 import { Container } from "components/container";
 import { LibraryHeader } from "components/libraryHeader";
 import { SeriesModal } from "components/seriesModal";
-import { BreadcrumbItem, LibraryView } from "models/ui-models";
+import { BreadcrumbItem, ViewType } from "models/ui-models";
 import React, { useState } from "react";
 import { useParams } from "react-router-dom";
 import { useSeries, useSeriesBooks } from "services/series";
@@ -10,8 +10,10 @@ import styles from "./Series.module.scss";
 import { SeriesDetail } from "./SeriesDetail";
 
 export const Series = () => {
-	const { libraryId, seriesId } =
-		useParams<{ libraryId: string; seriesId: string }>();
+	const { libraryId, seriesId } = useParams<{
+		libraryId: string;
+		seriesId: string;
+	}>();
 
 	const { data: series, isLoading: isLoadingSeries } = useSeries(seriesId!);
 	const { data: books, isLoading: isLoadingBooks } = useSeriesBooks(
@@ -19,6 +21,7 @@ export const Series = () => {
 	);
 
 	const [showSeriesModal, setShowSeriesModal] = useState<boolean>(false);
+	const [view, setView] = useState<ViewType>(ViewType.CoverGrid);
 
 	const breadCrumbItems: BreadcrumbItem[] = [
 		{
@@ -38,12 +41,13 @@ export const Series = () => {
 				<>
 					<LibraryHeader
 						libraryId={libraryId!}
-						libraryView={LibraryView.CoverGrid}
+						libraryView={ViewType.CoverGrid}
 						navItems={breadCrumbItems}
+						changeView={setView}
 						openEditModal={() => setShowSeriesModal(true)}
 					/>
 					<div className={styles.seriesBody}>
-						<SeriesDetail series={series} />						
+						<SeriesDetail series={series} />
 						<BookCoverGrid books={books || []} title="Issues" />
 						<SeriesModal
 							show={showSeriesModal}
