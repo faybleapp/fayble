@@ -1,0 +1,32 @@
+@import "../../../scss/variables";
+
+.table {
+	width: 100%;
+}
+.cell {
+	background-color: transparent !important;
+	color: white;
+	border: none !important;
+}
+
+
+.row {
+    cursor: pointer;
+    &:nth-of-type(even){
+        background-color: #253b47;
+    }
+    &:hover {
+        background-color:  #253b47;
+    }
+}
+.header {
+    background-color: $primary-color;
+    font-weight: bold;
+    color: white;
+    height: 30px;
+    padding-left: 8px;
+}
+
+.sortIcon {
+    padding-left: 8px;
+}

@@ -15,9 +15,9 @@ internal static class Mappings
             new LibrarySettings(bool.Parse(entity.GetSetting(LibrarySettingKey.ReviewOnImport))));
     }
 
-    public static List<LibrarySetting> ToEntity(this LibrarySettings settings)
+    public static List<UserSetting> ToEntity(this LibrarySettings settings)
     {
-        var librarySettings = new List<LibrarySetting>
+        var librarySettings = new List<UserSetting>
             {new(LibrarySettingKey.ReviewOnImport, settings.ReviewOnImport.ToString())};
 
         return librarySettings;

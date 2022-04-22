@@ -3,7 +3,7 @@ import { BookModal } from "components/bookModal";
 import { Container } from "components/container";
 import { LibraryHeader } from "components/libraryHeader";
 import { getBookType } from "helpers/bookHelpers";
-import { BreadcrumbItem, LibraryView } from "models/ui-models";
+import { BreadcrumbItem, ViewType } from "models/ui-models";
 import React, { useState } from "react";
 import { useParams } from "react-router-dom";
 import { useBook, useRelatedBooks } from "services/book";
@@ -21,6 +21,7 @@ export const Book = () => {
 		useRelatedBooks(bookId!);
 
 	const [showBookModal, setShowBookModal] = useState<boolean>(false);
+	const [view, setView] = useState<ViewType>(ViewType.CoverGrid);
 
 	const breadCrumbItems: BreadcrumbItem[] = [
 		{
@@ -44,8 +45,9 @@ export const Book = () => {
 				<>
 					<LibraryHeader
 						libraryId={libraryId!}
-						libraryView={LibraryView.CoverGrid}
+						libraryView={ViewType.CoverGrid}
 						navItems={breadCrumbItems}
+						changeView={setView}
 						openEditModal={() => setShowBookModal(true)}
 					/>
 					<BookDetail book={book} />

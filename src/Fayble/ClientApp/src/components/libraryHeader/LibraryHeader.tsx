@@ -7,7 +7,7 @@ import {
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import cn from "classnames";
 import { Breadcrumb } from "components/breadcrumb";
-import { BackgroundTaskType, BreadcrumbItem, LibraryView } from "models/ui-models";
+import { BackgroundTaskType, BreadcrumbItem, ViewType } from "models/ui-models";
 import React from "react";
 import { NavDropdown, OverlayTrigger, Tooltip } from "react-bootstrap";
 import { useRunBackgroundTask } from "services";
@@ -16,13 +16,15 @@ import styles from "./LibraryHeader.module.scss";
 interface LibraryHeaderProps {
 	navItems: BreadcrumbItem[];
 	libraryId: string;
-	libraryView: LibraryView;
+	libraryView: ViewType;
+	changeView: (view: ViewType) => void;
 	openEditModal: () => void;
 }
 
 export const LibraryHeader = ({
 	navItems,
 	openEditModal,
+	changeView,
 	libraryView,
 	libraryId,
 }: LibraryHeaderProps) => {
@@ -80,14 +82,20 @@ export const LibraryHeader = ({
 								<FontAwesomeIcon
 									className={styles.libraryHeaderIcon}
 									icon={
-										libraryView === LibraryView.CoverGrid
+										libraryView === ViewType.CoverGrid
 											? faTh
 											: faList
 									}
 								/>
 							}>
-							<NavDropdown.Item>Cover View</NavDropdown.Item>
-							<NavDropdown.Item>List View</NavDropdown.Item>
+							<NavDropdown.Item
+								onClick={() => changeView(ViewType.CoverGrid)}>
+								Cover View
+							</NavDropdown.Item>
+							<NavDropdown.Item
+								onClick={() => changeView(ViewType.List)}>
+								List View
+							</NavDropdown.Item>
 						</NavDropdown>
 					</OverlayTrigger>
 				</div>

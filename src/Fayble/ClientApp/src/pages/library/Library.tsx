@@ -2,12 +2,13 @@ import Notfound from "assets/notfound2.svg";
 import { Container } from "components/container";
 import { LibraryHeader } from "components/libraryHeader";
 import { LibraryModal } from "components/libraryModal";
-import { BreadcrumbItem, LibraryView } from "models/ui-models";
+import { BreadcrumbItem, ViewType } from "models/ui-models";
 import React, { useState } from "react";
 import { Image } from "react-bootstrap";
 import { useParams } from "react-router-dom";
 import { useLibrary, useLibrarySeries } from "services/library";
 import styles from "./Library.module.scss";
+import { SeriesList } from "./series/SeriesList";
 import { SeriesCoverGrid } from "./SeriesCoverGrid";
 
 export const Library = () => {
@@ -15,6 +16,7 @@ export const Library = () => {
 	const { data: library } = useLibrary(libraryId!);
 	const { data: series } = useLibrarySeries(libraryId!);
 	const [showLibraryModal, setShowLibraryModal] = useState<boolean>(false);
+	const [view, setView] = useState<ViewType>(ViewType.CoverGrid);
 
 	const breadCrumbItems: BreadcrumbItem[] = [
 		{
@@ -30,8 +32,9 @@ export const Library = () => {
 				<>
 					<LibraryHeader
 						libraryId={libraryId!}
-						libraryView={LibraryView.CoverGrid}
+						libraryView={view}
 						navItems={breadCrumbItems}
+						changeView={setView}
 						openEditModal={() => setShowLibraryModal(true)}
 					/>
 					{series && series.length === 0 ? (
@@ -50,8 +53,10 @@ export const Library = () => {
 							</div>
 							<div className={styles.emptyLibraryText}></div>
 						</>
-					) : (
+					) : view === ViewType.CoverGrid ? (
 						<SeriesCoverGrid items={series || []} />
+					) : (
+						<SeriesList items={series || []} />
 					)}
 					<LibraryModal
 						show={showLibraryModal}

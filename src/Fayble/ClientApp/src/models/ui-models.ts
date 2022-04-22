@@ -4,7 +4,7 @@ export interface BreadcrumbItem {
 	active?: boolean;
 }
 
-export enum LibraryView {
+export enum ViewType {
 	CoverGrid,
 	List,
 }
