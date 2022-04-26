@@ -1,10 +1,6 @@
-import { faStar as faStarO } from "@fortawesome/free-regular-svg-icons";
-import { faStar } from "@fortawesome/free-solid-svg-icons";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Book } from "models/api-models";
 import React, { useEffect, useState } from "react";
 import { Image } from "react-bootstrap";
-import Rating from "react-rating";
 import ShowMoreText from "react-show-more-text";
 import { useUpdateBook } from "services/book";
 import styles from "./BookDetail.module.scss";
@@ -46,7 +42,7 @@ export const BookDetail = (props: BookDetailProps) => {
 					</h4>
 
 					<div className={styles.rating}>
-						<Rating
+						{/* <Rating
 							className={styles.rating}
 							fractions={2}
 							onChange={ratingChanged}
@@ -63,7 +59,7 @@ export const BookDetail = (props: BookDetailProps) => {
 									color={"#fafafa"}
 								/>
 							}
-						/>
+						/> */}
 					</div>
 				</div>
 
@@ -99,7 +95,7 @@ export const BookDetail = (props: BookDetailProps) => {
 							<div className={styles.detailsHeading}>
 								Publisher
 							</div>
-							<div>{book?.publisher}</div>
+							<div>{book?.publisher?.name}</div>
 						</div>
 					)}
 				</div>

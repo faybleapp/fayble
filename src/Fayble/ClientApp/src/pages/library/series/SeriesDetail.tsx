@@ -1,10 +1,6 @@
-import { faStar as faStarO } from "@fortawesome/free-regular-svg-icons";
-import { faStar } from "@fortawesome/free-solid-svg-icons";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Series } from "models/api-models";
 import React, { useEffect, useState } from "react";
 import { Image } from "react-bootstrap";
-import Rating from "react-rating";
 import ShowMoreText from "react-show-more-text";
 import { useUpdateSeries } from "services";
 import styles from "./SeriesDetail.module.scss";
@@ -42,7 +38,7 @@ export const SeriesDetail = (props: SeriesDetailProps) => {
 					<h4>{series?.name}</h4>
 
 					<div className={styles.rating}>
-						<Rating
+						{/* <Rating
 							className={styles.rating}
 							fractions={2}
 							onChange={ratingChanged}
@@ -59,7 +55,7 @@ export const SeriesDetail = (props: SeriesDetailProps) => {
 									color={"#fafafa"}
 								/>
 							}
-						/>
+						/> */}
 					</div>
 				</div>
 				<hr />

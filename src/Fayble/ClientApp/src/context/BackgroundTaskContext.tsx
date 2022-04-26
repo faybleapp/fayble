@@ -1,9 +1,7 @@
 import { HubConnection, HubConnectionBuilder } from "@microsoft/signalr";
 import { BackgroundTask } from "models/api-models";
 import React, {
-	createContext,
-	FC,
-	useContext,
+	createContext, useContext,
 	useEffect,
 	useState
 } from "react";
@@ -18,7 +16,11 @@ export const BackgroundTaskContext = createContext<BackgroundTaskState>({
 
 export const useBackgroundTaskState = () => useContext(BackgroundTaskContext);
 
-export const BackgroundTaskContextProvider: FC = (props) => {
+interface BackgroundTaskContextProviderProps {
+	children?: React.ReactNode;
+}
+
+export const BackgroundTaskContextProvider = (props: BackgroundTaskContextProviderProps) => {
 	const [connection, setConnection] = useState<null | HubConnection>(null);
 	const [backgroundTasks, setBackgroundTasks] = useState<
 		Array<BackgroundTask>
