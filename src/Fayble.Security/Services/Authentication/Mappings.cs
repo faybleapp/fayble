@@ -1,6 +1,6 @@
-﻿using Fayble.Models.User;
+﻿using Fayble.Security.Models;
 
-namespace Fayble.Services.Authentication;
+namespace Fayble.Security.Services.Authentication;
 
 public static class Mappings
 {
@@ -8,7 +8,6 @@ public static class Mappings
     {
         return new User(
             entity.Id,
-            entity.Name,
             entity.UserName
         );
     }

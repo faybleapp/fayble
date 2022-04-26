@@ -1,5 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.Net;
+using System.Security.Principal;
 using Fayble.BackgroundServices;
 using Fayble.BackgroundServices.ComicLibrary;
 using Fayble.Core.Exceptions;
@@ -11,6 +12,7 @@ using Fayble.Domain.Repositories;
 using Fayble.Infrastructure;
 using Fayble.Infrastructure.Repositories;
 using Fayble.Security;
+using Fayble.Security.Models;
 using Fayble.Services.Book;
 using Fayble.Services.ComicLibrary;
 using Fayble.Services.FileSystem;
@@ -27,7 +29,6 @@ using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 using Newtonsoft.Json.Serialization;
-using IComicLibraryService = Fayble.Services.ComicLibrary.IComicLibraryService;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -42,11 +43,12 @@ builder.Services.AddControllersWithViews().AddNewtonsoftJson(o =>
     settings.Converters.Add(new StringEnumConverter());
 }); ;
 builder.Services.AddHttpContextAccessor();
+builder.Services.AddScoped<Fayble.Security.Models.IUser, Fayble.Security.Models.User>();
 
 builder.Services.AddDbContext<FaybleDbContext>((_, options) =>
     options.UseSqlite($"Data Source={Path.Combine(ApplicationHelpers.GetAppDirectory(), "Fayble.db")}"));
 
-builder.Services.AddIdentity<User, UserRole>()
+builder.Services.AddIdentity<Fayble.Domain.Aggregates.User.User, UserRole>()
     .AddEntityFrameworkStores<FaybleDbContext>()
     .AddDefaultTokenProviders();
 
@@ -57,12 +59,13 @@ builder.Services.AddSignalR(
     });
 builder.Services.AddOpenApiDocument();
 
+builder.Services.AddHttpContextAccessor();
+
 builder.Services.AddHostedService<QueuedHostedService>();
 builder.Services.AddSingleton<IBackgroundTaskQueue, BackgroundTaskQueue>();
 builder.Services.AddScoped<IBackgroundTaskService, BackgroundTaskService>();
 
 builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
-builder.Services.AddScoped<IUserIdentity, UserIdentity>();
 
 // Register Repositories
 builder.Services.AddScoped<ILibraryRepository, LibraryRepository>();
@@ -85,6 +88,7 @@ builder.Services.AddScoped<IAuthenticationService, AuthenticationService>();
 builder.Services.AddScoped<IPublisherService, PublisherService>();
 builder.Services.AddScoped<IBookService, BookService>();
 builder.Services.AddScoped<ITagService, TagService>();
+builder.Services.AddScoped<IAuthenticationService, AuthenticationService>();
 
 // Register Background Services
 builder.Services.AddSingleton<IBackgroundTaskQueue, BackgroundTaskQueue>();
@@ -159,6 +163,9 @@ app.MapFallbackToFile("index.html");
 
 app.MapGet("/api/heartbeat", () => "♥");
 
+app.UseAuthentication();
+
+app.UseAuthorization();
 
 //Ensure app directory exists
 var appDirectory = ApplicationHelpers.GetAppDirectory();
@@ -167,3 +174,6 @@ if (!Directory.Exists(appDirectory)) Directory.CreateDirectory(appDirectory);
 app.MigrateAndSeedDb();
 
 app.Run();
+
+
+

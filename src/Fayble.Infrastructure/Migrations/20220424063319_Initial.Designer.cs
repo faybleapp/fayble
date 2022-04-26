@@ -11,7 +11,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Fayble.Infrastructure.Migrations
 {
     [DbContext(typeof(FaybleDbContext))]
-    [Migration("20220410102414_Initial")]
+    [Migration("20220424063319_Initial")]
     partial class Initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -32,6 +32,21 @@ namespace Fayble.Infrastructure.Migrations
                     b.HasIndex("TagsId");
 
                     b.ToTable("BookBookTag");
+                });
+
+            modelBuilder.Entity("BookPerson", b =>
+                {
+                    b.Property<Guid>("BooksId")
+                        .HasColumnType("TEXT");
+
+                    b.Property<Guid>("PeopleId")
+                        .HasColumnType("TEXT");
+
+                    b.HasKey("BooksId", "PeopleId");
+
+                    b.HasIndex("PeopleId");
+
+                    b.ToTable("BookPerson");
                 });
 
             modelBuilder.Entity("Fayble.Domain.Aggregates.BackgroundTask.BackgroundTask", b =>
@@ -311,6 +326,23 @@ namespace Fayble.Infrastructure.Migrations
                     b.ToTable("LibrarySetting", (string)null);
                 });
 
+            modelBuilder.Entity("Fayble.Domain.Aggregates.Person.Person", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Name")
+                        .HasColumnType("TEXT");
+
+                    b.Property<int>("Type")
+                        .HasColumnType("INTEGER");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Person");
+                });
+
             modelBuilder.Entity("Fayble.Domain.Aggregates.Publisher.Publisher", b =>
                 {
                     b.Property<Guid>("Id")
@@ -472,9 +504,6 @@ namespace Fayble.Infrastructure.Migrations
                     b.Property<DateTimeOffset?>("LockoutEnd")
                         .HasColumnType("TEXT");
 
-                    b.Property<string>("Name")
-                        .HasColumnType("TEXT");
-
                     b.Property<string>("NormalizedEmail")
                         .HasMaxLength(256)
                         .HasColumnType("TEXT");
@@ -539,6 +568,24 @@ namespace Fayble.Infrastructure.Migrations
                         .HasDatabaseName("RoleNameIndex");
 
                     b.ToTable("Role", (string)null);
+                });
+
+            modelBuilder.Entity("Fayble.Domain.Aggregates.User.UserSetting", b =>
+                {
+                    b.Property<string>("Setting")
+                        .HasColumnType("TEXT");
+
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Value")
+                        .HasColumnType("TEXT");
+
+                    b.HasKey("Setting", "UserId");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("UserSetting", (string)null);
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<System.Guid>", b =>
@@ -651,6 +698,21 @@ namespace Fayble.Infrastructure.Migrations
                     b.HasOne("Fayble.Domain.Aggregates.Tag.BookTag", null)
                         .WithMany()
                         .HasForeignKey("TagsId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("BookPerson", b =>
+                {
+                    b.HasOne("Fayble.Domain.Aggregates.Book.Book", null)
+                        .WithMany()
+                        .HasForeignKey("BooksId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Fayble.Domain.Aggregates.Person.Person", null)
+                        .WithMany()
+                        .HasForeignKey("PeopleId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
@@ -774,6 +836,17 @@ namespace Fayble.Infrastructure.Migrations
                     b.Navigation("Publisher");
                 });
 
+            modelBuilder.Entity("Fayble.Domain.Aggregates.User.UserSetting", b =>
+                {
+                    b.HasOne("Fayble.Domain.Aggregates.User.User", "User")
+                        .WithMany("Settings")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("User");
+                });
+
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<System.Guid>", b =>
                 {
                     b.HasOne("Fayble.Domain.Aggregates.User.UserRole", null)
@@ -846,6 +919,11 @@ namespace Fayble.Infrastructure.Migrations
             modelBuilder.Entity("Fayble.Domain.Aggregates.Series.Series", b =>
                 {
                     b.Navigation("Books");
+                });
+
+            modelBuilder.Entity("Fayble.Domain.Aggregates.User.User", b =>
+                {
+                    b.Navigation("Settings");
                 });
 #pragma warning restore 612, 618
         }

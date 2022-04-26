@@ -52,7 +52,7 @@ public class LibraryBuilder : TestDataBuilder<Library>
         return this;
     }
 
-    public LibraryBuilder WithSettings(IReadOnlyCollection<UserSetting> settings)
+    public LibraryBuilder WithSettings(IReadOnlyCollection<LibrarySetting> settings)
     {
         Set(i => i.Settings, settings);
         return this;
