@@ -1,4 +1,9 @@
-﻿using System.Reflection;
+﻿
+
+#nullable disable warnings
+#nullable disable annotations
+
+using System.Reflection;
 using Fayble.Domain.Aggregates.BackgroundTask;
 using Fayble.Domain.Aggregates.Book;
 using Fayble.Domain.Aggregates.Configuration;
@@ -9,13 +14,11 @@ using Fayble.Domain.Aggregates.Series;
 using Fayble.Domain.Aggregates.Tag;
 using Fayble.Domain.Aggregates.User;
 using Fayble.Domain.Entities;
-using Fayble.Security;
+using Fayble.Security.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
-
-#nullable disable warnings
-#nullable disable annotations
+using User = Fayble.Domain.Aggregates.User.User;
 
 namespace Fayble.Infrastructure;
 
@@ -36,9 +39,9 @@ public class FaybleDbContext : IdentityDbContext<User, UserRole, Guid>, IFaybleD
     public DbSet<BackgroundTask> BackgroundTasks { get; set; }
     public DbSet<BookTag> BookTags { get; set; }
 
-    private readonly IUserIdentity _userIdentity;
+    private readonly IUser _userIdentity;
 
-    public FaybleDbContext(DbContextOptions options, IUserIdentity userIdentity) : base(options)
+    public FaybleDbContext(DbContextOptions options, IUser userIdentity) : base(options)
     {
         _userIdentity = userIdentity;
     }

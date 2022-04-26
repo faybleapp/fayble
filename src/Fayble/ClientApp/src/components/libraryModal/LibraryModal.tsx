@@ -28,7 +28,7 @@ export const LibraryModal = ({ show, library, close }: LibraryModalProps) => {
 	const [isNew, setIsNew] = useState<boolean>(false);
 	const [updatedLibrary, setUpdatedLibrary] =
 		useState<Library>(initialLibraryState);
-	const history = useNavigate();
+	const navigate = useNavigate();
 	const deleteLibrary = useDeleteLibrary();
 	const createLibrary = useCreateLibrary();
 	const updateLibrary = useUpdateLibrary();
@@ -47,7 +47,7 @@ export const LibraryModal = ({ show, library, close }: LibraryModalProps) => {
 		deleteLibrary.mutate([updatedLibrary.id!, null], {
 			onSuccess: () => {
 				close();
-				history("/");
+				navigate("/");
 			},
 		});
 	};

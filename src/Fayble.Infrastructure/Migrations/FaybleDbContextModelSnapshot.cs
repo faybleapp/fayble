@@ -502,9 +502,6 @@ namespace Fayble.Infrastructure.Migrations
                     b.Property<DateTimeOffset?>("LockoutEnd")
                         .HasColumnType("TEXT");
 
-                    b.Property<string>("Name")
-                        .HasColumnType("TEXT");
-
                     b.Property<string>("NormalizedEmail")
                         .HasMaxLength(256)
                         .HasColumnType("TEXT");
@@ -569,6 +566,24 @@ namespace Fayble.Infrastructure.Migrations
                         .HasDatabaseName("RoleNameIndex");
 
                     b.ToTable("Role", (string)null);
+                });
+
+            modelBuilder.Entity("Fayble.Domain.Aggregates.User.UserSetting", b =>
+                {
+                    b.Property<string>("Setting")
+                        .HasColumnType("TEXT");
+
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Value")
+                        .HasColumnType("TEXT");
+
+                    b.HasKey("Setting", "UserId");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("UserSetting", (string)null);
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<System.Guid>", b =>
@@ -819,6 +834,17 @@ namespace Fayble.Infrastructure.Migrations
                     b.Navigation("Publisher");
                 });
 
+            modelBuilder.Entity("Fayble.Domain.Aggregates.User.UserSetting", b =>
+                {
+                    b.HasOne("Fayble.Domain.Aggregates.User.User", "User")
+                        .WithMany("Settings")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("User");
+                });
+
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<System.Guid>", b =>
                 {
                     b.HasOne("Fayble.Domain.Aggregates.User.UserRole", null)
@@ -891,6 +917,11 @@ namespace Fayble.Infrastructure.Migrations
             modelBuilder.Entity("Fayble.Domain.Aggregates.Series.Series", b =>
                 {
                     b.Navigation("Books");
+                });
+
+            modelBuilder.Entity("Fayble.Domain.Aggregates.User.User", b =>
+                {
+                    b.Navigation("Settings");
                 });
 #pragma warning restore 612, 618
         }

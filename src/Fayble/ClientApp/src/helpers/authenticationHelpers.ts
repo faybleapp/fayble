@@ -1,9 +1,9 @@
-import { Authentication } from "models/api-models";
+import { AuthenticationResult } from "models/api-models";
 
-export const getAuthConfig = (): Authentication => {
+export const getAuthConfig = (): AuthenticationResult => {
 	return JSON.parse(
 		localStorage.getItem("authentication") || "{}"
-	) as Authentication;
+	) as AuthenticationResult;
 };
 
 export const isLoggedIn = (): boolean => {
@@ -11,7 +11,7 @@ export const isLoggedIn = (): boolean => {
 	return config !== null && config.loggedIn;
 };
 
-export const setAuthConfig = (auth: Authentication) => {
+export const setAuthConfig = (auth: AuthenticationResult) => {
 	localStorage.setItem("authentication", JSON.stringify(auth));
 };
 

@@ -3,8 +3,11 @@ using Fayble.Domain.Aggregates.Configuration;
 using Fayble.Domain.Aggregates.FileType;
 using Fayble.Domain.Aggregates.Library;
 using Fayble.Domain.Aggregates.Publisher;
+using Fayble.Domain.Aggregates.User;
 using Fayble.Domain.Enums;
+using Fayble.Security.Models;
 using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -67,6 +70,26 @@ public static class SeedDb
             publishers.ForEach(p => p.SetMediaPath(ApplicationHelpers.GetMediaDirectory(p.GetType().Name, p.Id)));
 
             context.Publishers.AddRange(publishers);
+        }
+
+        if (!context.Roles.Any())
+        {
+            context.Roles.AddRange(
+                new UserRole
+                {
+                    Id = Guid.NewGuid(),
+                    Name = UserRoles.Owner
+                },
+                new UserRole
+                {
+                    Id = Guid.NewGuid(),
+                    Name = UserRoles.Administrator
+                },
+                new UserRole
+                {
+                    Id = Guid.NewGuid(),
+                    Name = UserRoles.User
+                });
         }
     }
 }

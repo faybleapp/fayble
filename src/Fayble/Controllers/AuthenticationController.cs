@@ -1,4 +1,6 @@
 ﻿using Fayble.Security;
+using Fayble.Security.Models;
+using Fayble.Security.Services.Authentication;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -10,19 +12,29 @@ namespace Fayble.Controllers;
 [ApiController]
 public class AuthenticationController : ControllerBase
 {
+    private readonly IAuthenticationService _authenticationService;
+
+    public AuthenticationController(IAuthenticationService authenticationService)
+    {
+        _authenticationService = authenticationService;
+    }
+
+    [HttpPost]
+    [Route("login")]
+    [AllowAnonymous]
+    public async Task<ActionResult<AuthenticationResult>> Login([FromBody] LoginCredentials login)
+    {
+       return await _authenticationService.Login(login);
+    }
+
     [HttpPost]
     [Route("refresh")]
     [AllowAnonymous]
-    public async Task<ActionResult<Authentication>> Refresh([FromBody] string refreshToken)
+    public async Task<ActionResult<AuthenticationResult>> Refresh([FromBody] string refreshToken)
     {
-        // var refreshResult = await _authenticationService.Refresh(refreshToken);
-
-        // if (refreshResult != null)
-        // {
-        //    return refreshResult;
-        // }
-
-        return Unauthorized();
+        return await _authenticationService.RefreshToken(refreshToken);
     }
+
+
 }
 

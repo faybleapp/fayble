@@ -10,4 +10,8 @@
     <ProjectReference Include="..\Fayble.Core\Fayble.Core.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="User\" />
+  </ItemGroup>
+
 </Project>

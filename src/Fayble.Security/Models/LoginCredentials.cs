@@ -1,4 +1,4 @@
-﻿namespace Fayble.Security;
+﻿namespace Fayble.Security.Models;
 
 public class LoginCredentials
 {

@@ -4,18 +4,25 @@ namespace Fayble.Domain.Aggregates.User;
 
 public class User : IdentityUser<Guid>
 {
-    public string Name { get; set; }
-
     private readonly List<UserSetting> _settings = new();
     public virtual IReadOnlyCollection<UserSetting> Settings => _settings;
-
+    
     public User()
     {
     }
 
-    public User(Guid id, string name)
+    
+    public User(Guid id, string username, string password)
     {
         Id = id;
-        Name = name;
+        UserName = username;
+        UpdatePassword(password);
+    }
+
+    public void UpdatePassword(string password)
+    {
+        var hasher = new PasswordHasher<User>();
+        PasswordHash = hasher.HashPassword(this, password);
+        SecurityStamp = Guid.NewGuid().ToString();
     }
 }

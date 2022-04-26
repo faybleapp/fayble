@@ -10,7 +10,7 @@
 
 
 
-export interface Authentication {
+export interface AuthenticationResult {
     token: string;
     expiration: Date;
     loggedIn: boolean;
@@ -20,8 +20,13 @@ export interface Authentication {
 
 export interface User {
     id: string;
-    name: string;
     username: string;
+    isAuthenticated: boolean;
+}
+
+export interface LoginCredentials {
+    username: string;
+    password: string;
 }
 
 export interface BackgroundTask {
@@ -72,7 +77,7 @@ export interface Media {
 }
 
 export interface Publisher {
-    id: string ;
+    id: string | undefined;
     name: string;
     description: string;
     mediaPath: string;
@@ -148,6 +153,12 @@ export interface UpdateSeries {
 export interface Tag {
     id: string;
     name: string;
+}
+
+export interface NewUser {
+    username: string;
+    password: string;
+    role: string;
 }
 
 export interface FileResponse {

@@ -1,7 +1,6 @@
 import { Series } from "models/api-models";
 import React, { useEffect, useState } from "react";
 import { Image } from "react-bootstrap";
-import ShowMoreText from "react-show-more-text";
 import { useUpdateSeries } from "services";
 import styles from "./SeriesDetail.module.scss";
 
@@ -90,16 +89,7 @@ export const SeriesDetail = (props: SeriesDetailProps) => {
 						</div>
 					)}
 				</div>
-				<div className={styles.summary}>
-					<ShowMoreText
-						lines={3}
-						more="show more"
-						less="show less"
-						anchorClass=""
-						width={750}>
-						{series?.summary}
-					</ShowMoreText>
-				</div>
+				<div className={styles.summary}>{series?.summary}</div>
 			</div>
 		</div>
 	);

@@ -5,7 +5,7 @@ import { TextField } from "components/form/textField";
 import { FormikProps } from "formik";
 import { languageSelectOptions } from "helpers/languageHelpers";
 import { Book, Tag } from "models/api-models";
-import React, { useEffect } from "react";
+import React from "react";
 import { Col, Container, Form, Row } from "react-bootstrap";
 import { useBookTags } from "services/tag";
 import { TextAreaField } from "textAreaField";
@@ -24,12 +24,6 @@ export const BookDetailsTab = ({ formik }: BookDetailsTabProps) => {
 				.concat(formik?.values?.tags?.map((tag) => tag)) || []
 		)
 	);
-
-	// var test = Array.from(new Set([tagList]));
-	
-	useEffect(() => {
-		console.log(formik.values);
-	},[formik.values])
 
 	return (
 		<Container>

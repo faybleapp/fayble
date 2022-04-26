@@ -1,5 +1,6 @@
 ﻿using Fayble.Models.Book;
 using Fayble.Services.Book;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Fayble.Controllers;

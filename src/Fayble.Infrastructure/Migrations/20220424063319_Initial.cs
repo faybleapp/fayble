@@ -93,6 +93,19 @@ namespace Fayble.Infrastructure.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "Person",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "TEXT", nullable: false),
+                    Name = table.Column<string>(type: "TEXT", nullable: true),
+                    Type = table.Column<int>(type: "INTEGER", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Person", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Publisher",
                 columns: table => new
                 {
@@ -126,7 +139,6 @@ namespace Fayble.Infrastructure.Migrations
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "TEXT", nullable: false),
-                    Name = table.Column<string>(type: "TEXT", nullable: true),
                     UserName = table.Column<string>(type: "TEXT", maxLength: 256, nullable: true),
                     NormalizedUserName = table.Column<string>(type: "TEXT", maxLength: 256, nullable: true),
                     Email = table.Column<string>(type: "TEXT", maxLength: 256, nullable: true),
@@ -343,6 +355,25 @@ namespace Fayble.Infrastructure.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "UserSetting",
+                columns: table => new
+                {
+                    Setting = table.Column<string>(type: "TEXT", nullable: false),
+                    UserId = table.Column<Guid>(type: "TEXT", nullable: false),
+                    Value = table.Column<string>(type: "TEXT", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_UserSetting", x => new { x.Setting, x.UserId });
+                    table.ForeignKey(
+                        name: "FK_UserSetting_User_UserId",
+                        column: x => x.UserId,
+                        principalTable: "User",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "UserToken",
                 columns: table => new
                 {
@@ -463,6 +494,30 @@ namespace Fayble.Infrastructure.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "BookPerson",
+                columns: table => new
+                {
+                    BooksId = table.Column<Guid>(type: "TEXT", nullable: false),
+                    PeopleId = table.Column<Guid>(type: "TEXT", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_BookPerson", x => new { x.BooksId, x.PeopleId });
+                    table.ForeignKey(
+                        name: "FK_BookPerson_Book_BooksId",
+                        column: x => x.BooksId,
+                        principalTable: "Book",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_BookPerson_Person_PeopleId",
+                        column: x => x.PeopleId,
+                        principalTable: "Person",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "ReadHistory",
                 columns: table => new
                 {
@@ -518,6 +573,11 @@ namespace Fayble.Infrastructure.Migrations
                 table: "BookFile",
                 column: "BookId",
                 unique: true);
+
+            migrationBuilder.CreateIndex(
+                name: "IX_BookPerson_PeopleId",
+                table: "BookPerson",
+                column: "PeopleId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_LibraryPath_LibraryId",
@@ -600,6 +660,11 @@ namespace Fayble.Infrastructure.Migrations
                 name: "IX_UserRoleClaim_RoleId",
                 table: "UserRoleClaim",
                 column: "RoleId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_UserSetting_UserId",
+                table: "UserSetting",
+                column: "UserId");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
@@ -612,6 +677,9 @@ namespace Fayble.Infrastructure.Migrations
 
             migrationBuilder.DropTable(
                 name: "BookFile");
+
+            migrationBuilder.DropTable(
+                name: "BookPerson");
 
             migrationBuilder.DropTable(
                 name: "Configuration");
@@ -641,10 +709,16 @@ namespace Fayble.Infrastructure.Migrations
                 name: "UserRoleClaim");
 
             migrationBuilder.DropTable(
+                name: "UserSetting");
+
+            migrationBuilder.DropTable(
                 name: "UserToken");
 
             migrationBuilder.DropTable(
                 name: "BookTag");
+
+            migrationBuilder.DropTable(
+                name: "Person");
 
             migrationBuilder.DropTable(
                 name: "Book");
