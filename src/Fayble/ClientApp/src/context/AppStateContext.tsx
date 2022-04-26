@@ -1,4 +1,4 @@
-import React, { createContext, FC, useContext, useState } from "react";
+import React, { createContext, useContext, useState } from "react";
 
 interface AppState {
 	sidebarOpen?: boolean;
@@ -7,12 +7,15 @@ interface AppState {
 
 export const AppStateContext = createContext<AppState>({
 	sidebarOpen: true,
-	setSidebarOpen: () => {},
+	setSidebarOpen: () => {}
 });
 
 export const useAppState = () => useContext(AppStateContext);
 
-export const AppStateContextProvider: FC = (props) => {
+interface AppStateContextProviderProps  {
+	children?: React.ReactNode;
+}
+export const AppStateContextProvider = (props: AppStateContextProviderProps) => {
 	const [sidebarOpen, setSidebarOpen] = useState<boolean>(true);
 
 	return (

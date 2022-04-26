@@ -77,7 +77,7 @@ export interface Media {
 }
 
 export interface Publisher {
-    id: string | undefined;
+    id: string ;
     name: string;
     description: string;
     mediaPath: string;
