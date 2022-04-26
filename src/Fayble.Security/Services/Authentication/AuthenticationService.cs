@@ -90,7 +90,7 @@ public class AuthenticationService : IAuthenticationService
 
         var createdUser = await _userManager.FindByNameAsync(newUser.Username);
 
-        await _userManager.AddToRoleAsync(createdUser, newUser.Admin ? UserRoles.Administrator : UserRoles.User);
+        await _userManager.AddToRoleAsync(createdUser, newUser.Role);
 
         return createdUser.ToModel();
     }

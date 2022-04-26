@@ -1,6 +1,6 @@
 import axios, { AxiosInstance } from "axios";
 import { getAuthConfig, setAuthConfig } from "helpers/authenticationHelpers";
-import { Authentication } from "models/api-models";
+import { AuthenticationResult } from "models/api-models";
 import React, { useContext } from "react";
 
 export const HttpClientContext = React.createContext<AxiosInstance | undefined>(
@@ -87,7 +87,7 @@ export const useNewHttpClient = (): AxiosInstance => {
 					})
 					.then((response) => {
 						// 1) put token to LocalStorage
-						const authConfig = response.data as Authentication;
+						const authConfig = response.data as AuthenticationResult;
 						setAuthConfig(authConfig);
 
 						// 2) Change Authorization header

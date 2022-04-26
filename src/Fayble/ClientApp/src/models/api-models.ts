@@ -77,7 +77,7 @@ export interface Media {
 }
 
 export interface Publisher {
-    id: string ;
+    id: string | undefined;
     name: string;
     description: string;
     mediaPath: string;
@@ -158,8 +158,7 @@ export interface Tag {
 export interface NewUser {
     username: string;
     password: string;
-    name: string;
-    admin: boolean;
+    role: string;
 }
 
 export interface FileResponse {

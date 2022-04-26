@@ -1,7 +1,6 @@
 import { Book } from "models/api-models";
 import React, { useEffect, useState } from "react";
 import { Image } from "react-bootstrap";
-import ShowMoreText from "react-show-more-text";
 import { useUpdateBook } from "services/book";
 import styles from "./BookDetail.module.scss";
 
@@ -99,16 +98,7 @@ export const BookDetail = (props: BookDetailProps) => {
 						</div>
 					)}
 				</div>
-				<div className={styles.summary}>
-					<ShowMoreText
-						lines={3}
-						more="show more"
-						less="show less"
-						anchorClass=""
-						width={750}>
-						{book?.summary}
-					</ShowMoreText>
-				</div>
+				<div className={styles.summary}>{book?.summary}</div>
 			</div>
 		</div>
 	);

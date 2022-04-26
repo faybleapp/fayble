@@ -18,12 +18,12 @@ export const Main = () => {
 	const navigate = useNavigate();
 	const location = useLocation();
 
-	if (loggedIn && location.pathname.toUpperCase() === "/LOGIN") {
-		navigate("/");
-	}
-	if (!loggedIn && location.pathname.toUpperCase() !== "/LOGIN") {
-		navigate("/login");
-	}
+	// if (loggedIn && location.pathname.toUpperCase() === "/LOGIN") {
+	// 	navigate("/");
+	// }
+	// if (!loggedIn && location.pathname.toUpperCase() !== "/LOGIN") {
+	// 	navigate("/login");
+	// }
 
 	return (
 		<div className={styles.application}>
