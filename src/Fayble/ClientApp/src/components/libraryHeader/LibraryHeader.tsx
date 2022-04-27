@@ -52,51 +52,59 @@ export const LibraryHeader = ({
 			<div className={styles.toolbar}>
 				<div className={cn(styles.libraryHeaderButton)}>
 					<OverlayTrigger
-						overlay={<Tooltip id="hi">Edit</Tooltip>}
+						overlay={<Tooltip id="h2i">Edit</Tooltip>}
 						placement="top">
-						<FontAwesomeIcon
-							icon={faEdit}
-							className={styles.libraryHeaderIcon}
-							onClick={openEditModal}
-						/>
+						<div>
+							<FontAwesomeIcon
+								icon={faEdit}
+								className={styles.libraryHeaderIcon}
+								onClick={openEditModal}
+							/>
+						</div>
 					</OverlayTrigger>
 				</div>
 				<div className={styles.libraryHeaderButton}>
 					<OverlayTrigger
-						overlay={<Tooltip id="hi">Scan Library</Tooltip>}
+						overlay={<Tooltip id="h3i">Scan Library</Tooltip>}
 						placement="top">
-						<FontAwesomeIcon
-							className={styles.libraryHeaderIcon}
-							icon={faSearchPlus}
-							onClick={scan}
-						/>
+						<div>
+							<FontAwesomeIcon
+								className={styles.libraryHeaderIcon}
+								icon={faSearchPlus}
+								onClick={scan}
+							/>
+						</div>
 					</OverlayTrigger>
 				</div>
 				<div className={styles.libraryHeaderMenu}>
 					<OverlayTrigger
 						overlay={<Tooltip id="hi">Change View</Tooltip>}
 						placement="top">
-						<NavDropdown
-							id="library-view-toggle"
-							title={
-								<FontAwesomeIcon
-									className={styles.libraryHeaderIcon}
-									icon={
-										libraryView === ViewType.CoverGrid
-											? faTh
-											: faList
-									}
-								/>
-							}>
-							<NavDropdown.Item
-								onClick={() => changeView(ViewType.CoverGrid)}>
-								Cover View
-							</NavDropdown.Item>
-							<NavDropdown.Item
-								onClick={() => changeView(ViewType.List)}>
-								List View
-							</NavDropdown.Item>
-						</NavDropdown>
+						<div>
+							<NavDropdown
+								id="library-view-toggle"
+								title={
+									<FontAwesomeIcon
+										className={styles.libraryHeaderIcon}
+										icon={
+											libraryView === ViewType.CoverGrid
+												? faTh
+												: faList
+										}
+									/>
+								}>
+								<NavDropdown.Item
+									onClick={() =>
+										changeView(ViewType.CoverGrid)
+									}>
+									Cover View
+								</NavDropdown.Item>
+								<NavDropdown.Item
+									onClick={() => changeView(ViewType.List)}>
+									List View
+								</NavDropdown.Item>
+							</NavDropdown>
+						</div>
 					</OverlayTrigger>
 				</div>
 			</div>
