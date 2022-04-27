@@ -100,7 +100,7 @@ public class ComicLibraryScannerService : IComicLibraryScannerService
         var reviewImportedIssue = bool.Parse((await _configurationRepository.Get(Setting.ReviewOnImport)).Value);
         
         _logger.LogDebug("Retrieving new files from library paths.");
-        var newFiles = await GetNewFiles(libraryPath.Path);
+        var newFiles = await GetNewFiles(libraryPath.Path, libraryPath.LibraryId);
         _logger.LogDebug("{fileCount} new files found in path", newFiles.Count);
 
         foreach (var newFile in newFiles)
@@ -178,7 +178,7 @@ public class ComicLibraryScannerService : IComicLibraryScannerService
         }
     }
 
-    private async Task<List<ComicFile>> GetNewFiles(string path)
+    private async Task<List<ComicFile>> GetNewFiles(string path, Guid libraryId)
     {
         var newFiles = new List<ComicFile>();
 
@@ -188,7 +188,7 @@ public class ComicLibraryScannerService : IComicLibraryScannerService
         {
             var exists = (await _bookRepository.Get(
                 b => b.File.FilePath.ToLower() ==
-                     file.FilePath.ToLower().Replace(path.ToLower(), "").TrimStart('\\'))).Any();
+                     file.FilePath.ToLower().Replace(path.ToLower(), string.Empty).TrimStart('\\') && b.LibraryId == libraryId)).Any();
 
             if (!exists)
                 newFiles.Add(file);
