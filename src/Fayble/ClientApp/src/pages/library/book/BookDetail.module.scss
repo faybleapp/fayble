@@ -30,14 +30,15 @@
 
 			.rating {
 				margin-left: auto;
-				margin-top: -4px;
+				display: flex;
+				flex-direction: column;
+				justify-content: flex-end;
 			}
 		}
 
 		.detailProperty {
 			display: flex;
 			line-height: 25px;
-			
 
 			.detailsHeading {
 				flex: 0 0 150px;
