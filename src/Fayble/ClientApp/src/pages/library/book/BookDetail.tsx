@@ -1,3 +1,4 @@
+import { StarRating } from "components/starRating";
 import { Book } from "models/api-models";
 import React, { useEffect, useState } from "react";
 import { Image } from "react-bootstrap";
@@ -41,24 +42,7 @@ export const BookDetail = (props: BookDetailProps) => {
 					</h4>
 
 					<div className={styles.rating}>
-						{/* <Rating
-							className={styles.rating}
-							fractions={2}
-							onChange={ratingChanged}
-							initialRating={book?.rating}
-							emptySymbol={
-								<FontAwesomeIcon
-									icon={faStarO}
-									color={"#fafafa"}
-								/>
-							}
-							fullSymbol={
-								<FontAwesomeIcon
-									icon={faStar}
-									color={"#fafafa"}
-								/>
-							}
-						/> */}
+						<StarRating rating={book.rating} onChange={ratingChanged}/>
 					</div>
 				</div>
 
