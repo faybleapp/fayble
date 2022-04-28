@@ -2,6 +2,8 @@
 
 .application {
 	height: 100%;
+	display: flex;
+	flex-direction: row;
 }
 
 .main {
@@ -9,17 +11,34 @@
 	height: 100%;
 	display: flex;
 	flex-direction: column;
+	flex: 1;
+}
+
+.sidebar {
+	height: 100%;
+	z-index: 1;
+	top: 0;
+	padding-top: 56px;
+	left: 0;
+	background: $primary-color;
+	overflow-x: hidden;
+	padding-top: 60px;
+	transition: 0.5s;
+	color: $primary-font-color;
+
+	ul {
+		padding-left: 0px;
+	}
+}
+
+.sidebar.open {
+	flex: 0 0 $sidebar-open-width;
+}
+
+.sidebar.closed {
+	flex: 0 0 $sidebar-closed-width;
 }
 
 .pageContent {
-	flex: 1;	
 	overflow: auto;
-}
-
-.main.sidebaropen {
-	margin-left: $sidebar-open-width;
-}
-
-.main.sidebarclosed {
-	margin-left: $sidebar-closed-width;
 }

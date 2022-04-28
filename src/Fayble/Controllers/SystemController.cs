@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Fayble.Models;
+using Microsoft.AspNetCore.Mvc;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -9,7 +10,7 @@ namespace Fayble.Controllers
     public class SystemController : ControllerBase
     {
         [HttpPost("first-run")]
-        public void Post([FromBody] string value)
+        public void Post([FromBody] FirstRun firstRun)
         {
         }
     }

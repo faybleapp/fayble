@@ -150,6 +150,10 @@ export interface UpdateSeries {
     parentSeriesId: string | undefined;
 }
 
+export interface FirstRun {
+    ownerCredentials: LoginCredentials;
+}
+
 export interface Tag {
     id: string;
     name: string;
