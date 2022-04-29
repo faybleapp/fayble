@@ -12,6 +12,6 @@ public class ConfigurationConfiguration : IEntityTypeConfiguration<Configuration
         builder.Property(x => x.Id)
             .HasConversion(
                 setting => setting.ToString(),
-                setting => (Setting) Enum.Parse(typeof(Setting), setting));
+                setting => (ConfigurationKey) Enum.Parse(typeof(ConfigurationKey), setting));
     }
 }

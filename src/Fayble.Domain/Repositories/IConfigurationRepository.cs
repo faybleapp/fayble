@@ -2,6 +2,6 @@
 
 namespace Fayble.Domain.Repositories;
 
-public interface IConfigurationRepository : IRepositoryBase<Configuration, Setting>
+public interface IConfigurationRepository : IRepositoryBase<Configuration, ConfigurationKey>
 {
 }

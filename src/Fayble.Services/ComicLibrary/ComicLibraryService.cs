@@ -56,7 +56,7 @@ public class ComicLibraryService : IComicLibraryService
     private async Task ScanNewBooks(LibraryPath libraryPath)
     {
         // TODO: Configuration service?
-        var reviewImportedIssue = bool.Parse((await _configurationRepository.Get(Setting.ReviewOnImport)).Value);
+        var reviewImportedIssue = bool.Parse((await _configurationRepository.Get(ConfigurationKey.ReviewOnImport)).Value);
         
         _logger.LogDebug("Retrieving new files from library paths.");
         var newFiles = await GetNewFiles(libraryPath.Path);

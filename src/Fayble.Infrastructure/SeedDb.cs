@@ -52,7 +52,7 @@ public static class SeedDb
         {
             context.Configuration.AddRange(new List<Configuration>
                 {
-                    new(Setting.ReviewOnImport, "true")
+                    new(ConfigurationKey.ReviewOnImport, "true")
                 });
 
         }

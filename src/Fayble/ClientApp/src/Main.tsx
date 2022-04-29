@@ -21,7 +21,7 @@ export const Main = () => {
 	const location = useLocation();
 	// TODO: UseConfiguration
 
-	const firstRun = false;
+	const firstRun = true;
 
 	useEffect(() => {
 		if (firstRun && location.pathname.toLowerCase() !== "/first-run") {

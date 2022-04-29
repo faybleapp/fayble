@@ -3,7 +3,7 @@ using Fayble.Domain.Repositories;
 
 namespace Fayble.Infrastructure.Repositories;
 
-public class ConfigurationRepository : RepositoryBase<FaybleDbContext, Configuration, Setting>, IConfigurationRepository
+public class ConfigurationRepository : RepositoryBase<FaybleDbContext, Configuration, ConfigurationKey>, IConfigurationRepository
 {
     public ConfigurationRepository(FaybleDbContext context) : base(context)
     {
