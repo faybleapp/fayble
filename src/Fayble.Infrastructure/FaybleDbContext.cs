@@ -6,11 +6,11 @@
 using System.Reflection;
 using Fayble.Domain.Aggregates.BackgroundTask;
 using Fayble.Domain.Aggregates.Book;
-using Fayble.Domain.Aggregates.Configuration;
 using Fayble.Domain.Aggregates.FileType;
 using Fayble.Domain.Aggregates.Library;
 using Fayble.Domain.Aggregates.Publisher;
 using Fayble.Domain.Aggregates.Series;
+using Fayble.Domain.Aggregates.SystemConfiguration;
 using Fayble.Domain.Aggregates.Tag;
 using Fayble.Domain.Aggregates.User;
 using Fayble.Domain.Entities;
@@ -35,7 +35,7 @@ public class FaybleDbContext : IdentityDbContext<User, UserRole, Guid>, IFaybleD
     public DbSet<Series> Series { get; set; }
     public DbSet<FileType> FileTypes { get; set; }
     public DbSet<Publisher> Publishers { get; set; }
-    public DbSet<Configuration> Configuration { get; set; }
+    public DbSet<SystemConfiguration> SystemConfiguration { get; set; }
     public DbSet<BackgroundTask> BackgroundTasks { get; set; }
     public DbSet<BookTag> BookTags { get; set; }
 

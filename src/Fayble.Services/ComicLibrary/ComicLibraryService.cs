@@ -3,7 +3,6 @@ using Fayble.Core.Extensions;
 using Fayble.Core.Helpers;
 using Fayble.Domain;
 using Fayble.Domain.Aggregates.Book;
-using Fayble.Domain.Aggregates.Configuration;
 using Fayble.Domain.Aggregates.Library;
 using Fayble.Domain.Enums;
 using Fayble.Domain.Repositories;
@@ -18,7 +17,6 @@ public class ComicLibraryService : IComicLibraryService
 {
     private readonly IBookRepository _bookRepository;
     private readonly IComicBookFileSystemService _comicBookFileSystemService;
-    private readonly IConfigurationRepository _configurationRepository;
     private readonly ILibraryRepository _libraryRepository;
     private readonly ILogger _logger;
     private readonly ISeriesRepository _seriesRepository;
@@ -29,7 +27,6 @@ public class ComicLibraryService : IComicLibraryService
         IUnitOfWork unitOfWork,
         IBookRepository bookRepository,
         ILibraryRepository libraryRepository,
-        IConfigurationRepository configurationRepository,
         IComicBookFileSystemService comicBookFileSystemService,
         ISeriesRepository seriesRepository)
     {
@@ -37,7 +34,6 @@ public class ComicLibraryService : IComicLibraryService
         _unitOfWork = unitOfWork;
         _bookRepository = bookRepository;
         _libraryRepository = libraryRepository;
-        _configurationRepository = configurationRepository;
         _comicBookFileSystemService = comicBookFileSystemService;
         _seriesRepository = seriesRepository;
     }
@@ -56,7 +52,7 @@ public class ComicLibraryService : IComicLibraryService
     private async Task ScanNewBooks(LibraryPath libraryPath)
     {
         // TODO: Configuration service?
-        var reviewImportedIssue = bool.Parse((await _configurationRepository.Get(ConfigurationKey.ReviewOnImport)).Value);
+       
         
         _logger.LogDebug("Retrieving new files from library paths.");
         var newFiles = await GetNewFiles(libraryPath.Path);

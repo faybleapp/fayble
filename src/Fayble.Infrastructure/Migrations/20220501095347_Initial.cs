@@ -38,18 +38,6 @@ namespace Fayble.Infrastructure.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Configuration",
-                columns: table => new
-                {
-                    Id = table.Column<string>(type: "TEXT", nullable: false),
-                    Value = table.Column<string>(type: "TEXT", nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Configuration", x => x.Id);
-                });
-
-            migrationBuilder.CreateTable(
                 name: "FileType",
                 columns: table => new
                 {
@@ -132,6 +120,18 @@ namespace Fayble.Infrastructure.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Role", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "SystemConfiguration",
+                columns: table => new
+                {
+                    Id = table.Column<string>(type: "TEXT", nullable: false),
+                    Value = table.Column<string>(type: "TEXT", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_SystemConfiguration", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -682,9 +682,6 @@ namespace Fayble.Infrastructure.Migrations
                 name: "BookPerson");
 
             migrationBuilder.DropTable(
-                name: "Configuration");
-
-            migrationBuilder.DropTable(
                 name: "FileType");
 
             migrationBuilder.DropTable(
@@ -695,6 +692,9 @@ namespace Fayble.Infrastructure.Migrations
 
             migrationBuilder.DropTable(
                 name: "RefreshToken");
+
+            migrationBuilder.DropTable(
+                name: "SystemConfiguration");
 
             migrationBuilder.DropTable(
                 name: "UserClaim");

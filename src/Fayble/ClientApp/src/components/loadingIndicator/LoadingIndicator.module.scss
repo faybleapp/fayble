@@ -6,12 +6,6 @@
 	z-index: 1031;
 	color: $accent-color;
 	top: 50%;
+	right: 50%;
 }
 
-.spinner.sidebaropen {
-	right: calc(50% - ($sidebar-open-width / 2));
-}
-
-.spinner.sidebarclosed {
-	right: calc(50% - ($sidebar-closed-width / 2));
-}

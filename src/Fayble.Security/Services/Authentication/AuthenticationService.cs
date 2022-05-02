@@ -9,7 +9,6 @@ using Fayble.Domain.Aggregates.User;
 using Fayble.Domain.Repositories;
 using Fayble.Models.Configuration;
 using Fayble.Security.Models;
-using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
@@ -91,7 +90,7 @@ public class AuthenticationService : IAuthenticationService
         await _userManager.CreateAsync(user, newUser.Password);
 
         var createdUser = await _userManager.FindByNameAsync(newUser.Username);
-
+        
         await _userManager.AddToRoleAsync(createdUser, newUser.Role);
 
         return createdUser.ToModel();

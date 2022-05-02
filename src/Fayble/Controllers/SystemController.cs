@@ -1,4 +1,5 @@
 ﻿using Fayble.Models;
+using Fayble.Services.System;
 using Microsoft.AspNetCore.Mvc;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
@@ -9,9 +10,23 @@ namespace Fayble.Controllers
     [ApiController]
     public class SystemController : ControllerBase
     {
-        [HttpPost("first-run")]
-        public void Post([FromBody] FirstRun firstRun)
+        private readonly ISystemService _systemService;
+
+        public SystemController(ISystemService systemService)
         {
+            _systemService = systemService;
+        }
+
+        [HttpPost("first-run")]
+        public async Task Post([FromBody] FirstRun firstRun)
+        {
+            await _systemService.FirstRun(firstRun);
+        }
+
+        [HttpGet("configuration")]
+        public async Task<SystemConfiguration> GetConfiguration()
+        {
+            return await _systemService.GetConfiguration();
         }
     }
 }

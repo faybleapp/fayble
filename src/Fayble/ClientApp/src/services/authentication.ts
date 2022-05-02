@@ -6,7 +6,7 @@ export const useLogin = () => {
     const queryClient = useQueryClient();
     return useApiMutation<AuthenticationResult, null, LoginCredentials>("POST", () => `/authentication/login`,
     {
-        onSuccess: () => {            
+        onSuccess: (_, [variables, data]) => {
             queryClient.invalidateQueries("user")         
         }
     });

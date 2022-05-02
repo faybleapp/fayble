@@ -1,8 +1,8 @@
 ﻿using Fayble.Core.Helpers;
-using Fayble.Domain.Aggregates.Configuration;
 using Fayble.Domain.Aggregates.FileType;
 using Fayble.Domain.Aggregates.Library;
 using Fayble.Domain.Aggregates.Publisher;
+using Fayble.Domain.Aggregates.SystemConfiguration;
 using Fayble.Domain.Aggregates.User;
 using Fayble.Domain.Enums;
 using Fayble.Security.Models;
@@ -19,7 +19,7 @@ public static class SeedDb
     {
         using var serviceScope = app.ApplicationServices.GetRequiredService<IServiceScopeFactory>().CreateScope();
         using var context = serviceScope.ServiceProvider.GetService<FaybleDbContext>();
-        context?.Migrate();
+        context?.Migrate(); 
         context?.Seed();
     }
 
@@ -48,14 +48,6 @@ public static class SeedDb
                 });
         }
 
-        if (!context.Configuration.Any())
-        {
-            context.Configuration.AddRange(new List<Configuration>
-                {
-                    new(ConfigurationKey.ReviewOnImport, "true")
-                });
-
-        }
 
         if (!context.Publishers.Any())
         {
@@ -72,23 +64,36 @@ public static class SeedDb
             context.Publishers.AddRange(publishers);
         }
 
+        if (!context.SystemConfiguration.Any())
+        {
+            context.SystemConfiguration.AddRange(
+                new List<SystemConfiguration>
+                {
+                    new(SystemConfigurationKey.FirstRun, true.ToString())
+                });
+        }
+
         if (!context.Roles.Any())
         {
             context.Roles.AddRange(
                 new UserRole
                 {
                     Id = Guid.NewGuid(),
-                    Name = UserRoles.Owner
+                    Name = UserRoles.Owner,
+                    NormalizedName = UserRoles.Owner.ToUpper()
                 },
                 new UserRole
                 {
                     Id = Guid.NewGuid(),
-                    Name = UserRoles.Administrator
+                    Name = UserRoles.Administrator,
+                    NormalizedName = UserRoles.Administrator.ToUpper()
                 },
                 new UserRole
                 {
                     Id = Guid.NewGuid(),
-                    Name = UserRoles.User
+                    Name = UserRoles.User,
+                    NormalizedName = UserRoles.User.ToUpper()
+
                 });
         }
     }

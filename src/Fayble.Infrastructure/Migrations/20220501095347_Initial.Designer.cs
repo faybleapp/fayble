@@ -11,7 +11,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Fayble.Infrastructure.Migrations
 {
     [DbContext(typeof(FaybleDbContext))]
-    [Migration("20220424063319_Initial")]
+    [Migration("20220501095347_Initial")]
     partial class Initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -208,19 +208,6 @@ namespace Fayble.Infrastructure.Migrations
                     b.HasIndex("UserId");
 
                     b.ToTable("ReadHistory");
-                });
-
-            modelBuilder.Entity("Fayble.Domain.Aggregates.Configuration.Configuration", b =>
-                {
-                    b.Property<string>("Id")
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("Value")
-                        .HasColumnType("TEXT");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Configuration", (string)null);
                 });
 
             modelBuilder.Entity("Fayble.Domain.Aggregates.FileType.FileType", b =>
@@ -462,6 +449,19 @@ namespace Fayble.Infrastructure.Migrations
                     b.HasIndex("PublisherId");
 
                     b.ToTable("Series", (string)null);
+                });
+
+            modelBuilder.Entity("Fayble.Domain.Aggregates.SystemConfiguration.SystemConfiguration", b =>
+                {
+                    b.Property<string>("Id")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Value")
+                        .HasColumnType("TEXT");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("SystemConfiguration", (string)null);
                 });
 
             modelBuilder.Entity("Fayble.Domain.Aggregates.Tag.BookTag", b =>

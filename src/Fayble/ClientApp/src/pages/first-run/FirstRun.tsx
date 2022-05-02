@@ -4,6 +4,7 @@ import { useFormik } from "formik";
 import { FirstRun as FirstRunModel } from "models/api-models";
 import React, { useEffect, useState } from "react";
 import { Button, Container, Form, Modal, Spinner, Tab } from "react-bootstrap";
+import { useNavigate } from "react-router-dom";
 import { useFirstRun } from "services/system";
 
 export const FirstRun = () => {
@@ -14,10 +15,12 @@ export const FirstRun = () => {
 	const [passwordValid, setPasswordValid] = useState<boolean>(true);
 
 	const firstRun = useFirstRun();
+	const navigate = useNavigate();
+
 	const formik = useFormik<FirstRunModel>({
 		initialValues: { ownerCredentials: { username: "", password: "" } },
 		onSubmit: (values: FirstRunModel) => {
-			firstRun.mutate([null, values]);
+			firstRun.mutate([null, values], { onSuccess: () => navigate("/") });
 		},
 	});
 

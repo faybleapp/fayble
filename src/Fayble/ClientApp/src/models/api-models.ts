@@ -154,6 +154,10 @@ export interface FirstRun {
     ownerCredentials: LoginCredentials;
 }
 
+export interface SystemConfiguration {
+    firstRun: boolean;
+}
+
 export interface Tag {
     id: string;
     name: string;

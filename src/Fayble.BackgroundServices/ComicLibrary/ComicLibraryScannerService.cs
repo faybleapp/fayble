@@ -5,7 +5,6 @@ using Fayble.Core.Hubs;
 using Fayble.Domain;
 using Fayble.Domain.Aggregates.BackgroundTask;
 using Fayble.Domain.Aggregates.Book;
-using Fayble.Domain.Aggregates.Configuration;
 using Fayble.Domain.Aggregates.Library;
 using Fayble.Domain.Enums;
 using Fayble.Domain.Repositories;
@@ -20,7 +19,6 @@ public class ComicLibraryScannerService : IComicLibraryScannerService
 {
     private readonly IBookRepository _bookRepository;
     private readonly IComicBookFileSystemService _comicBookFileSystemService;
-    private readonly IConfigurationRepository _configurationRepository;
     private readonly ILibraryRepository _libraryRepository;
     private readonly IBackgroundTaskRepository _backgroundTaskRepository;
     private readonly ILogger _logger;
@@ -34,7 +32,6 @@ public class ComicLibraryScannerService : IComicLibraryScannerService
         IUnitOfWork unitOfWork,
         IBookRepository bookRepository,
         ILibraryRepository libraryRepository,
-        IConfigurationRepository configurationRepository,
         IComicBookFileSystemService comicBookFileSystemService,
         ISeriesRepository seriesRepository,
         IHubContext<BackgroundTaskHub> hubContext,
@@ -44,7 +41,6 @@ public class ComicLibraryScannerService : IComicLibraryScannerService
         _unitOfWork = unitOfWork;
         _bookRepository = bookRepository;
         _libraryRepository = libraryRepository;
-        _configurationRepository = configurationRepository;
         _comicBookFileSystemService = comicBookFileSystemService;
         _seriesRepository = seriesRepository;
         _hubContext = hubContext;
@@ -96,8 +92,6 @@ public class ComicLibraryScannerService : IComicLibraryScannerService
         _backgroundTask.UpdateDescription("Scanning new books");
         await _hubContext.Clients.All.SendAsync("BackgroundTaskUpdated", _backgroundTask);
 
-        // TODO: Configuration service?
-        var reviewImportedIssue = bool.Parse((await _configurationRepository.Get(Setting.ReviewOnImport)).Value);
         
         _logger.LogDebug("Retrieving new files from library paths.");
         var newFiles = await GetNewFiles(libraryPath.Path, libraryPath.LibraryId);
