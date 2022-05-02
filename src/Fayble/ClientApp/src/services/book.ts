@@ -12,7 +12,7 @@ export const useRelatedBooks = (id: string) =>
 export const useUpdateBook = () => {
 	const queryClient = useQueryClient();
 	return useApiMutation<Book, string, Book>("PATCH", (id) => `/books/${id}`, {
-		onSuccess: (_, [variables, data]) => {
+		onSuccess: () => {
 			queryClient.invalidateQueries("book");
 			queryClient.invalidateQueries("books");
 		},

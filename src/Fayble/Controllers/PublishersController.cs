@@ -1,4 +1,4 @@
-﻿using Fayble.Models.Publisher;
+﻿using Fayble.Models;
 using Fayble.Services.Publisher;
 using Microsoft.AspNetCore.Mvc;
 

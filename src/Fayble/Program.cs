@@ -20,6 +20,7 @@ using Fayble.Services.FileSystemService;
 using Fayble.Services.Library;
 using Fayble.Services.Publisher;
 using Fayble.Services.Series;
+using Fayble.Services.System;
 using Fayble.Services.Tag;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Diagnostics;
@@ -52,6 +53,17 @@ builder.Services.AddIdentity<Fayble.Domain.Aggregates.User.User, UserRole>()
     .AddEntityFrameworkStores<FaybleDbContext>()
     .AddDefaultTokenProviders();
 
+builder.Services.Configure<IdentityOptions>(options =>
+{
+    //TODO: Implement complexity checks
+    options.Password.RequireDigit = false;
+    options.Password.RequireLowercase = false;
+    options.Password.RequireNonAlphanumeric = false;
+    options.Password.RequireUppercase = false;
+    options.Password.RequiredLength = 0;
+    options.Password.RequiredUniqueChars = 0;
+});
+
 builder.Services.AddSignalR(
     options =>
     {
@@ -72,7 +84,7 @@ builder.Services.AddScoped<ILibraryRepository, LibraryRepository>();
 builder.Services.AddScoped<ISeriesRepository, SeriesRepository>();
 builder.Services.AddScoped<IBookRepository, BookRepository>();
 builder.Services.AddScoped<IBackgroundTaskRepository, BackgroundTaskRepository>();
-builder.Services.AddScoped<IConfigurationRepository, ConfigurationRepository>();
+builder.Services.AddScoped<ISystemConfigurationRepository, SystemConfigurationRepository>();
 builder.Services.AddScoped<IFileTypeRepository, FileTypeRepository>();
 builder.Services.AddScoped<IRefreshTokenRepository, RefreshTokenRepository>();
 builder.Services.AddScoped<IPublisherRepository, PublisherRepository>();
@@ -84,11 +96,13 @@ builder.Services.AddScoped<ISeriesService, SeriesService>();
 builder.Services.AddScoped<IComicLibraryService, ComicLibraryService>();
 builder.Services.AddScoped<IComicLibraryScannerService, ComicLibraryScannerService>();
 builder.Services.AddScoped<IComicBookFileSystemService, ComicBookFileSystemService>();
-builder.Services.AddScoped<IAuthenticationService, AuthenticationService>();
+builder.Services.AddScoped<Fayble.Security.Services.Authentication.IAuthenticationService, Fayble.Security.Services.Authentication.AuthenticationService>();
 builder.Services.AddScoped<IPublisherService, PublisherService>();
 builder.Services.AddScoped<IBookService, BookService>();
 builder.Services.AddScoped<ITagService, TagService>();
-builder.Services.AddScoped<IAuthenticationService, AuthenticationService>();
+
+builder.Services.AddScoped<ISystemService, SystemService>();
+
 
 // Register Background Services
 builder.Services.AddSingleton<IBackgroundTaskQueue, BackgroundTaskQueue>();

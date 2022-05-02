@@ -1,5 +1,4 @@
-﻿using Fayble.Domain.Aggregates.Configuration;
-using Fayble.Domain.Aggregates.Library;
+﻿using Fayble.Domain.Aggregates.Library;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 

@@ -11,12 +11,12 @@ public class PublisherService : IPublisherService
         _publisherRepository = publisherRepository;
     }
 
-    public async Task<IEnumerable<Models.Publisher.Publisher>> GetAll()
+    public async Task<IEnumerable<Models.Publisher>> GetAll()
     {
         return (await _publisherRepository.Get()).OrderBy(p => p.Name).Select(p => p.ToModel());
     }
 
-    public async Task<Models.Publisher.Publisher?> Get(Guid libraryId)
+    public async Task<Models.Publisher?> Get(Guid libraryId)
     {
         return (await _publisherRepository.Get(libraryId))?.ToModel();
     }

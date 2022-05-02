@@ -1,4 +1,4 @@
-﻿namespace Fayble.Models.Publisher;
+﻿namespace Fayble.Models;
 
 public class Publisher
 {
