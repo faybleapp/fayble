@@ -22,7 +22,7 @@ public class Series
 
     public Guid? PublisherId { get; }
 
-    public Publisher.Publisher? Publisher { get; }
+    public Publisher? Publisher { get; }
 
     public decimal Rating { get; }
 
@@ -47,7 +47,7 @@ public class Series
         Guid? parentSeriesId,
         Series? parentSeries,
         Guid? publisherId,
-        Publisher.Publisher? publisher,
+        Publisher? publisher,
         decimal rating,
         string? mediaPath,
         Library.Library? library,

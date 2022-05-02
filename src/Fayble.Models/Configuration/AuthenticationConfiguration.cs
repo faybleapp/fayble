@@ -1,4 +1,4 @@
-﻿namespace Fayble.Security.Models
+﻿namespace Fayble.Models.Configuration
 {
     public class AuthenticationConfiguration
     {

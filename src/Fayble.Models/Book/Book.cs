@@ -1,5 +1,4 @@
-﻿
-namespace Fayble.Models.Book;
+﻿namespace Fayble.Models.Book;
 
 public class Book
 {
@@ -14,7 +13,7 @@ public class Book
     public double FileSize { get; private set; }
     public decimal Rating { get; private set; }
     public Media Media { get; private set; }
-    public Publisher.Publisher? Publisher { get; private set; }
+    public Publisher? Publisher { get; private set; }
     public bool Read { get; private set; }
     public DateTimeOffset Created { get; private set; }
     public DateTimeOffset Modified { get; private set; }
@@ -40,7 +39,7 @@ public class Book
         double fileSize,
         string filePath,
         decimal rating,
-        Publisher.Publisher? publisher,
+        Publisher? publisher,
         bool read,
         string number,
         Series.Series? series,

@@ -1,4 +1,4 @@
-﻿namespace Fayble.Models.Tag;
+﻿namespace Fayble.Models;
 
 public class Tag
 {

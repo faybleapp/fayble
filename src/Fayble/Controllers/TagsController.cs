@@ -1,4 +1,4 @@
-﻿using Fayble.Models.Tag;
+﻿using Fayble.Models;
 using Fayble.Services.Tag;
 using Microsoft.AspNetCore.Mvc;
 

@@ -8,6 +8,8 @@ interface TextFieldProps {
 	className?: string;
 	error?: string | false | undefined;
 	value?: string;
+	secure?: boolean;
+	onBlur?: (event: React.FocusEvent<HTMLInputElement>) => void;
 	onChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
 }
 
@@ -17,16 +19,19 @@ export const TextField = ({
 	className,
 	error,
 	value,
+	secure,
 	onChange,
+	onBlur
 }: TextFieldProps) => {
 	return (
 		<Form.Group className={cn(className, "mb-3")}>
 			<Form.Label>{label}</Form.Label>
 			<Form.Control
 				name={name}
-				type="text"
+				type={secure ? "password" : "text"}
 				isInvalid={!!error}
 				value={value}
+				onBlur={onBlur}
 				onChange={onChange}
 			/>
 			<Form.Control.Feedback type="invalid">

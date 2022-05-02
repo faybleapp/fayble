@@ -1,9 +1,8 @@
 import {
-    faBook,
-    faBookOpen,
-    faDesktop
+	faBook,
+	faBookOpen,
+	faDesktop
 } from "@fortawesome/free-solid-svg-icons";
-import cn from "classnames";
 import { LibraryModal } from "components/libraryModal";
 import { useAppState } from "context/AppStateContext";
 import { Library } from "models/api-models";
@@ -27,10 +26,7 @@ export const Sidebar = () => {
 	return (
 		<>
 			<div
-				className={cn(
-					styles.sidebar,
-					sidebarOpen ? styles.open : styles.closed
-				)}>
+			>
 				<ul>
 					{libraries &&
 						libraries?.map((library: Library) => {

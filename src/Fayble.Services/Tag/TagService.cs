@@ -14,7 +14,7 @@ public class TagService : ITagService
         _unitOfWork = unitOfWork;
     }
 
-    public async Task<IEnumerable<Models.Tag.Tag>?> GetAllBookTags()
+    public async Task<IEnumerable<Models.Tag>?> GetAllBookTags()
     {
         return (await _bookTagRepository.Get())?.Select(t => t.ToModel());
     }

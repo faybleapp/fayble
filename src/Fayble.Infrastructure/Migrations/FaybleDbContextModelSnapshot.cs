@@ -208,19 +208,6 @@ namespace Fayble.Infrastructure.Migrations
                     b.ToTable("ReadHistory");
                 });
 
-            modelBuilder.Entity("Fayble.Domain.Aggregates.Configuration.Configuration", b =>
-                {
-                    b.Property<string>("Id")
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("Value")
-                        .HasColumnType("TEXT");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Configuration", (string)null);
-                });
-
             modelBuilder.Entity("Fayble.Domain.Aggregates.FileType.FileType", b =>
                 {
                     b.Property<Guid>("Id")
@@ -460,6 +447,19 @@ namespace Fayble.Infrastructure.Migrations
                     b.HasIndex("PublisherId");
 
                     b.ToTable("Series", (string)null);
+                });
+
+            modelBuilder.Entity("Fayble.Domain.Aggregates.SystemConfiguration.SystemConfiguration", b =>
+                {
+                    b.Property<string>("Id")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Value")
+                        .HasColumnType("TEXT");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("SystemConfiguration", (string)null);
                 });
 
             modelBuilder.Entity("Fayble.Domain.Aggregates.Tag.BookTag", b =>
