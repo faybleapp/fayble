@@ -61,6 +61,16 @@ export const useNewHttpClient = (): AxiosInstance => {
 			const originalRequest = error.config;
 			const authConfig = getAuthConfig();
 
+			// If 401 trying to login, don't retry
+			if (
+				error.response.status === 401 &&
+				originalRequest.url
+					.toLowerCase()
+					.includes("/authentication/login")
+			) {
+				return Promise.reject(error);
+			}
+
 			// If 401 trying to refresh, go back to login
 			if (
 				error.response.status === 401 &&
@@ -87,7 +97,8 @@ export const useNewHttpClient = (): AxiosInstance => {
 					})
 					.then((response) => {
 						// 1) put token to LocalStorage
-						const authConfig = response.data as AuthenticationResult;
+						const authConfig =
+							response.data as AuthenticationResult;
 						setAuthConfig(authConfig);
 
 						// 2) Change Authorization header

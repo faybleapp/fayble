@@ -1,6 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.Net;
 using System.Security.Principal;
+using System.Text;
 using Fayble.BackgroundServices;
 using Fayble.BackgroundServices.ComicLibrary;
 using Fayble.Core.Exceptions;
@@ -11,6 +12,7 @@ using Fayble.Domain.Aggregates.User;
 using Fayble.Domain.Repositories;
 using Fayble.Infrastructure;
 using Fayble.Infrastructure.Repositories;
+using Fayble.Models.Configuration;
 using Fayble.Security;
 using Fayble.Security.Models;
 using Fayble.Services.Book;
@@ -23,15 +25,23 @@ using Fayble.Services.Series;
 using Fayble.Services.System;
 using Fayble.Services.Tag;
 using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 using Newtonsoft.Json.Serialization;
 
+IConfiguration config = new ConfigurationBuilder()
+    .AddJsonFile("appsettings.json")
+    .AddEnvironmentVariables()
+    .Build();
+
 var builder = WebApplication.CreateBuilder(args);
+
 
 // Add services to the container.
 
@@ -63,6 +73,28 @@ builder.Services.Configure<IdentityOptions>(options =>
     options.Password.RequiredLength = 0;
     options.Password.RequiredUniqueChars = 0;
 });
+
+builder.Services.Configure<AuthenticationConfiguration>(config.GetSection("Authentication"));
+
+builder.Services.AddAuthentication(options =>
+    {
+        options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+        options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+        options.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
+    })
+    .AddJwtBearer(options =>
+    {
+        options.SaveToken = true;
+        options.RequireHttpsMetadata = false;
+        options.TokenValidationParameters = new TokenValidationParameters
+        {
+            ValidateIssuer = true,
+            ValidateAudience = true,
+            ValidAudience = config["Authentication:TokenAudience"],
+            ValidIssuer = config["Authentication:TokenIssuer"],
+            IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(ApplicationHelpers.GetTokenSigningKey()))
+        };
+    });
 
 builder.Services.AddSignalR(
     options =>

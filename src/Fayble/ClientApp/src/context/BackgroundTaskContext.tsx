@@ -27,10 +27,6 @@ export const BackgroundTaskContextProvider = (props: BackgroundTaskContextProvid
 	>([]);
 
 	useEffect(() => {
-		console.log(backgroundTasks);
-	}, [backgroundTasks]);
-
-	useEffect(() => {
 		const connect = new HubConnectionBuilder()
 			.withUrl("/hubs/backgroundtasks")
 			.withAutomaticReconnect()

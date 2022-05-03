@@ -13,15 +13,9 @@
 export interface AuthenticationResult {
     token: string;
     expiration: Date;
-    loggedIn: boolean;
-    loggedInUser: User;
-    refreshToken: string;
-}
-
-export interface User {
-    id: string;
-    username: string;
     isAuthenticated: boolean;
+    userId: string;
+    refreshToken: string;
 }
 
 export interface LoginCredentials {
@@ -161,6 +155,12 @@ export interface SystemConfiguration {
 export interface Tag {
     id: string;
     name: string;
+}
+
+export interface User {
+    id: string;
+    username: string;
+    role: string | undefined;
 }
 
 export interface NewUser {

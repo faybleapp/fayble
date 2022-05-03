@@ -6,9 +6,9 @@ export const getAuthConfig = (): AuthenticationResult => {
 	) as AuthenticationResult;
 };
 
-export const isLoggedIn = (): boolean => {
-	const config = getAuthConfig();
-	return config !== null && config.loggedIn;
+export const isAuthenticated = (): boolean => {
+	const config = getAuthConfig();	
+	return config?.isAuthenticated === true;
 };
 
 export const setAuthConfig = (auth: AuthenticationResult) => {

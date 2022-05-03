@@ -4,11 +4,12 @@ import { Form } from "react-bootstrap";
 
 interface TextFieldProps {
 	name: string;
-	label: string;
+	label?: string;
 	className?: string;
 	error?: string | false | undefined;
 	value?: string;
 	secure?: boolean;
+	placeholder?: string;
 	onBlur?: (event: React.FocusEvent<HTMLInputElement>) => void;
 	onChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
 }
@@ -20,12 +21,13 @@ export const TextField = ({
 	error,
 	value,
 	secure,
+	placeholder,
 	onChange,
-	onBlur
+	onBlur,
 }: TextFieldProps) => {
 	return (
 		<Form.Group className={cn(className, "mb-3")}>
-			<Form.Label>{label}</Form.Label>
+			{label && <Form.Label>{label}</Form.Label>}
 			<Form.Control
 				name={name}
 				type={secure ? "password" : "text"}
@@ -33,6 +35,7 @@ export const TextField = ({
 				value={value}
 				onBlur={onBlur}
 				onChange={onChange}
+				placeholder={placeholder}
 			/>
 			<Form.Control.Feedback type="invalid">
 				{error}

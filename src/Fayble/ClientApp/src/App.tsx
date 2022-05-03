@@ -18,7 +18,7 @@ const App = () => {
 			<QueryClientProvider client={queryClient}>
 				<AppStateContextProvider>
 					<BackgroundTaskContextProvider>
-						<ToastContainer />
+						<ToastContainer position="bottom-right" closeOnClick theme="dark"/>
 						<HttpClientProvider>
 							<ReactQueryDevtools initialIsOpen={false} />
 							<Main />

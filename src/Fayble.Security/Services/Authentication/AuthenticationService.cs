@@ -3,9 +3,12 @@ using System.Security.Claims;
 using System.Security.Cryptography;
 using System.Text;
 using Fayble.Core.Exceptions;
+using Fayble.Core.Helpers;
 using Fayble.Domain;
 using Fayble.Domain.Aggregates.RefreshToken;
+using Fayble.Domain.Aggregates.SystemConfiguration;
 using Fayble.Domain.Aggregates.User;
+using Fayble.Domain.Extensions;
 using Fayble.Domain.Repositories;
 using Fayble.Models.Configuration;
 using Fayble.Security.Models;
@@ -19,29 +22,27 @@ namespace Fayble.Security.Services.Authentication;
 public class AuthenticationService : IAuthenticationService
 {
     private readonly UserManager<Domain.Aggregates.User.User> _userManager;
-    private readonly RoleManager<UserRole> _roleManager;
     private readonly SignInManager<Domain.Aggregates.User.User> _signInManager;
     private readonly IUser _currentUser;
-    private readonly AuthenticationConfiguration _configuration;
+    private readonly AuthenticationConfiguration _authConfiguration;
     private readonly IRefreshTokenRepository _refreshTokenRepository;
     private readonly IUnitOfWork _unitOfWork;
 
     public AuthenticationService(
         UserManager<Domain.Aggregates.User.User> userManager,
-        RoleManager<UserRole> roleManager,
         SignInManager<Domain.Aggregates.User.User> signInManager,
         IOptions<AuthenticationConfiguration> configuration,
         IRefreshTokenRepository refreshTokenRepository,
         IUnitOfWork unitOfWork,
-        IUser currentUser)
+        IUser currentUser )
     {
         _userManager = userManager;
-        _roleManager = roleManager;
         _signInManager = signInManager;
         _refreshTokenRepository = refreshTokenRepository;
         _unitOfWork = unitOfWork;
-        _configuration = configuration.Value;
+        _authConfiguration = configuration.Value;
         _currentUser = currentUser;
+     
     }
 
     public async Task<Models.User> GetUser(Guid id)
@@ -64,7 +65,7 @@ public class AuthenticationService : IAuthenticationService
             var user = await _userManager.FindByNameAsync(loginCredentials.Username);
             var token = await GenerateToken(user.Id);
             return new AuthenticationResult(
-                user.ToModel(),
+                user.Id,
                 token.ValidTo,
                 new JwtSecurityTokenHandler().WriteToken(token),
                 true,
@@ -95,8 +96,7 @@ public class AuthenticationService : IAuthenticationService
 
         return createdUser.ToModel();
     }
-
-
+    
     public async Task<AuthenticationResult> RefreshToken(string refreshToken)
     {
         var validToken = (await _refreshTokenRepository.Get()).FirstOrDefault(x =>
@@ -113,7 +113,7 @@ public class AuthenticationService : IAuthenticationService
         await _unitOfWork.Commit();
 
         return new AuthenticationResult(
-            validToken.User.ToModel(),
+            validToken.UserId,
             token.ValidTo,
             new JwtSecurityTokenHandler().WriteToken(token),
             true,
@@ -129,17 +129,17 @@ public class AuthenticationService : IAuthenticationService
         {
             new (ClaimTypes.Name, user.UserName),
             new (JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
-            new ("userName", user.UserName),
+            new ("username", user.UserName),
             new ("id", user.Id.ToString())
         };
 
         authClaims.AddRange(userRoles.Select(userRole => new Claim(ClaimTypes.Role, userRole)));
 
-        var authSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration.Key));
+        var authSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(ApplicationHelpers.GetTokenSigningKey()));
 
         return new JwtSecurityToken(
-            issuer: _configuration.ValidIssuer,
-            audience: _configuration.ValidAudience,
+            issuer: _authConfiguration.TokenIssuer,
+            audience: _authConfiguration.TokenAudience,
             expires: DateTime.Now.AddHours(3),
             claims: authClaims,
             signingCredentials: new SigningCredentials(authSigningKey, SecurityAlgorithms.HmacSha256)

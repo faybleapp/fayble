@@ -3,7 +3,7 @@ import { LoadingIndicator } from "components/loadingIndicator";
 import { NavbarMenu as Navbar } from "components/navbar";
 import { Sidebar } from "components/sidebar";
 import { useAppState } from "context";
-import { isLoggedIn } from "helpers/authenticationHelpers";
+import { isAuthenticated } from "helpers/authenticationHelpers";
 import { FirstRun } from "pages/first-run";
 import { Home } from "pages/home";
 import { Library } from "pages/library";
@@ -18,11 +18,12 @@ import styles from "./Main.module.scss";
 export const Main = () => {
 	const [hideNavAndSidebar, setHideNavAndSidebar] = useState<boolean>(true);
 	const [loading, setLoading] = useState<boolean>(true);
-	const { sidebarOpen } = useAppState();
 
-	const loggedIn = isLoggedIn();
+	const loggedIn = isAuthenticated();
 	const navigate = useNavigate();
 	const location = useLocation();
+
+	const { sidebarOpen } = useAppState();	
 	const {
 		data: systemConfiguration,
 		isLoading: isLoadingSystemConfiguration,
@@ -30,45 +31,29 @@ export const Main = () => {
 
 	useEffect(() => {
 		setLoading(isLoadingSystemConfiguration);
-		console.log(systemConfiguration);
-		console.log(isLoadingSystemConfiguration);
-	}, [isLoadingSystemConfiguration, systemConfiguration]);
+	}, [isLoadingSystemConfiguration]);
 
 	useEffect(() => {
-		const firstRun = systemConfiguration?.firstRun;
 		setHideNavAndSidebar(
-			loading ||
+			!loggedIn ||
 				location.pathname.toLowerCase() === "/first-run" ||
 				location.pathname.toLowerCase() === "/login"
 		);
+	}, [loggedIn, location]);
+
+	useEffect(() => {
+		const firstRun = systemConfiguration?.firstRun;
+
+		if (loading) {
+			return;
+		}
 		if (firstRun && location.pathname.toLowerCase() !== "/first-run") {
 			navigate("/first-run");
 		}
-		else if (!firstRun && location.pathname.toLowerCase() === "/first-run") {
-			navigate("/");
+		if (!loggedIn && !firstRun && location.pathname.toLowerCase() !== "/login") {
+			navigate("/login");
 		}
-
-	}, [location, navigate, systemConfiguration, loading]);
-
-	// if (location.pathname.toLowerCase() === "/first-run") {
-	// 	navigate(systemConfiguration?.firstRun ? "/first-run" : "/");
-	// }
-
-	// useEffect(() => {
-	// 	if (
-	// 		systemConfiguration?.firstRun &&
-	// 		location.pathname.toLowerCase() !== "/first-run"
-	// 	) {
-	// 		navigate("/first-run");
-	// 	}
-	// }, [systemConfiguration?.firstRun, location, navigate]);
-
-	// if (loggedIn && location.pathname.toUpperCase() === "/LOGIN") {
-	// 	navigate("/");
-	// }
-	// if (!loggedIn && location.pathname.toUpperCase() !== "/LOGIN") {
-	// 	navigate("/login");
-	// }
+	}, [location, navigate, systemConfiguration, loading, loggedIn]);
 
 	return (
 		<div className={styles.application}>
