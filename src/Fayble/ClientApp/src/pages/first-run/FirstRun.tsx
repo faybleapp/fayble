@@ -5,7 +5,7 @@ import { FirstRun as FirstRunModel } from "models/api-models";
 import React, { useEffect, useState } from "react";
 import { Button, Container, Form, Modal, Spinner, Tab } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
-import { useFirstRun } from "services/system";
+import { useFirstRun, useSystemConfiguration } from "services/system";
 
 export const FirstRun = () => {
 	const [activeTabKey, setActiveTabKey] = useState<string>("1");
@@ -13,6 +13,7 @@ export const FirstRun = () => {
 	const [passwordConfirmation, setPasswordConfirmation] =
 		useState<string>("");
 	const [passwordValid, setPasswordValid] = useState<boolean>(true);
+	const { data: systemConfiguration } = useSystemConfiguration();
 
 	const firstRun = useFirstRun();
 	const navigate = useNavigate();
@@ -20,9 +21,15 @@ export const FirstRun = () => {
 	const formik = useFormik<FirstRunModel>({
 		initialValues: { ownerCredentials: { username: "", password: "" } },
 		onSubmit: (values: FirstRunModel) => {
-			firstRun.mutate([null, values], { onSuccess: () => navigate("/") });
+			firstRun.mutate([null, values], {
+				onSuccess: () => navigate("/login"),
+			});
 		},
 	});
+
+	useEffect(() => {
+		if (!systemConfiguration?.firstRun) navigate("/");
+	}, [systemConfiguration, navigate]);
 
 	useEffect(() => {
 		if (activeTabKey === "1") {

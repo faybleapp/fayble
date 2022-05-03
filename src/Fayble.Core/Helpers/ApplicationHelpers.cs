@@ -1,29 +1,34 @@
-﻿using System.Runtime.InteropServices;
+﻿using System.Reflection;
+using System.Runtime.InteropServices;
 using Fayble.Core.Enums;
 
 namespace Fayble.Core.Helpers;
 
 public static class ApplicationHelpers
 {
-    public static Application GetApplication() => System.Reflection.Assembly.GetEntryAssembly()?.GetName().Name switch
+    public static Application GetApplication()
     {
-        "Fayble" => Application.Fayble,
-        "Fayble.Service" => Application.Service,
-        _ => Application.Fayble,
-    };
+        return Assembly.GetEntryAssembly()?.GetName().Name switch
+        {
+            "Fayble" => Application.Fayble,
+            "Fayble.Service" => Application.Service,
+            _ => Application.Fayble
+        };
+    }
 
     public static string GetAppDirectory()
     {
-        var folder = Environment.GetEnvironmentVariable(RuntimeInformation.IsOSPlatform(OSPlatform.Windows)
-            ? "ProgramData"
-            : "Home");
+        var folder = Environment.GetEnvironmentVariable(
+            RuntimeInformation.IsOSPlatform(OSPlatform.Windows)
+                ? "ProgramData"
+                : "Home");
 
         return Path.Combine(folder!, "Fayble");
     }
 
     public static string GetMediaDirectory(string type, Guid id)
     {
-        int folder = 0;
+        var folder = 0;
         var rootPath = Path.Combine(GetAppDirectory(), "Media", type);
         var path = Path.Combine(rootPath, folder.ToString());
 
@@ -34,11 +39,32 @@ public static class ApplicationHelpers
         }
 
         var pathWithId = Path.Combine(path, id.ToString());
-        if (!Directory.Exists(pathWithId))
-        {
-            Directory.CreateDirectory(pathWithId);
-        }
+        if (!Directory.Exists(pathWithId)) Directory.CreateDirectory(pathWithId);
 
         return Path.Combine("Media", type, folder.ToString(), id.ToString());
+    }
+
+    public static string GetTokenSigningKey()
+    {
+        var signingTokenKeyFile = Path.Combine(GetConfigDirectory(), "SigningTokenKey");
+
+        if (!File.Exists(signingTokenKeyFile))
+        {
+            File.WriteAllText(signingTokenKeyFile, Guid.NewGuid().ToString());
+        }
+
+        return File.ReadAllText(signingTokenKeyFile);
+    }
+
+    private static string GetConfigDirectory()
+    {
+        var configFolder = Path.Combine(GetAppDirectory(), "Config");
+
+        if (!Directory.Exists(configFolder))
+        {
+            Directory.CreateDirectory(configFolder);
+        }
+
+        return configFolder;
     }
 }

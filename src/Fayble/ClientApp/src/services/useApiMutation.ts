@@ -17,11 +17,11 @@ export const useApiMutation = <Response, Variables, Data = null>(
 		async ([variables, data]): Promise<Response> => {
 			switch (method) {
 				case "PATCH":
-					return await httpClient.patch(path(variables), data);
+					return await (await httpClient.patch(path(variables), data)).data;
 				case "DELETE":
-					return await httpClient.delete(path(variables), data);
+					return (await httpClient.delete(path(variables), data)).data;
 				default:
-					return await httpClient.post(path(variables), data);
+					return (await httpClient.post(path(variables), data)).data;
 			}
 		},
 		options

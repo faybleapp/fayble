@@ -6,9 +6,8 @@ namespace Fayble.Security.Models;
 public class User : IUser
 {
     public Guid Id { get; set; }
-    public string Username { get;  set; }
-    public bool IsAuthenticated { get; set; }
-
+    public string Username { get; set; }
+    public string? Role { get; set; }
 
     public User(IHttpContextAccessor _httpContextAccessor)
     {
@@ -22,16 +21,16 @@ public class User : IUser
         else
         {
             var identity = principal.Identity as ClaimsIdentity;
-            IsAuthenticated = principal.Identity?.IsAuthenticated ?? false;
+            Role = identity?.Claims.FirstOrDefault(x => x.Type == ClaimTypes.Role)?.Value ?? string.Empty;
             Id = new Guid(identity?.Claims.FirstOrDefault(x => x.Type == "id")?.Value ?? string.Empty);
             Username = identity?.Claims.FirstOrDefault(x => x.Type == "name")?.Value;
         }
     }
 
-    public User(Guid id, string username, bool isAuthenticated = false)
+    public User(Guid id, string username, string? role = null)
     {
         Id = id;
-        IsAuthenticated = isAuthenticated;
+        Role = role;
         Username = username;
     }
 }
