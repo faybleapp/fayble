@@ -1,11 +1,15 @@
 ﻿using System.Reflection;
 using System.Runtime.InteropServices;
 using Fayble.Core.Enums;
+using Serilog;
+using Serilog.Core;
 
 namespace Fayble.Core.Helpers;
 
 public static class ApplicationHelpers
 {
+    public static LoggingLevelSwitch logLevel;
+
     public static Application GetApplication()
     {
         return Assembly.GetEntryAssembly()?.GetName().Name switch
@@ -18,12 +22,19 @@ public static class ApplicationHelpers
 
     public static string GetAppDirectory()
     {
-        var folder = Environment.GetEnvironmentVariable(
+        var folder = Environment.GetFolderPath(
             RuntimeInformation.IsOSPlatform(OSPlatform.Windows)
-                ? "ProgramData"
-                : "Home");
+                ? Environment.SpecialFolder.CommonApplicationData
+                : Environment.SpecialFolder.UserProfile);
 
-        return Path.Combine(folder!, "Fayble");
+        var fullPath = Path.Combine(folder!, "Fayble");
+
+        if (!Directory.Exists(fullPath))
+        {
+            Directory.CreateDirectory(fullPath);
+        }
+
+        return fullPath;
     }
 
     public static string GetMediaDirectory(string type, Guid id)
@@ -56,9 +67,21 @@ public static class ApplicationHelpers
         return File.ReadAllText(signingTokenKeyFile);
     }
 
-    private static string GetConfigDirectory()
+    public static string GetConfigDirectory()
     {
         var configFolder = Path.Combine(GetAppDirectory(), "Config");
+
+        if (!Directory.Exists(configFolder))
+        {
+            Directory.CreateDirectory(configFolder);
+        }
+
+        return configFolder;
+    }
+
+    public static string GetLogsDirectory()
+    {
+        var configFolder = Path.Combine(GetAppDirectory(), "Logs");
 
         if (!Directory.Exists(configFolder))
         {

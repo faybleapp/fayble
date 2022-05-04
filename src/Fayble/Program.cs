@@ -2,6 +2,7 @@
 using System.Net;
 using System.Security.Principal;
 using System.Text;
+using Fayble;
 using Fayble.BackgroundServices;
 using Fayble.BackgroundServices.ComicLibrary;
 using Fayble.Core.Exceptions;
@@ -34,6 +35,32 @@ using Microsoft.IdentityModel.Tokens;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 using Newtonsoft.Json.Serialization;
+using Serilog;
+using Serilog.Core;
+using Serilog.Core.Enrichers;
+using Serilog.Events;
+
+ApplicationHelpers.logLevel = new LoggingLevelSwitch
+{
+    MinimumLevel = LogEventLevel.Information
+};
+
+Log.Logger = new LoggerConfiguration()
+    .WriteTo.Console()
+    .Enrich.With(new PropertyEnricher("MachineName", Environment.MachineName))
+    .Enrich.WithProperty("ApplicationName", "Fayble")
+    .MinimumLevel.ControlledBy(ApplicationHelpers.logLevel)
+    .MinimumLevel.Override("System", LogEventLevel.Warning)
+    .MinimumLevel.Override("Microsoft", LogEventLevel.Warning)
+    .MinimumLevel.Override("Microsoft.Hosting.Lifetime", LogEventLevel.Information)
+    .WriteTo.File(
+        Path.Combine(ApplicationHelpers.GetLogsDirectory(), "fayble.log"),
+        rollOnFileSizeLimit: true,
+        fileSizeLimitBytes: 1000000)
+    .CreateBootstrapLogger();
+
+Log.Information("Starting...");
+Log.Information("Application directory: {directory}", ApplicationHelpers.GetAppDirectory());
 
 IConfiguration config = new ConfigurationBuilder()
     .AddJsonFile("appsettings.json")
@@ -42,8 +69,7 @@ IConfiguration config = new ConfigurationBuilder()
 
 var builder = WebApplication.CreateBuilder(args);
 
-
-// Add services to the container.
+builder.Host.UseSerilog();
 
 builder.Services.AddControllersWithViews().AddNewtonsoftJson(o =>
 {
@@ -108,7 +134,7 @@ builder.Services.AddHttpContextAccessor();
 builder.Services.AddHostedService<QueuedHostedService>();
 builder.Services.AddSingleton<IBackgroundTaskQueue, BackgroundTaskQueue>();
 builder.Services.AddScoped<IBackgroundTaskService, BackgroundTaskService>();
-
+builder.Services.AddScoped<IProblemDetailsFactory, ProblemDetailsFactory>();
 builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 
 // Register Repositories
@@ -141,6 +167,8 @@ builder.Services.AddSingleton<IBackgroundTaskQueue, BackgroundTaskQueue>();
 
 var app = builder.Build();
 
+app.UseSerilogRequestLogging();
+
 // Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())
 {
@@ -148,57 +176,40 @@ if (!app.Environment.IsDevelopment())
     app.UseHsts();
 }
 
-app.UseExceptionHandler(exceptionHandlerApp =>
-{
-    exceptionHandlerApp.Run(async context =>
+app.UseExceptionHandler(
+    exceptionHandlerApp =>
     {
-        context.Response.ContentType = "application/json";
+        exceptionHandlerApp.Run(
+            async context =>
+            {
+                context.Response.ContentType = "application/json";
 
-        var exceptionHandlerFeature = context.Features.Get<IExceptionHandlerFeature>();
-        var exception = exceptionHandlerFeature?.Error;
+                var problemDetailsFactory = context.RequestServices.GetRequiredService<IProblemDetailsFactory>();
+                var exceptionHandlerFeature = context.Features.Get<IExceptionHandlerFeature>();
 
-        //TODO: DO we need this?
-        //Log.Error(exceptionHandlerFeature.Error, exceptionHandlerFeature.Error.Message);
+                if (exceptionHandlerFeature == null)
+                {
+                    Log.Error("Unable to get IExceptionHandlerFeature. Logging of exceptions disabled.");
+                    return;
+                }
 
-        var problemDetails = new ProblemDetails
-        {
-            Detail = app.Environment.IsDevelopment() ? exception?.ToString() : exception?.Message,
-            Instance = context.Request.Path,
-        };
-
-        switch (exception)
-        {
-            case NotFoundException _:
-                problemDetails.Type = exception.GetType().Name;
-                problemDetails.Status = context.Response.StatusCode = (int)HttpStatusCode.NotFound;
-                problemDetails.Title = "Not Found";
-                break;
-            case NotAuthorisedException _:
-                problemDetails.Type = exception.GetType().Name;
-                problemDetails.Status = context.Response.StatusCode = (int)HttpStatusCode.Unauthorized;
-                problemDetails.Title = "Not Authorised";
-                break;
-            case ValidationException _:
-                problemDetails.Type = exception.GetType().Name;
-                problemDetails.Status = context.Response.StatusCode = (int)HttpStatusCode.UnprocessableEntity;
-                problemDetails.Title = "Invalid";
-                break;
-
-            default:
-                problemDetails.Type = exception?.GetType().Name;
-                problemDetails.Status = context.Response.StatusCode = (int)HttpStatusCode.InternalServerError;
-                problemDetails.Title = "Unexpected error occurred";
-                break;
-        }
-
-        await context.Response.WriteAsync(JsonConvert.SerializeObject(problemDetails));
+                await context.Response.WriteAsync(
+                    JsonConvert.SerializeObject(
+                        problemDetailsFactory!.CreateProblemDetails(
+                            context,
+                            exceptionHandlerFeature.Error,
+                            app.Environment.IsDevelopment())));
+            });
     });
-});
+
 
 app.MapHub<BackgroundTaskHub>("/hubs/backgroundtasks");
 
 //app.UseHttpsRedirection();
 app.UseStaticFiles();
+
+
+
 app.UseRouting();
 
 app.MapControllerRoute(
@@ -212,10 +223,6 @@ app.MapGet("/api/heartbeat", () => "♥");
 app.UseAuthentication();
 
 app.UseAuthorization();
-
-//Ensure app directory exists
-var appDirectory = ApplicationHelpers.GetAppDirectory();
-if (!Directory.Exists(appDirectory)) Directory.CreateDirectory(appDirectory);
 
 app.MigrateAndSeedDb();
 
