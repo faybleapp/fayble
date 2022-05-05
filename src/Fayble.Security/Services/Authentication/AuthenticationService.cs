@@ -13,6 +13,7 @@ using Fayble.Domain.Repositories;
 using Fayble.Models.Configuration;
 using Fayble.Security.Models;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using User = Fayble.Security.Models.User;
@@ -21,6 +22,7 @@ namespace Fayble.Security.Services.Authentication;
 
 public class AuthenticationService : IAuthenticationService
 {
+    private readonly ILogger _logger;
     private readonly UserManager<Domain.Aggregates.User.User> _userManager;
     private readonly SignInManager<Domain.Aggregates.User.User> _signInManager;
     private readonly IUser _currentUser;
@@ -34,7 +36,8 @@ public class AuthenticationService : IAuthenticationService
         IOptions<AuthenticationConfiguration> configuration,
         IRefreshTokenRepository refreshTokenRepository,
         IUnitOfWork unitOfWork,
-        IUser currentUser )
+        IUser currentUser,
+        ILogger<AuthenticationService> logger)
     {
         _userManager = userManager;
         _signInManager = signInManager;
@@ -42,7 +45,7 @@ public class AuthenticationService : IAuthenticationService
         _unitOfWork = unitOfWork;
         _authConfiguration = configuration.Value;
         _currentUser = currentUser;
-     
+        _logger = logger;
     }
 
     public async Task<Models.User> GetUser(Guid id)
@@ -74,9 +77,11 @@ public class AuthenticationService : IAuthenticationService
         // TODO: Check lockout is enabled and whether user is admin
         if (loginResult.IsLockedOut)
         {
-            throw new UnauthorizedAccessException("User account is currently locked out");
+            _logger.LogWarning("User account is currently locked out: {account}", loginCredentials.Username);
+            throw new NotAuthorisedException("User account is currently locked out");
         }
 
+        _logger.LogWarning("Failed login attempt {account}", loginCredentials.Username);
         throw new NotAuthorisedException("Incorrect username or password");
     }
 
@@ -104,7 +109,7 @@ public class AuthenticationService : IAuthenticationService
 
         if (validToken == null)
         {
-            throw new UnauthorizedAccessException("Invalid refresh token");
+            throw new NotAuthorisedException("Invalid refresh token");
         };
 
         var token = await GenerateToken(validToken.UserId);
@@ -142,7 +147,7 @@ public class AuthenticationService : IAuthenticationService
             audience: _authConfiguration.TokenAudience,
             expires: DateTime.Now.AddHours(3),
             claims: authClaims,
-            signingCredentials: new SigningCredentials(authSigningKey, SecurityAlgorithms.HmacSha256)
+            signingCredentials: new SigningCredentials(authSigningKey, SecurityAlgorithms.HmacSha256Signature)
         );
     }
 
