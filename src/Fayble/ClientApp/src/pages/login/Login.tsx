@@ -25,7 +25,16 @@ export const Login = () => {
 			login.mutate([null, values], {
 				onSuccess: () => {},
 				onError: (error) => {
-					toast.error("Incorrect username or password");
+					switch (error.response?.status) {
+						case 401:
+							toast.error("Incorrect username or password");
+							break;
+						case 429:
+							toast.error("Too many login attempts");
+							break;
+						default:
+							toast.error("An error occurred while logging in");
+					}
 				},
 			});
 		},
