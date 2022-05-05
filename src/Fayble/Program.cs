@@ -2,6 +2,7 @@
 using System.Net;
 using System.Security.Principal;
 using System.Text;
+using AspNetCoreRateLimit;
 using Fayble;
 using Fayble.BackgroundServices;
 using Fayble.BackgroundServices.ComicLibrary;
@@ -39,6 +40,7 @@ using Serilog;
 using Serilog.Core;
 using Serilog.Core.Enrichers;
 using Serilog.Events;
+using SixLabors.ImageSharp;
 
 ApplicationHelpers.logLevel = new LoggingLevelSwitch
 {
@@ -158,12 +160,18 @@ builder.Services.AddScoped<Fayble.Security.Services.Authentication.IAuthenticati
 builder.Services.AddScoped<IPublisherService, PublisherService>();
 builder.Services.AddScoped<IBookService, BookService>();
 builder.Services.AddScoped<ITagService, TagService>();
-
 builder.Services.AddScoped<ISystemService, SystemService>();
 
 
 // Register Background Services
 builder.Services.AddSingleton<IBackgroundTaskQueue, BackgroundTaskQueue>();
+
+// Register Rate Limiting
+builder.Services.AddMemoryCache();
+builder.Services.Configure<IpRateLimitOptions>(config.GetSection("IpRateLimiting"));
+builder.Services.Configure<IpRateLimitPolicies>(config.GetSection("IpRateLimitPolicies"));
+builder.Services.AddInMemoryRateLimiting();
+builder.Services.AddSingleton<IRateLimitConfiguration, RateLimitConfiguration>();
 
 var app = builder.Build();
 
@@ -208,7 +216,7 @@ app.MapHub<BackgroundTaskHub>("/hubs/backgroundtasks");
 //app.UseHttpsRedirection();
 app.UseStaticFiles();
 
-
+app.UseIpRateLimiting();
 
 app.UseRouting();
 
