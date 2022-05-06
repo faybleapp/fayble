@@ -356,3 +356,5 @@ src/Fayble/appsettings.Development.json
 src/Fayble/ClientApp/.env.development
 
 src/Fayble/ClientApp/.env.development.local
+
+src/.idea

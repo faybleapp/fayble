@@ -3,6 +3,9 @@ name: Build and Test
 on:
   push:
     branches: [ develop ]
+    paths:
+      - '**.cs'
+      - '**.csproj'
     
 env:
   DOTNET_VERSION: '6.0.x'
