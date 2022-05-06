@@ -210,7 +210,6 @@ app.UseExceptionHandler(
             });
     });
 
-
 app.MapHub<BackgroundTaskHub>("/hubs/backgroundtasks");
 
 app.UseStaticFiles();
