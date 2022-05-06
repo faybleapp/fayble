@@ -34,7 +34,7 @@ jobs:
       
     - uses: azure/webapps-deploy@v2      
       name: Deploy
-      if: "!github.event.release.prelease"
+      if: "!github.event.release.prerelease"
       with:
         app-name: 'FaybleDemo'
         publish-profile: '${{ secrets.DEMO_PUBLISH_PROFILE }}'
