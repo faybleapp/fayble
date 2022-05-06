@@ -3,27 +3,27 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.0.32112.339
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Fayble", "Fayble\Fayble.csproj", "{FFCCE16D-4B1F-4C7B-8693-9422B7B9A3C9}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Fayble", "src\Fayble\Fayble.csproj", "{FFCCE16D-4B1F-4C7B-8693-9422B7B9A3C9}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Fayble.Domain", "Fayble.Domain\Fayble.Domain.csproj", "{D92B1A13-E5EC-41F5-861D-A367C123C535}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Fayble.Domain", "src\Fayble.Domain\Fayble.Domain.csproj", "{D92B1A13-E5EC-41F5-861D-A367C123C535}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Fayble.Core", "Fayble.Core\Fayble.Core.csproj", "{35CABE93-04C7-4143-9947-0ECB85B8A95D}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Fayble.Core", "src\Fayble.Core\Fayble.Core.csproj", "{35CABE93-04C7-4143-9947-0ECB85B8A95D}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Fayble.Services", "Fayble.Services\Fayble.Services.csproj", "{486AFD93-AC49-45B2-8BD6-1C54F95DAC93}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Fayble.Services", "src\Fayble.Services\Fayble.Services.csproj", "{486AFD93-AC49-45B2-8BD6-1C54F95DAC93}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Fayble.Infrastructure", "Fayble.Infrastructure\Fayble.Infrastructure.csproj", "{516A5817-D820-4B53-8D27-DF3BE86B681A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Fayble.Infrastructure", "src\Fayble.Infrastructure\Fayble.Infrastructure.csproj", "{516A5817-D820-4B53-8D27-DF3BE86B681A}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Fayble.Security", "Fayble.Security\Fayble.Security.csproj", "{3ED7F04D-2F23-4E57-817A-0C9B1620E704}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Fayble.Security", "src\Fayble.Security\Fayble.Security.csproj", "{3ED7F04D-2F23-4E57-817A-0C9B1620E704}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Fayble.Models", "Fayble.Models\Fayble.Models.csproj", "{8DEB94CC-A9BC-418B-9646-48EEEC603FBE}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Fayble.Models", "src\Fayble.Models\Fayble.Models.csproj", "{8DEB94CC-A9BC-418B-9646-48EEEC603FBE}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Fayble.Infrastructure.Tests", "..\tests\Fayble.Infrastructure.Tests\Fayble.Infrastructure.Tests.csproj", "{07316060-2759-4CB0-9D48-80D3EFB6F1D6}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Fayble.Infrastructure.Tests", "tests\Fayble.Infrastructure.Tests\Fayble.Infrastructure.Tests.csproj", "{07316060-2759-4CB0-9D48-80D3EFB6F1D6}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{182C5D51-D9D6-47D4-A9D7-74F9DF6634C4}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Fayble.BackgroundServices", "Fayble.BackgroundServices\Fayble.BackgroundServices.csproj", "{8D0D2333-8DB1-4C48-9547-3384ED639AF3}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Fayble.BackgroundServices", "src\Fayble.BackgroundServices\Fayble.BackgroundServices.csproj", "{8D0D2333-8DB1-4C48-9547-3384ED639AF3}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Fayble.Domain.Tests", "Fayble.Domain.Tests\Fayble.Domain.Tests.csproj", "{1EFFF192-D23C-4D18-A451-B928D523BFFA}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Fayble.Domain.Tests", "src\Fayble.Domain.Tests\Fayble.Domain.Tests.csproj", "{1EFFF192-D23C-4D18-A451-B928D523BFFA}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
