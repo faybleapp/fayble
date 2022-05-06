@@ -1,6 +1,6 @@
 import cn from "classnames";
 import { Series } from "models/api-models";
-import React, { useState } from "react";
+import React from "react";
 import { Figure } from "react-bootstrap";
 import { Link, useParams } from "react-router-dom";
 import styles from "./SeriesCoverGrid.module.scss";
@@ -13,25 +13,25 @@ interface SeriesCoverGridProps {
 export const SeriesCoverGrid = ({ items }: SeriesCoverGridProps) => {
 	const { libraryId } = useParams<{ libraryId: string }>();
 
-	const [selectedSeriesId, setSelectedSeriesId] = useState<string>();
-	const [showEditSeriesModal, setShowEditSeriesModal] =
-		useState<boolean>(false);
-	const [showMarkReadModal, setShowMarkReadModal] = useState<boolean>(false);
+	// const [selectedSeriesId, setSelectedSeriesId] = useState<string>();
+	// const [showEditSeriesModal, setShowEditSeriesModal] =
+	// 	useState<boolean>(false);
+	// const [showMarkReadModal, setShowMarkReadModal] = useState<boolean>(false);
 
 	const edit = (id: string) => {
-		setSelectedSeriesId(id);
-		setShowEditSeriesModal(true);
+		//setSelectedSeriesId(id);
+		//setShowEditSeriesModal(true);
 	};
 
 	const markReadClick = (id: string) => {
-		setSelectedSeriesId(id);
-		setShowMarkReadModal(true);
+		//setSelectedSeriesId(id);
+		//setShowMarkReadModal(true);
 	};
 
-	const markRead = () => {
-		setShowMarkReadModal(false);
-		setSelectedSeriesId(undefined);
-	};
+	// const markRead = () => {
+	// 	setShowMarkReadModal(false);
+	// 	setSelectedSeriesId(undefined);
+	// };
 
 	return (
 		<>

@@ -22,7 +22,7 @@ export const BookHorizontalScrollList = ({
 }: BookHorizontalScrollListProps) => {
 	const scrollListRef = useRef<any>(null);
 
-	const [selectedBook, setSelectedBook] = useState<Book>();
+	const [selectedBook] = useState<Book>();
 	const [showBookModal, setShowBookModal] = useState<boolean>(false);
 	const [showControls, setShowControls] = useState<boolean>(false);
 

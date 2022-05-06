@@ -21,7 +21,7 @@ export const Series = () => {
 	);
 
 	const [showSeriesModal, setShowSeriesModal] = useState<boolean>(false);
-	const [view, setView] = useState<ViewType>(ViewType.CoverGrid);
+	//const [view, setView] = useState<ViewType>(ViewType.CoverGrid);
 
 	const breadCrumbItems: BreadcrumbItem[] = [
 		{
@@ -43,7 +43,7 @@ export const Series = () => {
 						libraryId={libraryId!}
 						libraryView={ViewType.CoverGrid}
 						navItems={breadCrumbItems}
-						changeView={setView}
+						changeView={() => {}}
 						openEditModal={() => setShowSeriesModal(true)}
 					/>
 					<div className={styles.seriesBody}>

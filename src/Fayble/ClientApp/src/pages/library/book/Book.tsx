@@ -10,18 +10,18 @@ import { useBook, useRelatedBooks } from "services/book";
 import { BookDetail } from "./BookDetail";
 
 export const Book = () => {
-	const { libraryId, seriesId, bookId } = useParams<{
+	const { libraryId, bookId } = useParams<{
 		libraryId: string;
 		seriesId: string;
 		bookId: string;
 	}>();
 
 	const { data: book, isLoading: isLoadingBook } = useBook(bookId!);
-	const { data: relatedBooks, isLoading: isLoadingRelatedBooks } =
+	const { data: relatedBooks } =
 		useRelatedBooks(bookId!);
 
 	const [showBookModal, setShowBookModal] = useState<boolean>(false);
-	const [view, setView] = useState<ViewType>(ViewType.CoverGrid);
+	//const [ view, setView] = useState<ViewType>(ViewType.CoverGrid);
 
 	const breadCrumbItems: BreadcrumbItem[] = [
 		{
@@ -47,7 +47,7 @@ export const Book = () => {
 						libraryId={libraryId!}
 						libraryView={ViewType.CoverGrid}
 						navItems={breadCrumbItems}
-						changeView={setView}
+						changeView={() => {}}
 						openEditModal={() => setShowBookModal(true)}
 					/>
 					<BookDetail book={book} />
