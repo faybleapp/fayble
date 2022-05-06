@@ -30,9 +30,10 @@ jobs:
       run: dotnet test --no-restore --verbosity normal
       
     - name: Publish
-      run: dotnet publish src/Fayble/Fayble.csproj -c Release -o ${{env.AZURE_WEBAPP_PACKAGE_PATH}} -p:Version=${VERSION} 
+      run: dotnet publish src/Fayble/Fayble.csproj -c Release -o ${{env.AZURE_WEBAPP_PACKAGE_PATH}} -p:Version=${{env.VERSION}} 
 
   deploy_demo:
+    needs: [build]
     if: "!github.event.release.prelease"
     runs-on: ubuntu-latest
     
