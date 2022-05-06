@@ -21,7 +21,7 @@ export const Sidebar = () => {
 
 	const [showLibraryModal, setShowLibraryModal] = useState(false);
 	const [activeMenuItem, setActiveMenuItem] = useState("");
-	const [sidebarPinned, setSidebarPinned] = useState(false);
+	const [sidebarPinned] = useState(false);
 
 	return (
 		<>

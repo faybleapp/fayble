@@ -2,7 +2,6 @@ import { BookItem } from "components/bookItem";
 import { Book } from "models/api-models";
 import { MediaType } from "models/ui-models";
 import React from "react";
-import { useParams } from "react-router-dom";
 import styles from "./BookCoverGrid.module.scss";
 
 interface BookCoverGridProps {
@@ -11,14 +10,14 @@ interface BookCoverGridProps {
 }
 
 export const BookCoverGrid = ({ books, title }: BookCoverGridProps) => {
-	const { libraryId, seriesId } = useParams<{
-		libraryId: string;
-		seriesId: string;
-	}>();
+	// const { libraryId, seriesId } = useParams<{
+	// 	libraryId: string;
+	// 	seriesId: string;
+	// }>();
 
-	const markRead = (id: string) => {};
+	// const markRead = (id: string) => {};
 
-	const edit = (id: string) => {};
+	// const edit = (id: string) => {};
 
 	return (
 		<>

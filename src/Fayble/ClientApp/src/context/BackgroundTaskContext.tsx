@@ -60,7 +60,7 @@ export const BackgroundTaskContextProvider = (props: BackgroundTaskContextProvid
 				})
 				.catch((error) => console.log(error));
 		}
-	}, [connection]);
+	}, [backgroundTasks, connection]);
 
 	return (
 		<BackgroundTaskContext.Provider value={{ backgroundTasks }}>
