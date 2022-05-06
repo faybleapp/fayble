@@ -34,6 +34,9 @@ jobs:
 
   deploy_demo:
     if: "!github.event.release.prelease"
+    runs-on: ubuntu-latest
+    
+    steps:
     - uses: azure/webapps-deploy@v2
       name: Deploy
       with:
