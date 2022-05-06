@@ -213,7 +213,6 @@ app.UseExceptionHandler(
 
 app.MapHub<BackgroundTaskHub>("/hubs/backgroundtasks");
 
-//app.UseHttpsRedirection();
 app.UseStaticFiles();
 
 app.UseIpRateLimiting();
