@@ -1,5 +1,7 @@
 ﻿using Fayble.Models.Series;
+using Fayble.Security.Authorisation;
 using Fayble.Services.Series;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Book = Fayble.Models.Book.Book;
 
@@ -7,6 +9,7 @@ namespace Fayble.Controllers;
 
 [Route("api/[controller]")]
 [ApiController]
+[Authorize(Policy = Policies.User)]
 public class SeriesController : ControllerBase
 {
     private readonly ISeriesService _seriesService;
@@ -36,6 +39,7 @@ public class SeriesController : ControllerBase
 
 
     [HttpPatch("{id}")]
+    [Authorize(Policy = Policies.Administrator)]
     public async Task<ActionResult<Series>> Update(Guid id, [FromBody] UpdateSeries series)
     {
         return await _seriesService.Update(id, series);

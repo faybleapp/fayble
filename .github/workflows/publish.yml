@@ -10,7 +10,7 @@ env:
   AZURE_WEBAPP_PACKAGE_PATH: 'publish'
 
 jobs:
-  build:
+  publish:
     runs-on: ubuntu-latest
   
     steps:    
@@ -33,7 +33,7 @@ jobs:
       run: dotnet publish src/Fayble/Fayble.csproj -c Release -o ${{env.AZURE_WEBAPP_PACKAGE_PATH}} -p:Version=${{env.VERSION}}
       
     - uses: azure/webapps-deploy@v2      
-      name: Deploy
+      name: Deploy Demo site
       if: "!github.event.release.prerelease"
       with:
         app-name: 'FaybleDemo'

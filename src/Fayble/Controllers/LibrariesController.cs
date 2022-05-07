@@ -1,12 +1,15 @@
 ﻿using Fayble.Models.Library;
 using Fayble.Models.Series;
+using Fayble.Security.Authorisation;
 using Fayble.Services.Library;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Fayble.Controllers;
 
 [Route("api/[controller]")]
 [ApiController]
+[Authorize(Policy = Policies.Administrator)]
 public class LibrariesController : ControllerBase
 {
     private readonly ILibraryService _libraryService;
@@ -17,12 +20,14 @@ public class LibrariesController : ControllerBase
     }
 
     [HttpGet]
+    [Authorize(Policy = Policies.User)]
     public async Task<IEnumerable<Library>> GetAll()
     {
         return await _libraryService.GetAll();
     }
 
     [HttpGet("{id}")]
+    [Authorize(Policy = Policies.User)]
     public async Task<Library> Get(Guid id)
     {
         return await _libraryService.Get(id);
@@ -36,6 +41,7 @@ public class LibrariesController : ControllerBase
     }
 
     [HttpGet("{id}/series")]
+    [Authorize(Policy = Policies.User)]
     public async Task<IEnumerable<Series>?> GetSeries(Guid id)
     {
         return await _libraryService.GetSeries(id);

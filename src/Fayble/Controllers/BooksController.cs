@@ -1,4 +1,5 @@
 ﻿using Fayble.Models.Book;
+using Fayble.Security.Authorisation;
 using Fayble.Services.Book;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -7,6 +8,7 @@ namespace Fayble.Controllers;
 
 [Route("api/[controller]")]
 [ApiController]
+[Authorize(Policy = Policies.Administrator)]
 public class BooksController : ControllerBase
 {
     private readonly IBookService _bookService;
@@ -17,6 +19,7 @@ public class BooksController : ControllerBase
     }
 
     [HttpGet("{id}")]
+    [Authorize(Policy = Policies.User)]
     public async Task<Book?> Get(Guid id)
     {
         return await _bookService.Get(id);
@@ -28,7 +31,7 @@ public class BooksController : ControllerBase
         return await _bookService.Update(id, series);
     }
 
-    //ignore this action
+    [Authorize(Policy = Policies.User)]
     [HttpGet("{id}/related")]
     public async Task<RelatedBooks> GetRelated(Guid id)
     {

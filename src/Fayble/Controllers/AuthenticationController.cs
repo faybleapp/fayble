@@ -8,7 +8,6 @@ namespace Fayble.Controllers;
 
 
 [Route("api/[controller]")]
-[Authorize]
 [ApiController]
 public class AuthenticationController : ControllerBase
 {
@@ -21,7 +20,6 @@ public class AuthenticationController : ControllerBase
 
     [HttpPost]
     [Route("login")]
-    [AllowAnonymous]
     public async Task<ActionResult<AuthenticationResult>> Login([FromBody] LoginCredentials login)
     {
        return await _authenticationService.Login(login);
@@ -29,7 +27,6 @@ public class AuthenticationController : ControllerBase
 
     [HttpPost]
     [Route("refresh")]
-    [AllowAnonymous]
     public async Task<ActionResult<AuthenticationResult>> Refresh([FromBody] string refreshToken)
     {
         return await _authenticationService.RefreshToken(refreshToken);
