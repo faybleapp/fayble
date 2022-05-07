@@ -1,6 +1,8 @@
 ﻿using Fayble.BackgroundServices;
 using Fayble.Domain.Aggregates.BackgroundTask;
 using Fayble.Models.BackgroundTask;
+using Fayble.Security.Authorisation;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using BackgroundTask = Fayble.BackgroundServices.BackgroundTask;
 
@@ -9,6 +11,7 @@ namespace Fayble.Controllers;
 
 [Route("api/[controller]")]
 [ApiController]
+[Authorize(Policy = Policies.Administrator)]
 public class BackgroundTasksController : ControllerBase
 {
     private readonly IBackgroundTaskService _backgroundTaskService;

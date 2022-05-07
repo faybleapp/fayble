@@ -1,4 +1,5 @@
-﻿using Fayble.Security.Models;
+﻿using Fayble.Security.Authorisation;
+using Fayble.Security.Models;
 using Fayble.Security.Services.Authentication;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -7,7 +8,7 @@ namespace Fayble.Controllers;
 
 [Route("api/[controller]")]
 [ApiController]
-[Authorize]
+[Authorize(Policy = Policies.User)]
 public class UsersController : ControllerBase
 {
     private readonly IAuthenticationService _authenticationService;
@@ -33,6 +34,7 @@ public class UsersController : ControllerBase
     }
 
     [HttpPost]
+    [Authorize(Policy = Policies.Administrator)]
     [Route("create-user")]
     public async Task<User> CreateUser([FromBody] NewUser newUser)
     {

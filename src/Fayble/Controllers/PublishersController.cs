@@ -1,11 +1,14 @@
 ﻿using Fayble.Models;
+using Fayble.Security.Authorisation;
 using Fayble.Services.Publisher;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Fayble.Controllers;
 
 [Route("api/[controller]")]
 [ApiController]
+[Authorize(Policy = Policies.User)]
 public class PublishersController : ControllerBase
 {
     private readonly IPublisherService _publisherService;

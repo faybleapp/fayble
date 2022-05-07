@@ -16,6 +16,7 @@ using Fayble.Infrastructure;
 using Fayble.Infrastructure.Repositories;
 using Fayble.Models.Configuration;
 using Fayble.Security;
+using Fayble.Security.Authorisation;
 using Fayble.Security.Models;
 using Fayble.Services.Book;
 using Fayble.Services.ComicLibrary;
@@ -124,6 +125,15 @@ builder.Services.AddAuthentication(options =>
         };
     });
 
+builder.Services.AddAuthorization(
+    options =>
+    {
+        options.AddPolicy(
+            Policies.Administrator, policy => policy.RequireRole(UserRoles.Owner, UserRoles.Administrator));
+        options.AddPolicy(
+            Policies.User, policy => policy.RequireRole(UserRoles.Owner, UserRoles.Administrator, UserRoles.User));
+    });
+
 builder.Services.AddSignalR(
     options =>
     {
@@ -197,7 +207,7 @@ app.UseExceptionHandler(
 
                 if (exceptionHandlerFeature == null)
                 {
-                    Log.Error("Unable to get IExceptionHandlerFeature. Logging of exceptions disabled.");
+                    Log.Error("Unable to get IExceptionHandlerFeature. Logging of exceptions disabled");
                     return;
                 }
 
