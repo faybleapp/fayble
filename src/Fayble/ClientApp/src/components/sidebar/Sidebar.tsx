@@ -6,8 +6,8 @@ import {
 import { LibraryModal } from "components/libraryModal";
 import { useAppState } from "context/AppStateContext";
 import { Library } from "models/api-models";
-import React, { useState } from "react";
-import { Link } from "react-router-dom";
+import React, { useEffect, useState } from "react";
+import { Link, useLocation } from "react-router-dom";
 import { useLibraries } from "services/library";
 import styles from "./Sidebar.module.scss";
 import { SidebarMenuItem } from "./SidebarMenuItem";
@@ -15,18 +15,21 @@ import { SidebarMenuItemDropdown } from "./SidebarMenuItemDropdown";
 import { SidebarSubmenuItem } from "./SidebarSubmenuItem";
 
 export const Sidebar = () => {
-	const { data: libraries } = useLibraries();
-
-	const { sidebarOpen } = useAppState();
-
 	const [showLibraryModal, setShowLibraryModal] = useState(false);
 	const [activeMenuItem, setActiveMenuItem] = useState("");
-	const [sidebarPinned] = useState(false);
+
+	const { data: libraries } = useLibraries();
+	const { pathname } = useLocation();
+	const { sidebarOpen } = useAppState();
+
+	useEffect(() => {
+		var libraryId = libraries?.find((l) => pathname.includes(l.id!))?.id;
+		setActiveMenuItem(!!libraryId ? libraryId : "");
+	}, [pathname, libraries]);
 
 	return (
 		<>
-			<div
-			>
+			<div className={styles.sidebar}>
 				<ul>
 					{libraries &&
 						libraries?.map((library: Library) => {
@@ -37,9 +40,7 @@ export const Sidebar = () => {
 										style={{ textDecoration: "none" }}>
 										<SidebarMenuItem
 											name={library.name || ""}
-											collapsed={
-												!sidebarPinned && !sidebarOpen
-											}
+											collapsed={!sidebarOpen}
 											id={library.id || ""}
 											icon={faBook}
 											activeIcon={faBookOpen}
@@ -54,7 +55,7 @@ export const Sidebar = () => {
 						<SidebarMenuItemDropdown
 							id="application"
 							name="Application"
-							collapsed={!sidebarPinned && !sidebarOpen}
+							collapsed={!sidebarOpen}
 							activeItem={activeMenuItem}
 							icon={faDesktop}>
 							<div

@@ -115,6 +115,7 @@ public class AuthenticationService : IAuthenticationService
         var token = await GenerateToken(validToken.UserId);
 
         _refreshTokenRepository.Delete(validToken);
+
         await _unitOfWork.Commit();
 
         return new AuthenticationResult(

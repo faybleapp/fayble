@@ -6,6 +6,13 @@
 	z-index: 1031;
 	color: $accent-color;
 	top: 50%;
-	right: 50%;
+	 
+	&.sidebarOpen {
+		right: calc(50% - ($sidebar-open-width / 2));
+	 }
+
+	&.sidebarClosed {
+		right: calc(50% - ($sidebar-closed-width / 2));
+	 }
 }
 

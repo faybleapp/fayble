@@ -1,4 +1,5 @@
-﻿using Fayble.Security;
+﻿using Fayble.Domain.Aggregates.RefreshToken;
+using Fayble.Security;
 using Fayble.Security.Models;
 using Fayble.Security.Services.Authentication;
 using Microsoft.AspNetCore.Authorization;
@@ -27,11 +28,9 @@ public class AuthenticationController : ControllerBase
 
     [HttpPost]
     [Route("refresh")]
-    public async Task<ActionResult<AuthenticationResult>> Refresh([FromBody] string refreshToken)
+    public async Task<ActionResult<AuthenticationResult>> Refresh([FromBody] RefreshTokenRequest refreshTokenRequest)
     {
-        return await _authenticationService.RefreshToken(refreshToken);
+        return await _authenticationService.RefreshToken(refreshTokenRequest.RefreshToken);
     }
-
-
 }
 

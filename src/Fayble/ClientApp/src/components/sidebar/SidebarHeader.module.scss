@@ -1,0 +1,19 @@
+@import "../../scss/variables";
+
+
+.header {
+    margin-left: 20px;
+}
+
+.brand {
+    margin-left: 15px;
+    display: inline;
+}
+
+.toggleCollapseIcon {
+	color: $icon-button-color;
+	&:hover {
+		color: $accent-color;
+		cursor: pointer;
+	}
+}

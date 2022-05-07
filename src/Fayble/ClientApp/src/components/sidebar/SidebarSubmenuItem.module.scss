@@ -6,8 +6,7 @@
 	padding-bottom: 8px;
 
 	&:hover {
-		color: $accent-color;
-		background: $navigation-secondary-color;
+		color: $accent-color;		
 	}
 
 	&.active {
@@ -15,8 +14,8 @@
 			to right,
 			$accent-color 0px,
 			$accent-color 2px,
-			$navigation-secondary-color 2px,
-			$navigation-secondary-color 250px
+			transparent 2px,
+			transparent transparent $sidebar-open-width
 		) !important;
 		color: $accent-color;
 	}

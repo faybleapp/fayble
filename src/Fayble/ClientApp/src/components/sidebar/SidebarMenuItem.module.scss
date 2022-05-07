@@ -3,14 +3,14 @@
 .item {
 	cursor: pointer;
 	padding-left: 16px;
-	color: white;
-	font-size: 14px;
+	color: white;	
 	padding-top: 8px;
 	padding-bottom: 8px;
-	padding-right: 10px;
-	min-width: 200px;
+	padding-right: 10px;	
 	white-space: nowrap;
 	overflow: hidden;
+	font-size: $sidebar-font-size;
+	font-weight: $sidebar-font-weight;
 	text-overflow: ellipsis;
 
 	&:hover > .name {
@@ -28,20 +28,20 @@
 		to right,
 		$accent-color 0px,
 		$accent-color 2px,
-		$navigation-secondary-color 2px,
-		$navigation-secondary-color 250px
+		transparent 2px,
+		transparent $sidebar-open-width
 	) !important;
 	color: $accent-color;
 }
 
 .item:hover {
-	color: $accent-color;
-	background: $navigation-secondary-color;
+	color: $accent-color;	
 }
 
 .hide {
-	visibility: hidden;
+	display: none !important;
 }
+
 .icon {
-	font-size: 14px;
+	font-size: $sidebar-font-size;
 }

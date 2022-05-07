@@ -1,9 +1,13 @@
 import { faBell } from "@fortawesome/free-regular-svg-icons";
-import { faCircleNotch, faUserCircle } from "@fortawesome/free-solid-svg-icons";
+import {
+	faBars,
+	faCircleNotch,
+	faUserCircle
+} from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import cn from "classnames";
 import { BackgroundTaskSidebar } from "components/backgroundTaskSidebar";
-import { useBackgroundTaskState } from "context";
+import { useAppState, useBackgroundTaskState } from "context";
 import React, { useState } from "react";
 import {
 	FormControl,
@@ -16,6 +20,7 @@ import styles from "./Navbar.module.scss";
 
 export const NavbarMenu = () => {
 	const navigate = useNavigate();
+	const { sidebarOpen, setSidebarOpen } = useAppState();
 
 	const [showBackgroundTaskSidebar, setShowBackgroundTaskSidebar] =
 		useState(false);
@@ -31,7 +36,15 @@ export const NavbarMenu = () => {
 	return (
 		<>
 			<RBNavbar expand="md" className={styles.navMenu} sticky="top">
-				{/* <Navbar.Brand href="#home">Fayble</Navbar.Brand> */}
+				<div
+					className={styles.toggle}
+					onClick={() => setSidebarOpen(!sidebarOpen)}>
+					<FontAwesomeIcon icon={faBars} size="lg" />
+				</div>				
+					<RBNavbar.Brand className={styles.brand} onClick={() => navigate("/")}>
+						FAYBLE
+					</RBNavbar.Brand>
+				
 				<RBNavbar.Toggle aria-controls="responsive-navbar-nav" />
 				<RBNavbar.Collapse className={styles.navbarCollapse}>
 					<Nav className="me-auto">
@@ -71,10 +84,9 @@ export const NavbarMenu = () => {
 							icon={faCircleNotch}
 							size="lg"
 							spin={activeTasks}
-							className={cn
-								(styles.navMenuIcon,
-								{ [styles.active]: activeTasks })
-							}
+							className={cn(styles.navMenuIcon, {
+								[styles.active]: activeTasks,
+							})}
 						/>
 					</Nav.Link>
 					<NavDropdown
@@ -100,7 +112,7 @@ export const NavbarMenu = () => {
 								className={styles.navMenuIcon}
 							/>
 						}
-						className={styles.navMenuDropdown}>
+						className={cn(styles.navMenuDropdown, styles.logoutMenuButton)}>
 						<NavDropdown.Item onClick={logout}>
 							Logout
 						</NavDropdown.Item>
