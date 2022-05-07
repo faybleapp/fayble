@@ -38,6 +38,11 @@ export const BookHorizontalScrollList = ({
 	};
 
 	useEffect(() => {
+		console.log(scrollListRef.current?.scrollWidth );
+		console.log(scrollListRef.current?.clientWidth);
+	},[scrollListRef.current?.clientWidth, scrollListRef.current?.scrollWidth])
+
+	useEffect(() => {
 		setShowControls(
 			scrollListRef.current?.scrollWidth >
 				scrollListRef.current?.clientWidth
@@ -45,7 +50,7 @@ export const BookHorizontalScrollList = ({
 	}, []);
 
 	return (
-		<>
+		<div>
 			<div className={styles.listHeader}>
 				<div className={styles.listTitle}>
 					<h6>{title}</h6>
@@ -95,6 +100,6 @@ export const BookHorizontalScrollList = ({
 					close={() => setShowBookModal(false)}
 				/>
 			)}
-		</>
+		</div>
 	);
 };

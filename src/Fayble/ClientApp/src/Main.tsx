@@ -23,7 +23,7 @@ export const Main = () => {
 	const navigate = useNavigate();
 	const location = useLocation();
 
-	const { sidebarOpen } = useAppState();	
+	const { sidebarOpen } = useAppState();
 	const {
 		data: systemConfiguration,
 		isLoading: isLoadingSystemConfiguration,
@@ -50,7 +50,11 @@ export const Main = () => {
 		if (firstRun && location.pathname.toLowerCase() !== "/first-run") {
 			navigate("/first-run");
 		}
-		if (!loggedIn && !firstRun && location.pathname.toLowerCase() !== "/login") {
+		if (
+			!loggedIn &&
+			!firstRun &&
+			location.pathname.toLowerCase() !== "/login"
+		) {
 			navigate("/login");
 		}
 	}, [location, navigate, systemConfiguration, loading, loggedIn]);
@@ -61,41 +65,50 @@ export const Main = () => {
 				<LoadingIndicator />
 			) : (
 				<>
-					{hideNavAndSidebar ? null : (
-						<div
-							className={cn(
-								styles.sidebar,
-								sidebarOpen ? styles.open : styles.closed
-							)}>
-							<Sidebar />
-						</div>
-					)}
-					<div className={styles.main}>
-						{hideNavAndSidebar ? null : <Navbar />}
-						<div
-							className={styles.pageContent}
-							id="main-page-content">
-							<Routes>
-								<Route path="/" element={<Home />} />
-								<Route path="/login" element={<Login />} />
-								<Route
-									path="/first-run"
-									element={<FirstRun />}
-								/>
-								<Route
-									path="/library/:libraryId"
-									element={<Library />}
-								/>
-								<Route
-									path="/library/:libraryId/series/:seriesId"
-									element={<Series />}
-								/>
-								<Route
-									path="/library/:libraryId/series/:seriesId/book/:bookId"
-									element={<Book />}
-								/>
-							</Routes>
-						</div>
+					{hideNavAndSidebar ? null : <Navbar />}
+					<div className={styles.body}>
+						<>
+							{hideNavAndSidebar ? null : (
+								<div
+									className={cn(
+										styles.sidebar,
+										sidebarOpen
+											? styles.open
+											: styles.closed
+									)}>
+									<Sidebar />
+								</div>
+							)}
+							<div className={styles.main}>
+								<div
+									className={styles.pageContent}
+									id="main-page-content">
+									<Routes>
+										<Route path="/" element={<Home />} />
+										<Route
+											path="/login"
+											element={<Login />}
+										/>
+										<Route
+											path="/first-run"
+											element={<FirstRun />}
+										/>
+										<Route
+											path="/library/:libraryId"
+											element={<Library />}
+										/>
+										<Route
+											path="/library/:libraryId/series/:seriesId"
+											element={<Series />}
+										/>
+										<Route
+											path="/library/:libraryId/series/:seriesId/book/:bookId"
+											element={<Book />}
+										/>
+									</Routes>
+								</div>
+							</div>
+						</>
 					</div>
 				</>
 			)}

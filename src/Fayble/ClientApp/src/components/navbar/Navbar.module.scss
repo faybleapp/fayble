@@ -1,11 +1,11 @@
 @import "../../scss/variables";
 
-.navMenu {	
+.navMenu {
 	top: "0";
 	right: "0";
-	
-	background: rgba(0,0,0,.15) !important;
-	box-shadow: none !important;	
+
+	background: $primary-color;
+	box-shadow: none !important;
 	:global(.dropdown-toggle:after) {
 		display: none;
 	}
@@ -20,12 +20,17 @@
 }
 
 .active {
-	color: $accent-color
+	color: $accent-color;
+}
+
+.brand {
+	color: white !important;
+	cursor: pointer;
 }
 
 .search {
 	width: 350px !important;
-	background-color: #2A4151 !important;
+	background-color: #2a4151 !important;
 	border: none !important;
 	height: 30px !important;
 	margin-left: 15px;
@@ -33,3 +38,15 @@
 	color: white !important;
 }
 
+.toggle {
+	margin-left: 17px;
+	margin-right: 17px;	
+	cursor: pointer;
+	&:hover {
+		color: $accent-color;	
+	}
+}
+
+.logoutMenuButton {
+	margin-right: 15px;
+}

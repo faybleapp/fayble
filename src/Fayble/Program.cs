@@ -118,6 +118,7 @@ builder.Services.AddAuthentication(options =>
         options.TokenValidationParameters = new TokenValidationParameters
         {
             ValidateIssuer = true,
+            ValidateLifetime = true,
             ValidateAudience = true,
             ValidAudience = config["Authentication:TokenAudience"],
             ValidIssuer = config["Authentication:TokenIssuer"],

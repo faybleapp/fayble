@@ -92,9 +92,7 @@ export const useNewHttpClient = (): AxiosInstance => {
 				originalRequest._retry = true;
 				const refreshToken = authConfig.refreshToken;
 				return httpClient
-					.post("/authentication/refresh", `"${refreshToken}"`, {
-						headers: { "Content-Type": "application/json" },
-					})
+					.post("/authentication/refresh",{refreshToken: refreshToken})
 					.then((response) => {
 						// 1) put token to LocalStorage
 						const authConfig =

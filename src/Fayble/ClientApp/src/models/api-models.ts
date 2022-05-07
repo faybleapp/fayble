@@ -23,6 +23,10 @@ export interface LoginCredentials {
     password: string;
 }
 
+export interface RefreshTokenRequest {
+    refreshToken: string;
+}
+
 export interface BackgroundTask {
     id: string;
     itemId: string | undefined;

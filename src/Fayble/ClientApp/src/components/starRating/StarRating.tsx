@@ -43,5 +43,5 @@ export const StarRating = ({ rating, onChange }: StarRatingProps) => {
 		return stars;
 	};
 
-	return <div>{renderStars()}</div>;
+	return <div className={styles.rating}>{renderStars()}</div>;
 };

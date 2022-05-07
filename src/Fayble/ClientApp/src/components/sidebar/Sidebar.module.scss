@@ -1,6 +1,23 @@
 @import "../../scss/variables";
 
+.sidebar {
+	padding-top: 10px;
+	height: 100%;	
+	z-index: 1;
+	margin-top: 10px;	
+	margin-left: 5px;
+	top: 0;	
+	left: 0;	
+	background: $transparent-background;
+	border-radius: 4px;
+	overflow-x: hidden;
+	transition: 0.5s;
+	color: $primary-font-color;
 
+	ul {
+		padding-left: 0px;
+	}
+}
 .mainContent {
 	padding: 20px;
 }
@@ -20,7 +37,6 @@
 	padding-bottom: 8px;
 
 	&:hover {
-		color: $accent-color;
-		background: $navigation-secondary-color;
+		color: $accent-color;		
 	}
 }
