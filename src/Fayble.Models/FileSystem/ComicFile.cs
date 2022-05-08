@@ -2,10 +2,9 @@
 
 public class ComicFile
 {
-    public string? Series { get; }
     public string? Number { get; }
-    public string? Year { get; }
-    public string? Volume { get; }
+    public int? Year { get; }
+    
     public string? FileType { get;  }
     public string FilePath { get; }
     public string? CoverImage { get; }
@@ -16,10 +15,8 @@ public class ComicFile
     public ComicInfoXml? ComicInfoXml { get; }
 
     public ComicFile(
-        string? series,
         string? number,
-        string? year,
-        string? volume,
+        int? year,
         string? fileType,
         string filePath,
         string? coverImage,
@@ -29,11 +26,9 @@ public class ComicFile
         DateTimeOffset fileLastModifiedDate,
         ComicInfoXml? comicInfoXml)
     {
-        Series = series;
         Number = number;
         Year = year;
-        Volume = volume;
-        FileType = fileType;
+        FileType = fileType?.ToLower().Replace(".", string.Empty);
         FilePath = filePath;
         CoverImage = coverImage;
         FileName = fileName;

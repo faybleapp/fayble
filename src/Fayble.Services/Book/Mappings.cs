@@ -17,7 +17,7 @@ public static class Mappings
             entity.File.FileName,
             entity.File.FileType,
             Math.Round(Convert.ToDouble(entity.File.FileSize / 1024) / 1024, 2),
-            Path.Combine(entity.LibraryPath.Path, entity.File.FilePath),
+            Path.Combine(entity.LibraryPath.Path, entity.File.FullPath),
             entity.Rating,
             entity.Publisher?.ToModel(),
             userId != null && entity.IsRead((Guid) userId),

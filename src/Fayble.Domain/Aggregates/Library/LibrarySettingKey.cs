@@ -2,5 +2,6 @@
 
 public enum LibrarySettingKey
 {
-    ReviewOnImport
+    ReviewOnImport,
+    SeriesFolders
 }

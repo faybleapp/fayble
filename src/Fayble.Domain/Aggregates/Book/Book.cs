@@ -18,7 +18,7 @@ public class Book : AuditableEntity<Guid>, IAggregateRoot
     public DateOnly? CoverDate { get; private set; }
     public MediaType MediaType { get; private set; }
     public BookFile File { get; private set; }
-    public Guid? SeriesId { get; set; }
+    public Guid? SeriesId { get; private set; }
     public Series.Series Series { get; set; }
     public Guid? LibraryId { get; private set; }
     public Library.Library Library { get; private set; }
@@ -80,6 +80,11 @@ public class Book : AuditableEntity<Guid>, IAggregateRoot
     public void UpdateMediaPath(string mediaPath)
     {
         MediaPath = mediaPath;
+    }
+
+    public void UpdateSeries(Guid seriesId)
+    {
+        SeriesId = seriesId;
     }
 
     public void UpdateReadStatus(Guid userId, bool read)

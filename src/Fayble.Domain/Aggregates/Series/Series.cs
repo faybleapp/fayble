@@ -46,12 +46,12 @@ public class Series : AuditableEntity<Guid>, IAggregateRoot
     {
     }
 
-    public Series(Guid id, string name, string volume, Guid libraryId) : base(id)
+    public Series(Guid id, string name, int? year, Guid libraryId) : base(id)
     {
         Guard.AgainstNullOrWhitespace(name, nameof(Name));
         
         Name = name;
-        Volume = volume;
+        Year = year;
         LibraryId = libraryId;
         Locked = false;
     }

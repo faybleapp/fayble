@@ -12,13 +12,18 @@ internal static class Mappings
             entity.Name,
             entity.Type.ToString(),
             entity.Paths.Select(p => p.Path).ToList(),
-            new LibrarySettings(bool.Parse(entity.GetSetting(LibrarySettingKey.ReviewOnImport))));
+            new LibrarySettings(
+                bool.Parse(entity.GetSetting(LibrarySettingKey.ReviewOnImport)),
+                bool.Parse(entity.GetSetting(LibrarySettingKey.SeriesFolders))));
     }
 
-    public static List<LibrarySetting> ToEntity(this LibrarySettings settings)
+    public static IEnumerable<LibrarySetting> ToEntity(this LibrarySettings settings)
     {
         var librarySettings = new List<LibrarySetting>
-            {new(LibrarySettingKey.ReviewOnImport, settings.ReviewOnImport.ToString())};
+        {
+            new(LibrarySettingKey.ReviewOnImport, settings.ReviewOnImport.ToString()),
+            new(LibrarySettingKey.SeriesFolders, settings.SeriesFolders.ToString())
+        };
 
         return librarySettings;
     }
