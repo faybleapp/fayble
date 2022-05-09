@@ -160,7 +160,13 @@ public class ComicBookHelpers
 
         return series.Trim();
     }
-    
+
+    public static string GetRelativeDirectoryPath(string filePath, string libraryPath)
+    {
+        return filePath.Replace(libraryPath, string.Empty, StringComparison.InvariantCultureIgnoreCase).TrimStart('\\');
+    }
+
+
     private static string ParseSeriesFromFilename(string fileName)
     {
         var series = string.Empty;

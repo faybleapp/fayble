@@ -107,14 +107,14 @@ public class ComicLibraryScannerService : IComicLibraryScannerService
 
         foreach (var seriesDirectory in seriesDirectories)
         {
-            var newFiles = await GetNewFiles(libraryPath.Path, libraryPath.LibraryId);
+            var newFiles = await GetNewFiles(seriesDirectory, libraryPath);
             _logger.LogDebug("{FileCount} new files found in path", newFiles.Count);
 
             foreach (var newFile in newFiles)
             {
                 _logger.LogDebug("Processing issue: {FilePath}", newFile.FilePath);
                 
-                var relativePath = Path.GetDirectoryName(newFile.FilePath)!.Replace(
+                var relativeDirectoryPath = Path.GetDirectoryName(newFile.FilePath)!.Replace(
                     libraryPath.Path.ToLower(),
                     string.Empty,
                     StringComparison.InvariantCultureIgnoreCase);
@@ -122,8 +122,7 @@ public class ComicLibraryScannerService : IComicLibraryScannerService
                 var bookFile = new BookFile(
                     Guid.NewGuid(),
                     newFile.FileName,
-                    relativePath,
-                    Path.Combine(relativePath, newFile.FileName),
+                    relativeDirectoryPath,
                     newFile.FileSize,
                     newFile.FileType,
                     newFile.FileLastModifiedDate);
@@ -170,7 +169,7 @@ public class ComicLibraryScannerService : IComicLibraryScannerService
                     _logger.LogError(ex, "An error occurred while extracting cover image");
                 }
 
-                var seriesId = await GetSeries(relativePath, libraryPath);
+                var seriesId = await GetSeries(relativeDirectoryPath, libraryPath);
                 comicIssue.UpdateSeries(seriesId);
 
                 _bookRepository.Add(comicIssue);
@@ -182,7 +181,7 @@ public class ComicLibraryScannerService : IComicLibraryScannerService
                     {
                         comicIssue.Id,
                         comicIssue.File.FileType,
-                        comicIssue.File.FullPath,
+                        comicIssue.File.FilePath,
                         comicIssue.LibraryPathId,
                         comicIssue.LibraryId
                     });
@@ -191,7 +190,7 @@ public class ComicLibraryScannerService : IComicLibraryScannerService
         }
     }
 
-    private async Task<List<ComicFile>> GetNewFiles(string path, Guid libraryId)
+    private async Task<List<ComicFile>> GetNewFiles(string path, LibraryPath libraryPath)
     {
         var newFiles = new List<ComicFile>();
 
@@ -200,8 +199,10 @@ public class ComicLibraryScannerService : IComicLibraryScannerService
         foreach (var filePath in filePaths)
         {
             var exists = (await _bookRepository.Get(
-                b => b.File.FullPath.ToLower() ==
-                    filePath.ToLower().Replace(path.ToLower(), string.Empty).TrimStart('\\') && b.LibraryId == libraryId)).Any();
+                b => b.File.DirectoryPath.ToLower() ==
+                     ComicBookHelpers.GetRelativeDirectoryPath(filePath, libraryPath.Path).ToLower() &&
+                     Path.GetFileName(filePath) == b.File.FileName &&
+                     b.LibraryPathId == libraryPath.Id)).Any();
 
             if (exists)
                 continue;
@@ -215,7 +216,7 @@ public class ComicLibraryScannerService : IComicLibraryScannerService
             var number = ComicBookHelpers.ParseIssueNumber(fileName);
             var year = ComicBookHelpers.ParseYear(fileName);
             var fileFormat = Path.GetExtension(fileName);
-            var comicInfoXml = _comicBookFileSystemService.ParseComicInfoXml(path);
+            var comicInfoXml = _comicBookFileSystemService.ParseComicInfoXml(filePath);
             
                 newFiles.Add(new ComicFile(
                     number,
@@ -237,7 +238,7 @@ public class ComicLibraryScannerService : IComicLibraryScannerService
     {
         var existingBookInSeries =
             (await _bookRepository.Get(
-                b => b.LibraryId == libraryPath.LibraryId && b.File.Directory == filePath && b.Series != null))
+                b => b.LibraryId == libraryPath.LibraryId && b.File.DirectoryPath == filePath && b.Series != null))
             .FirstOrDefault();
 
         if (existingBookInSeries != null)
