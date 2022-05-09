@@ -38,6 +38,10 @@ public class Series : AuditableEntity<Guid>, IAggregateRoot
 
     public string MediaPath { get; private set; }
 
+    public string FolderPath { get; private set; }
+
+    public string FolderName { get; private set; }
+
     public bool Locked { get; private set; }
 
     public DateTimeOffset? LastMetadataUpdate { get; private set; }
@@ -46,14 +50,16 @@ public class Series : AuditableEntity<Guid>, IAggregateRoot
     {
     }
 
-    public Series(Guid id, string name, string volume, Guid libraryId) : base(id)
+    public Series(Guid id, string name, int? year, Guid libraryId, string folderPath, string folderName) : base(id)
     {
         Guard.AgainstNullOrWhitespace(name, nameof(Name));
-        
+
         Name = name;
-        Volume = volume;
+        Year = year;
         LibraryId = libraryId;
         Locked = false;
+        FolderPath = folderPath;
+        FolderName = folderName;
     }
 
     public void Update(

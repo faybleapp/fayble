@@ -161,13 +161,13 @@ namespace Fayble.Infrastructure.Migrations
                     b.Property<Guid>("BookId")
                         .HasColumnType("TEXT");
 
+                    b.Property<string>("DirectoryPath")
+                        .HasColumnType("TEXT");
+
                     b.Property<DateTimeOffset>("FileLastModifiedDate")
                         .HasColumnType("TEXT");
 
                     b.Property<string>("FileName")
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("FilePath")
                         .HasColumnType("TEXT");
 
                     b.Property<long>("FileSize")

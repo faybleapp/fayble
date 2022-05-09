@@ -111,6 +111,7 @@ export interface Library {
 
 export interface LibrarySettings {
     reviewOnImport: boolean;
+    seriesFolders: boolean;
 }
 
 export interface UpdateBook {

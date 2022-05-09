@@ -1,10 +1,12 @@
 ﻿using Fayble.Models.FileSystem;
 
-namespace Fayble.Services.FileSystemService;
+namespace Fayble.Services.FileSystem;
 
 public interface IComicBookFileSystemService
 {
-    Task<IEnumerable<ComicFile>> ScanDirectory(string directory);
     ComicInfoXml ParseComicInfoXml(string filePath);
+    Task<IEnumerable<string>> GetSeriesDirectories(string libraryPath);
+    Task<IEnumerable<string>> GetFiles(string directory);
+    int GetPageCount(string filePath);
     void ExtractComicCoverImage(string filePath, string mediaPath);
 }

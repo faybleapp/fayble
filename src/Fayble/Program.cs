@@ -19,9 +19,7 @@ using Fayble.Security;
 using Fayble.Security.Authorisation;
 using Fayble.Security.Models;
 using Fayble.Services.Book;
-using Fayble.Services.ComicLibrary;
 using Fayble.Services.FileSystem;
-using Fayble.Services.FileSystemService;
 using Fayble.Services.Library;
 using Fayble.Services.Publisher;
 using Fayble.Services.Series;
@@ -164,7 +162,6 @@ builder.Services.AddScoped<IBookTagRepository, BookTagRepository>();
 // Register Services
 builder.Services.AddScoped<ILibraryService, LibraryService>();
 builder.Services.AddScoped<ISeriesService, SeriesService>();
-builder.Services.AddScoped<IComicLibraryService, ComicLibraryService>();
 builder.Services.AddScoped<IComicLibraryScannerService, ComicLibraryScannerService>();
 builder.Services.AddScoped<IComicBookFileSystemService, ComicBookFileSystemService>();
 builder.Services.AddScoped<Fayble.Security.Services.Authentication.IAuthenticationService, Fayble.Security.Services.Authentication.AuthenticationService>();

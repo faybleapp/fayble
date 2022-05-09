@@ -11,7 +11,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Fayble.Infrastructure.Migrations
 {
     [DbContext(typeof(FaybleDbContext))]
-    [Migration("20220503103132_Initial")]
+    [Migration("20220509092812_Initial")]
     partial class Initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -163,13 +163,13 @@ namespace Fayble.Infrastructure.Migrations
                     b.Property<Guid>("BookId")
                         .HasColumnType("TEXT");
 
+                    b.Property<string>("DirectoryPath")
+                        .HasColumnType("TEXT");
+
                     b.Property<DateTimeOffset>("FileLastModifiedDate")
                         .HasColumnType("TEXT");
 
                     b.Property<string>("FileName")
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("FilePath")
                         .HasColumnType("TEXT");
 
                     b.Property<long>("FileSize")

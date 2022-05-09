@@ -476,7 +476,7 @@ namespace Fayble.Infrastructure.Migrations
                 {
                     Id = table.Column<Guid>(type: "TEXT", nullable: false),
                     FileName = table.Column<string>(type: "TEXT", nullable: true),
-                    FilePath = table.Column<string>(type: "TEXT", nullable: true),
+                    DirectoryPath = table.Column<string>(type: "TEXT", nullable: true),
                     FileSize = table.Column<long>(type: "INTEGER", nullable: false),
                     FileType = table.Column<string>(type: "TEXT", nullable: true),
                     FileLastModifiedDate = table.Column<DateTimeOffset>(type: "TEXT", nullable: false),
