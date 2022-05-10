@@ -6,7 +6,7 @@ import { useNavigate } from "react-router-dom";
 import { useCreateLibrary, useDeleteLibrary, useUpdateLibrary } from "services";
 import { LibraryDetailsTab } from "./LibraryDetailsTab";
 import { LibraryModalFooter } from "./LibraryModalFooter";
-import { LibraryPathsTab } from "./LibraryPathsTab";
+import { LibraryPathTab } from "./LibraryPathTab";
 import { LibrarySettingsTab } from "./LibrarySettingsTab";
 
 interface LibraryModalProps {
@@ -19,7 +19,7 @@ const initialLibraryState: Library = {
 	id: undefined,
 	name: "",
 	libraryType: "ComicBook",
-	paths: [],
+	folderPath: "",
 	settings: { reviewOnImport: true, seriesFolders: false },
 };
 
@@ -36,7 +36,7 @@ export const LibraryModal = ({ show, library, close }: LibraryModalProps) => {
 	const continueDisabled =
 		activeTabKey === "1"
 			? !updatedLibrary?.name?.trim()
-			: updatedLibrary?.paths?.length === 0;
+			: !updatedLibrary?.folderPath;
 
 	const opened = () => {
 		setIsNew(!library);
@@ -96,9 +96,9 @@ export const LibraryModal = ({ show, library, close }: LibraryModalProps) => {
 							/>
 						</Container>
 					</Tab>
-					<Tab eventKey="2" disabled={tabsDisabled} title="Paths">
+					<Tab eventKey="2" disabled={tabsDisabled} title="Folder Path">
 						<Container>
-							<LibraryPathsTab
+							<LibraryPathTab
 								library={updatedLibrary}
 								updateLibrary={setUpdatedLibrary}
 							/>

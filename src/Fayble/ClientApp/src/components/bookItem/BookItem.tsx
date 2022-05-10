@@ -1,7 +1,8 @@
+import { faTrashCan } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import cn from "classnames";
 import { Book } from "models/api-models";
 import { BookCoverOverlay } from "pages/library/series/BookCoverOverlay";
-import React from "react";
 import { Figure } from "react-bootstrap";
 import { Link, useParams } from "react-router-dom";
 import styles from "./BookItem.module.scss";
@@ -32,23 +33,29 @@ export const BookItem = ({
 		<Figure key={book.id} className={styles.book}>
 			<div className={styles.coverContainer}>
 				<Figure.Image
-					className={cn(styles.coverImage, "shadow")}
+					className={cn(styles.coverImage, "shadow", {
+						[styles.deleted]: book.isDeleted,
+						[styles.overlay]: !book.isDeleted,
+					})}
 					src={`/api/media/${encodeURIComponent(
 						book?.media?.coverSm || ""
 					)}`}
 				/>
-
-				<div className={styles.overlay}>
-					<Link
-						key={book.id}
-						to={`/library/${libraryId}/series/${seriesId}/book/${book.id}`}>
-						<BookCoverOverlay
-							hideMenu={hideMenu === true}
-							edit={() => edit(book.id!)}
-							markRead={() => markRead(book.id!)}
-						/>
-					</Link>
-				</div>
+				<Link
+					key={book.id}
+					to={`/library/${libraryId}/series/${seriesId}/book/${book.id}`}>
+					<BookCoverOverlay
+						hideMenu={hideMenu === true}
+						edit={() => edit(book.id!)}
+						markRead={() => markRead(book.id!)}
+						deleted={book.isDeleted}
+					/>
+				</Link>
+				{book.isDeleted ? (
+					<div className={styles.deletedIcon}>
+						<FontAwesomeIcon icon={faTrashCan} size="lg" />
+					</div>
+				) : null}
 			</div>
 
 			<Figure.Caption className={styles.caption}>
@@ -57,7 +64,7 @@ export const BookItem = ({
 					key={book.id}
 					to={`/library/${libraryId}/series/${seriesId}/book/${book.id}`}>
 					<div className={styles.title}>{title}</div>
-					<div className={styles.subtitle}>{subtitle }</div>
+					<div className={styles.subtitle}>{subtitle}</div>
 				</Link>
 			</Figure.Caption>
 		</Figure>

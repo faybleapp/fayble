@@ -9,6 +9,7 @@ public class BookFile : IdentifiableEntity<Guid>
     public long FileSize { get; private set; }
     public string FileType { get; private set; }
     public string FileHash { get; private set;  }
+    public int PageCount { get; private set; }
     public DateTimeOffset FileLastModifiedDate { get; private set; }
     public Guid BookId { get; private set; }
     public virtual Book Book { get; private set; }
@@ -17,11 +18,12 @@ public class BookFile : IdentifiableEntity<Guid>
 
     public BookFile(
         Guid id,
-        string filePath,
         string fileName,
+        string filePath,
         long fileSize,
         string fileType, 
         DateTimeOffset fileLastModifiedDate,
+        int pageCount,
         string fileHash): base(id)
     {
         FileName = fileName;
@@ -29,6 +31,14 @@ public class BookFile : IdentifiableEntity<Guid>
         FileSize = fileSize;
         FileType = fileType;
         FileLastModifiedDate = fileLastModifiedDate;
+        PageCount = pageCount;
         FileHash = fileHash;
+    }
+
+    public void Update(long fileSize, string fileHash, int pageCount)
+    {
+        FileSize = fileSize;
+        FileHash = fileHash;
+        PageCount = pageCount;
     }
 }

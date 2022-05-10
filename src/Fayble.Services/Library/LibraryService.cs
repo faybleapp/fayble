@@ -45,7 +45,7 @@ public class LibraryService : ILibraryService
             Guid.NewGuid(),
             library.Name,
             Enum.Parse<MediaType>(library.LibraryType),
-            library.Paths,
+            library.FolderPath,
             library.Settings.ToEntity());
 
         var libraryEntity = _libraryRepository.Add(entity);
@@ -56,7 +56,8 @@ public class LibraryService : ILibraryService
             {
                 libraryEntity.Name,
                 libraryEntity.Type,
-                Paths = libraryEntity.Paths.Select(x => x.Path)
+                libraryEntity.FolderPath
+                
             });
 
         _logger.LogInformation("Created library: {LibraryName}", library.Name);
@@ -65,7 +66,7 @@ public class LibraryService : ILibraryService
     public async Task<Models.Library.Library> Update(Guid id, Models.Library.Library library)
     {
         var entity = await _libraryRepository.Get(id);
-        entity.Update(library.Name, library.Paths);
+        entity.Update(library.Name, library.FolderPath);
         entity.UpdateSetting(LibrarySettingKey.ReviewOnImport, library.Settings.ReviewOnImport.ToString());
 
         await _unitOfWork.Commit();

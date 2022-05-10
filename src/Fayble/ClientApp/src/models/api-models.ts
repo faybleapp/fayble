@@ -65,7 +65,8 @@ export interface Book {
     coverDate: string | undefined;
     lastMetadataUpdate: Date;
     mediaType: string;
-    tags: string[];
+    tags: string[] | undefined;
+    isDeleted: boolean;
 }
 
 export interface Media {
@@ -105,7 +106,7 @@ export interface Library {
     id: string | undefined;
     name: string;
     libraryType: string;
-    paths: string[] | undefined;
+    folderPath: string;
     settings: LibrarySettings;
 }
 

@@ -30,7 +30,6 @@ public interface IFaybleDbContext
 public class FaybleDbContext : IdentityDbContext<User, UserRole, Guid>, IFaybleDbContext
 {
     public DbSet<Library> Libraries { get; set; }
-    public DbSet<LibraryPath> LibraryPaths { get; set; }
     public DbSet<Book> Books { get; set; }
     public DbSet<Series> Series { get; set; }
     public DbSet<FileType> FileTypes { get; set; }

@@ -1,12 +1,8 @@
-﻿using System.ComponentModel.DataAnnotations;
-using System.Net;
-using System.Security.Principal;
-using System.Text;
+﻿using System.Text;
 using AspNetCoreRateLimit;
 using Fayble;
 using Fayble.BackgroundServices;
 using Fayble.BackgroundServices.ComicLibrary;
-using Fayble.Core.Exceptions;
 using Fayble.Core.Helpers;
 using Fayble.Core.Hubs;
 using Fayble.Domain;
@@ -15,7 +11,6 @@ using Fayble.Domain.Repositories;
 using Fayble.Infrastructure;
 using Fayble.Infrastructure.Repositories;
 using Fayble.Models.Configuration;
-using Fayble.Security;
 using Fayble.Security.Authorisation;
 using Fayble.Security.Models;
 using Fayble.Services.Book;
@@ -25,11 +20,9 @@ using Fayble.Services.Publisher;
 using Fayble.Services.Series;
 using Fayble.Services.System;
 using Fayble.Services.Tag;
-using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Newtonsoft.Json;
@@ -39,18 +32,13 @@ using Serilog;
 using Serilog.Core;
 using Serilog.Core.Enrichers;
 using Serilog.Events;
-using SixLabors.ImageSharp;
 
-ApplicationHelpers.logLevel = new LoggingLevelSwitch
-{
-    MinimumLevel = LogEventLevel.Information
-};
 
 Log.Logger = new LoggerConfiguration()
     .WriteTo.Console()
     .Enrich.With(new PropertyEnricher("MachineName", Environment.MachineName))
     .Enrich.WithProperty("ApplicationName", "Fayble")
-    .MinimumLevel.ControlledBy(ApplicationHelpers.logLevel)
+    .MinimumLevel.ControlledBy(ApplicationHelpers.LogLevel)
     .MinimumLevel.Override("System", LogEventLevel.Warning)
     .MinimumLevel.Override("Microsoft", LogEventLevel.Warning)
     .MinimumLevel.Override("Microsoft.Hosting.Lifetime", LogEventLevel.Information)
@@ -183,13 +171,22 @@ builder.Services.AddSingleton<IRateLimitConfiguration, RateLimitConfiguration>()
 
 var app = builder.Build();
 
-app.UseSerilogRequestLogging();
+app.UseSerilogRequestLogging(
+    options =>
+    {
+        options.GetLevel = (_, _, _) => LogEventLevel.Debug;
+
+    });
 
 // Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())
 {
     // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
     app.UseHsts();
+}
+else
+{
+    ApplicationHelpers.LogLevel.MinimumLevel = LogEventLevel.Debug;
 }
 
 app.UseExceptionHandler(

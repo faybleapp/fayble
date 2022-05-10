@@ -8,16 +8,16 @@ public class Library
 
     public string LibraryType { get; }
 
-    public List<string>? Paths { get; }
+    public string FolderPath { get; }
 
     public LibrarySettings Settings { get; }
 
-    public Library(Guid? id, string name, string libraryType, List<string>? paths, LibrarySettings settings)
+    public Library(Guid? id, string name, string libraryType, string folderPath, LibrarySettings settings)
     {
         Id = id;
         Name = name;
         LibraryType = libraryType;
-        Paths = paths;
+        FolderPath = folderPath;
         Settings = settings;
     }
 }

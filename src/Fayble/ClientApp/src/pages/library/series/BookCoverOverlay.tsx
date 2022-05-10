@@ -1,27 +1,28 @@
 import { faBars } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import cn from "classnames";
-import React, { useState } from "react";
+import { useState } from "react";
 import { Dropdown, DropdownButton } from "react-bootstrap";
 import styles from "./BookCoverOverlay.module.scss";
-
 interface BookCoverOverlayProps {
 	hideMenu: boolean;
 	markRead: () => void;
 	edit: () => void;
+	deleted: boolean;
 }
 
 export const BookCoverOverlay = ({
 	markRead,
 	edit,
+	deleted,
 	hideMenu,
 }: BookCoverOverlayProps) => {
 	const [active, setActive] = useState(false);
 	return (
 		<div
-			className={cn(styles.container, { [styles.active]: active })}
+			className={cn(styles.overlay, { [styles.deleted]: deleted })}
 			onMouseLeave={() => setActive(false)}>
-			{hideMenu? null : (
+			{hideMenu ? null : (
 				<DropdownButton
 					drop={"down"}
 					className={styles.menuDropDown}
@@ -33,7 +34,6 @@ export const BookCoverOverlay = ({
 						<FontAwesomeIcon
 							className={styles.icon}
 							icon={faBars}
-							// size="lg"
 						/>
 					}>
 					<Dropdown.Item href="#/action-1">Action</Dropdown.Item>

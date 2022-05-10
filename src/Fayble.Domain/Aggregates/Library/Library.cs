@@ -7,11 +7,10 @@ public class Library : AuditableEntity<Guid>, IAggregateRoot
 {
     public string Name { get; private set; }
     public MediaType Type { get; private init; }
+    public string FolderPath { get; set; }
+
     public virtual IEnumerable<Series.Series> Series { get; private set; }
     public virtual IReadOnlyCollection<Book.Book> Books { get; private set; }
-
-    private readonly List<LibraryPath> _paths = new();
-    public virtual IReadOnlyCollection<LibraryPath> Paths => _paths;
 
     private readonly List<LibrarySetting> _settings = new();
     public virtual IReadOnlyCollection<LibrarySetting> Settings => _settings;
@@ -24,7 +23,7 @@ public class Library : AuditableEntity<Guid>, IAggregateRoot
         Guid id,
         string name,
         MediaType type,
-        IEnumerable<string> paths,
+        string folderPath,
         IEnumerable<LibrarySetting> settings) : base(id)
     {
         Guard.AgainstEmpty(id, nameof(Id));
@@ -32,22 +31,14 @@ public class Library : AuditableEntity<Guid>, IAggregateRoot
 
         Name = name;
         Type = type;
+        FolderPath = folderPath;
         _settings = settings.ToList();
-
-        foreach (var path in paths) _paths.Add(new LibraryPath(Guid.NewGuid(), path));
     }
 
-    public void Update(string name, IEnumerable<string> paths)
+    public void Update(string name, string folderPath)
     {
         Name = name;
-        var newPaths = paths.ToArray();
-        var existingPaths = _paths.Select(p => p.Path).ToArray();
-
-        _paths.RemoveAll(p => existingPaths.Except(newPaths, StringComparer.OrdinalIgnoreCase).Any(ptr =>
-                string.Equals(ptr, p.Path, StringComparison.CurrentCultureIgnoreCase)));
-
-        _paths.AddRange(newPaths.Except(existingPaths, StringComparer.OrdinalIgnoreCase)
-            .Select(path => new LibraryPath(Guid.NewGuid(), path)));
+        FolderPath = folderPath;
     }
 
     public void UpdateSetting(LibrarySettingKey setting, string value)
