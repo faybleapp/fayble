@@ -11,6 +11,7 @@ namespace Fayble.Core.Helpers;
 public static class ApplicationHelpers
 {
     public static LoggingLevelSwitch LogLevel = new();
+    public static string? AppDirectoryOverride = null;
 
     public static Application GetApplication()
     {
@@ -24,7 +25,7 @@ public static class ApplicationHelpers
 
     public static string GetAppDirectory()
     {
-        var folder = Environment.GetFolderPath(
+        var folder = AppDirectoryOverride ?? Environment.GetFolderPath(
             RuntimeInformation.IsOSPlatform(OSPlatform.Windows)
                 ? Environment.SpecialFolder.CommonApplicationData
                 : Environment.SpecialFolder.UserProfile);
