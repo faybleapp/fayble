@@ -29,10 +29,19 @@ using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 using Newtonsoft.Json.Serialization;
 using Serilog;
-using Serilog.Core;
 using Serilog.Core.Enrichers;
 using Serilog.Events;
 
+
+IConfiguration config = new ConfigurationBuilder()
+    .AddJsonFile("appsettings.json")
+    .AddEnvironmentVariables()
+    .Build();
+
+if (!string.IsNullOrEmpty(config["AppDirectoryOverride"]))
+{
+    ApplicationHelpers.AppDirectoryOverride = config["AppDirectoryOverride"];
+}
 
 Log.Logger = new LoggerConfiguration()
     .WriteTo.Console()
@@ -51,10 +60,6 @@ Log.Logger = new LoggerConfiguration()
 Log.Information("Starting...");
 Log.Information("Application directory: {directory}", ApplicationHelpers.GetAppDirectory());
 
-IConfiguration config = new ConfigurationBuilder()
-    .AddJsonFile("appsettings.json")
-    .AddEnvironmentVariables()
-    .Build();
 
 var builder = WebApplication.CreateBuilder(args);
 
