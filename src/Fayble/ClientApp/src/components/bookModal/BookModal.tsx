@@ -44,6 +44,10 @@ export const BookModal = ({ book, show, close }: BookModalProps) => {
 					<Tab eventKey="details" title="Details">
 						<BookDetailsTab book={book} formik={formik} />
 					</Tab>
+					<Tab eventKey="people" title="People">						
+					</Tab>
+					<Tab eventKey="metadata" title="Metadata">						
+					</Tab>
 					<Tab eventKey="fileInfo" title="File Info">
 						<BookFileInfo book={book} />
 					</Tab>

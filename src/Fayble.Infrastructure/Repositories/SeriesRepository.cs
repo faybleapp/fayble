@@ -22,7 +22,6 @@ public class SeriesRepository : RepositoryBase<FaybleDbContext, Series, Guid>, I
             .Include(s => s.Library)
             .ThenInclude(l => l.Settings)
             .Include(s => s.Library)
-            .ThenInclude(l => l.Paths)
             .Include(s => s.ParentSeries)
             .Include(s => s.Publisher);
     }

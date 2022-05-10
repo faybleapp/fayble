@@ -14,7 +14,6 @@ public class LibraryRepository : RepositoryBase<FaybleDbContext, Library, Guid>,
     protected override IQueryable<Library> GetWithIncludes()
     {
         return base.GetWithIncludes()
-            .Include(l => l.Paths)
             .Include(l => l.Settings);
 
     }

@@ -11,11 +11,6 @@ public class BookEntityTypeConfiguration : IEntityTypeConfiguration<Book>
     {
         builder.ToTable("Book");
 
-        builder.HasOne(e => e.LibraryPath)
-            .WithMany()
-            .HasForeignKey(e => e.LibraryPathId)
-            .OnDelete(DeleteBehavior.Cascade);
-
         builder.HasOne(x => x.Series)
             .WithMany(x => x.Books)
             .HasForeignKey(x => x.SeriesId)

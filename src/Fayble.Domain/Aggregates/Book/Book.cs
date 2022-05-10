@@ -10,7 +10,6 @@ public class Book : AuditableEntity<Guid>, IAggregateRoot
     public string Title { get; private set; }
     public string Summary { get; private set; }
     public string Number { get; private set; }
-    public int? PageCount { get; private set; }
     public string MediaPath { get; private set; }
     public string Language { get; private set; }
     public decimal Rating { get; private set; }
@@ -22,11 +21,10 @@ public class Book : AuditableEntity<Guid>, IAggregateRoot
     public Series.Series Series { get; set; }
     public Guid? LibraryId { get; private set; }
     public Library.Library Library { get; private set; }
-    public Guid? LibraryPathId { get; private set; }
-    public LibraryPath LibraryPath { get; private set; }
     public Guid? PublisherId { get; private set; }
     public Publisher.Publisher Publisher { get; private set; }
     public DateTimeOffset? LastMetadataUpdate { get; private set; }
+    public DateTimeOffset? DeletedDate { get; private set; }
 
     private readonly List<ReadHistory> _readHistory = new ();
     public virtual IReadOnlyCollection<ReadHistory> ReadHistory => _readHistory;
@@ -41,20 +39,17 @@ public class Book : AuditableEntity<Guid>, IAggregateRoot
 
     public Book(
         Guid id,
-        Guid libraryPathId,
         Guid libraryId,
         MediaType mediaType,
-        int? pageCount,
         string number,
-        BookFile file) : base(id)
+        BookFile file, 
+        Guid? seriesId = null) : base(id)
     {
-       
-        LibraryPathId = libraryPathId;
         LibraryId = libraryId;
         MediaType = mediaType;
-        PageCount = pageCount;
         Number = number;
         File = file;
+        SeriesId = seriesId;
     }
 
     public void Update(
@@ -85,6 +80,16 @@ public class Book : AuditableEntity<Guid>, IAggregateRoot
     public void UpdateSeries(Guid seriesId)
     {
         SeriesId = seriesId;
+    }
+
+    public void Delete()
+    {
+        DeletedDate = DateTimeOffset.UtcNow;
+    }
+
+    public void Restore()
+    {
+        DeletedDate = null;
     }
 
     public void UpdateReadStatus(Guid userId, bool read)

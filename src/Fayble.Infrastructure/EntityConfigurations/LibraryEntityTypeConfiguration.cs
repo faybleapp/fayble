@@ -11,11 +11,6 @@ public class LibraryEntityTypeConfiguration : IEntityTypeConfiguration<Library>
     {
         builder.ToTable("Library");
 
-        builder.HasMany(e => e.Paths)
-            .WithOne(e => e.Library)
-            .HasForeignKey(e => e.LibraryId)
-            .OnDelete(DeleteBehavior.Cascade);
-
         builder.HasMany(e => e.Series)
             .WithOne(s => s.Library)
             .OnDelete(DeleteBehavior.Cascade);

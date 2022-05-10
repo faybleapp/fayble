@@ -12,12 +12,12 @@ public static class Mappings
             entity.Id,
             entity.Title,
             entity.Summary,
-            entity.PageCount,
+            entity.File.PageCount,
             entity.MediaPath,
             entity.File.FileName,
             entity.File.FileType,
             Math.Round(Convert.ToDouble(entity.File.FileSize / 1024) / 1024, 2),
-            entity.File.FilePath,
+            Path.Combine(entity.Library.FolderPath, entity.File.FilePath),
             entity.Rating,
             entity.Publisher?.ToModel(),
             userId != null && entity.IsRead((Guid) userId),
@@ -28,6 +28,7 @@ public static class Mappings
             entity.ReleaseDate?.ToString("yyyy-MM-dd"),
             entity.CoverDate?.ToString("yyyy-MM"),
             entity.Language,
-            entity.Tags?.Select(t => t.Name).OrderBy(t => t));
+            entity.Tags?.Select(t => t.Name).OrderBy(t => t), 
+            entity.DeletedDate != null);
     }
 }

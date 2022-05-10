@@ -148,25 +148,18 @@ public class ComicBookHelpers
     
     public static string ParseSeriesDirectory(string directoryName)
     {
-        var series = string.Empty;
+        var series = directoryName;
         
         //Remove year if present
-        var year = ParseYear(series);
-        if (year != null) series = series.Replace($"(${year})",string.Empty);
+        var year = ParseYear(directoryName);
+        if (year != null) series = series.Replace($"({year})",string.Empty);
         
         //Remove volume information if not caught above
-        var (volume, _) = ParseVolume(series);
+        var (volume, _) = ParseVolume(directoryName);
         if (!string.IsNullOrWhiteSpace(volume)) series = series.Replace(volume, "");
 
         return series.Trim();
     }
-
-    public static string GetRelativeDirectoryPath(string filePath, string libraryPath)
-    {
-        return filePath.Replace(libraryPath, string.Empty, StringComparison.InvariantCultureIgnoreCase).TrimStart('\\');
-    }
-
-
     private static string ParseSeriesFromFilename(string fileName)
     {
         var series = string.Empty;

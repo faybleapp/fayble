@@ -11,7 +11,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Fayble.Infrastructure.Migrations
 {
     [DbContext(typeof(FaybleDbContext))]
-    [Migration("20220509092812_Initial")]
+    [Migration("20220510081417_Initial")]
     partial class Initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -86,10 +86,13 @@ namespace Fayble.Infrastructure.Migrations
                     b.Property<DateOnly?>("CoverDate")
                         .HasColumnType("TEXT");
 
-                    b.Property<DateTimeOffset>("Created")
+                    b.Property<Guid>("CreatedBy")
                         .HasColumnType("TEXT");
 
-                    b.Property<Guid>("CreatedBy")
+                    b.Property<DateTimeOffset>("CreatedDate")
+                        .HasColumnType("TEXT");
+
+                    b.Property<DateTimeOffset?>("DeletedDate")
                         .HasColumnType("TEXT");
 
                     b.Property<string>("Language")
@@ -98,16 +101,13 @@ namespace Fayble.Infrastructure.Migrations
                     b.Property<DateTimeOffset?>("LastMetadataUpdate")
                         .HasColumnType("TEXT");
 
-                    b.Property<DateTimeOffset>("LastModified")
-                        .HasColumnType("TEXT");
-
                     b.Property<Guid>("LastModifiedBy")
                         .HasColumnType("TEXT");
 
-                    b.Property<Guid?>("LibraryId")
+                    b.Property<DateTimeOffset>("LastModifiedDate")
                         .HasColumnType("TEXT");
 
-                    b.Property<Guid?>("LibraryPathId")
+                    b.Property<Guid?>("LibraryId")
                         .HasColumnType("TEXT");
 
                     b.Property<string>("MediaPath")
@@ -119,9 +119,6 @@ namespace Fayble.Infrastructure.Migrations
 
                     b.Property<string>("Number")
                         .HasColumnType("TEXT");
-
-                    b.Property<int?>("PageCount")
-                        .HasColumnType("INTEGER");
 
                     b.Property<Guid?>("PublisherId")
                         .HasColumnType("TEXT");
@@ -145,8 +142,6 @@ namespace Fayble.Infrastructure.Migrations
 
                     b.HasIndex("LibraryId");
 
-                    b.HasIndex("LibraryPathId");
-
                     b.HasIndex("PublisherId");
 
                     b.HasIndex("SeriesId");
@@ -163,7 +158,7 @@ namespace Fayble.Infrastructure.Migrations
                     b.Property<Guid>("BookId")
                         .HasColumnType("TEXT");
 
-                    b.Property<string>("DirectoryPath")
+                    b.Property<string>("FileHash")
                         .HasColumnType("TEXT");
 
                     b.Property<DateTimeOffset>("FileLastModifiedDate")
@@ -172,11 +167,17 @@ namespace Fayble.Infrastructure.Migrations
                     b.Property<string>("FileName")
                         .HasColumnType("TEXT");
 
+                    b.Property<string>("FilePath")
+                        .HasColumnType("TEXT");
+
                     b.Property<long>("FileSize")
                         .HasColumnType("INTEGER");
 
                     b.Property<string>("FileType")
                         .HasColumnType("TEXT");
+
+                    b.Property<int>("PageCount")
+                        .HasColumnType("INTEGER");
 
                     b.HasKey("Id");
 
@@ -252,16 +253,19 @@ namespace Fayble.Infrastructure.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("TEXT");
 
-                    b.Property<DateTimeOffset>("Created")
-                        .HasColumnType("TEXT");
-
                     b.Property<Guid>("CreatedBy")
                         .HasColumnType("TEXT");
 
-                    b.Property<DateTimeOffset>("LastModified")
+                    b.Property<DateTimeOffset>("CreatedDate")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("FolderPath")
                         .HasColumnType("TEXT");
 
                     b.Property<Guid>("LastModifiedBy")
+                        .HasColumnType("TEXT");
+
+                    b.Property<DateTimeOffset>("LastModifiedDate")
                         .HasColumnType("TEXT");
 
                     b.Property<string>("Name")
@@ -274,25 +278,6 @@ namespace Fayble.Infrastructure.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Library", (string)null);
-                });
-
-            modelBuilder.Entity("Fayble.Domain.Aggregates.Library.LibraryPath", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("TEXT");
-
-                    b.Property<Guid>("LibraryId")
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("Path")
-                        .HasColumnType("TEXT");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("LibraryId");
-
-                    b.ToTable("LibraryPath", (string)null);
                 });
 
             modelBuilder.Entity("Fayble.Domain.Aggregates.Library.LibrarySetting", b =>
@@ -387,10 +372,16 @@ namespace Fayble.Infrastructure.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("TEXT");
 
-                    b.Property<DateTimeOffset>("Created")
+                    b.Property<Guid>("CreatedBy")
                         .HasColumnType("TEXT");
 
-                    b.Property<Guid>("CreatedBy")
+                    b.Property<DateTimeOffset>("CreatedDate")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("FolderName")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("FolderPath")
                         .HasColumnType("TEXT");
 
                     b.Property<Guid?>("FormatId")
@@ -399,10 +390,10 @@ namespace Fayble.Infrastructure.Migrations
                     b.Property<DateTimeOffset?>("LastMetadataUpdate")
                         .HasColumnType("TEXT");
 
-                    b.Property<DateTimeOffset>("LastModified")
+                    b.Property<Guid>("LastModifiedBy")
                         .HasColumnType("TEXT");
 
-                    b.Property<Guid>("LastModifiedBy")
+                    b.Property<DateTimeOffset>("LastModifiedDate")
                         .HasColumnType("TEXT");
 
                     b.Property<Guid?>("LibraryId")
@@ -724,11 +715,6 @@ namespace Fayble.Infrastructure.Migrations
                         .HasForeignKey("LibraryId")
                         .OnDelete(DeleteBehavior.Cascade);
 
-                    b.HasOne("Fayble.Domain.Aggregates.Library.LibraryPath", "LibraryPath")
-                        .WithMany()
-                        .HasForeignKey("LibraryPathId")
-                        .OnDelete(DeleteBehavior.Cascade);
-
                     b.HasOne("Fayble.Domain.Aggregates.Publisher.Publisher", "Publisher")
                         .WithMany()
                         .HasForeignKey("PublisherId");
@@ -739,8 +725,6 @@ namespace Fayble.Infrastructure.Migrations
                         .OnDelete(DeleteBehavior.Cascade);
 
                     b.Navigation("Library");
-
-                    b.Navigation("LibraryPath");
 
                     b.Navigation("Publisher");
 
@@ -773,17 +757,6 @@ namespace Fayble.Infrastructure.Migrations
                         .IsRequired();
 
                     b.Navigation("User");
-                });
-
-            modelBuilder.Entity("Fayble.Domain.Aggregates.Library.LibraryPath", b =>
-                {
-                    b.HasOne("Fayble.Domain.Aggregates.Library.Library", "Library")
-                        .WithMany("Paths")
-                        .HasForeignKey("LibraryId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Library");
                 });
 
             modelBuilder.Entity("Fayble.Domain.Aggregates.Library.LibrarySetting", b =>
@@ -908,8 +881,6 @@ namespace Fayble.Infrastructure.Migrations
             modelBuilder.Entity("Fayble.Domain.Aggregates.Library.Library", b =>
                 {
                     b.Navigation("Books");
-
-                    b.Navigation("Paths");
 
                     b.Navigation("Series");
 

@@ -11,7 +11,7 @@ internal static class Mappings
             entity.Id,
             entity.Name,
             entity.Type.ToString(),
-            entity.Paths.Select(p => p.Path).ToList(),
+            entity.FolderPath,
             new LibrarySettings(
                 bool.Parse(entity.GetSetting(LibrarySettingKey.ReviewOnImport)),
                 bool.Parse(entity.GetSetting(LibrarySettingKey.SeriesFolders))));

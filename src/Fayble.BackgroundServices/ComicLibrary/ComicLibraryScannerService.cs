@@ -13,6 +13,7 @@ using Fayble.Models.FileSystem;
 using Fayble.Services.FileSystem;
 using Microsoft.AspNetCore.SignalR;
 using Microsoft.Extensions.Logging;
+using SixLabors.ImageSharp.Processing;
 
 namespace Fayble.BackgroundServices.ComicLibrary;
 
@@ -47,7 +48,7 @@ public class ComicLibraryScannerService : IComicLibraryScannerService
         _hubContext = hubContext;
         _backgroundTaskRepository = backgroundTaskRepository;
     }
-    
+
     public async Task Run(Guid libraryId, Guid taskId)
     {
         var library = await _libraryRepository.Get(libraryId);
@@ -67,11 +68,8 @@ public class ComicLibraryScannerService : IComicLibraryScannerService
 
             await _hubContext.Clients.All.SendAsync("BackgroundTaskStarted", _backgroundTask);
             
-            foreach (var libraryPath in library.Paths)
-            {
-                _logger.LogInformation("Scanning library for new books: {Library}", library.Name);
-                await ScanNewBooks(libraryPath);
-            }
+            _logger.LogInformation("Scanning library for new books: {Library}", library.Name);
+            await Scan(library);
 
             task.UpdateStatus(BackgroundTaskStatus.Complete);
             _backgroundTaskRepository.Update(task);
@@ -86,7 +84,8 @@ public class ComicLibraryScannerService : IComicLibraryScannerService
         }
         finally
         {
-            await _hubContext.Clients.All.SendAsync("BackgroundTaskCompleted",
+            await _hubContext.Clients.All.SendAsync(
+                "BackgroundTaskCompleted",
                 new BackgroundTask(
                     task.Id,
                     task.ItemId,
@@ -96,60 +95,73 @@ public class ComicLibraryScannerService : IComicLibraryScannerService
         }
     }
 
-    private async Task ScanNewBooks(LibraryPath libraryPath)
+    private async Task Scan(Library library)
     {
         _backgroundTask.UpdateDescription("Scanning new books");
         await _hubContext.Clients.All.SendAsync("BackgroundTaskUpdated", _backgroundTask);
-        
+
         _logger.LogDebug("Retrieving new files from library paths");
 
-        var seriesDirectories = await _comicBookFileSystemService.GetSeriesDirectories(libraryPath.Path);
+        var seriesDirectories = await _comicBookFileSystemService.GetSeriesDirectories(library.FolderPath);
 
         foreach (var seriesDirectory in seriesDirectories)
         {
-            var newFiles = await GetNewFiles(seriesDirectory, libraryPath);
-            _logger.LogDebug("{FileCount} new files found in path", newFiles.Count);
+            var series = await GetSeries(seriesDirectory, library);
+            await ScanExistingBooks(series);
+            await ScanNewBooks(series);
+        }
+    }
 
-            foreach (var newFile in newFiles)
+    private async Task ScanExistingBooks(Series series)
+    {
+        _logger.LogInformation("Scanning existing books for Series: {Series}", series.Name);
+        if (series.Books == null || !series.Books.Any())
+        {
+            _logger.LogDebug("No existing books.");
+            return;
+        }
+
+        foreach (var book in series.Books)
+        {
+            var file = new FileInfo(Path.Combine(book.Library.FolderPath, book.File.FilePath));
+            if (!file.Exists)
             {
-                _logger.LogDebug("Processing issue: {FilePath}", newFile.FilePath);
+                if (book.DeletedDate == null)
+                {
+                    _logger.LogInformation("File no longer exists, flagging as deleted: {File}", file.FullName);
+                    book.Delete();
+                }
                 
-                var relativeDirectoryPath = Path.GetDirectoryName(newFile.FilePath)!.Replace(
-                    libraryPath.Path.ToLower(),
-                    string.Empty,
-                    StringComparison.InvariantCultureIgnoreCase);
-                
-                var bookFile = new BookFile(
-                    Guid.NewGuid(),
-                    newFile.FileName,
-                    relativeDirectoryPath,
-                    newFile.FileSize,
-                    newFile.FileType,
-                    newFile.FileLastModifiedDate);
+                continue;
+            }
 
-                var comicIssue = new Book(
-                    Guid.NewGuid(),
-                    libraryPath.Id,
-                    libraryPath.LibraryId,
-                    MediaType.ComicBook,
-                    newFile.PageCount,
-                    newFile.Number,
-                    bookFile);
-                
-                comicIssue.UpdateMediaPath(
-                    ApplicationHelpers.GetMediaDirectory(comicIssue.GetType().Name, comicIssue.Id));
-                
-                // if settings allow parsing ComicInfoXml
-                if (newFile.ComicInfoXml != null)
-                    comicIssue.Update(
-                        newFile.ComicInfoXml.Title,
-                        newFile.ComicInfoXml?.Number ?? newFile.Number,
-                        newFile.ComicInfoXml?.Summary,
+            if (file.LastWriteTimeUtc != book.File.FileLastModifiedDate)
+            {
+                if (book.DeletedDate != null)
+                {
+                    _logger.LogInformation("File previously flagged as deleted but is now present, restoring: {File}", file.FullName);
+                    book.Restore();
+                }
+
+                _logger.LogInformation("File modified date changed, updating: {File}", file.FullName);
+                var comicInfo = _comicBookFileSystemService.ReadComicInfoXml(file.FullName);
+
+                book.File.Update(
+                    file.Length,
+                    _comicBookFileSystemService.GetHash(file.FullName),
+                    _comicBookFileSystemService.GetPageCount(file.FullName));
+
+                // TODO: if settings allow parsing ComicInfoXml
+                if (comicInfo != null)
+                    book.Update(
+                        comicInfo?.Title,
+                        comicInfo?.Number,
+                        comicInfo?.Summary,
                         0,
                         null,
                         null,
                         DateOnly.TryParseExact(
-                            $"{newFile.ComicInfoXml?.Year}-{newFile.ComicInfoXml?.Month}-{newFile.ComicInfoXml?.Day}",
+                            $"{comicInfo?.Year}-{comicInfo?.Month}-{comicInfo?.Day}",
                             "yyyy-M-dd",
                             CultureInfo.InvariantCulture,
                             DateTimeStyles.None,
@@ -159,50 +171,110 @@ public class ComicLibraryScannerService : IComicLibraryScannerService
                         null
                     );
 
-                try
-                {
-                    _logger.LogDebug("Extracting cover image from: {FilePath}", newFile.FilePath);
-                    _comicBookFileSystemService.ExtractComicCoverImage(newFile.FilePath!, comicIssue.MediaPath);
-                }
-                catch (Exception ex)
-                {
-                    _logger.LogError(ex, "An error occurred while extracting cover image");
-                }
 
-                var seriesId = await GetSeries(relativeDirectoryPath, libraryPath);
-                comicIssue.UpdateSeries(seriesId);
+               
 
-                _bookRepository.Add(comicIssue);
-                await _unitOfWork.Commit();
-
-                _logger.LogDebug(
-                    "New issue added to library: {@ComicIssue}",
-                    new
-                    {
-                        comicIssue.Id,
-                        comicIssue.File.FileType,
-                        comicIssue.File.FilePath,
-                        comicIssue.LibraryPathId,
-                        comicIssue.LibraryId
-                    });
-
+                continue;
             }
+
+            _logger.LogDebug("File not modified: {File}", file.FullName);
         }
+
+        _logger.LogInformation("Scanning existing books for Series: {Series}", series.Name);
+        await _unitOfWork.Commit();
     }
 
-    private async Task<List<ComicFile>> GetNewFiles(string path, LibraryPath libraryPath)
+    private async Task ScanNewBooks(Series series)
+    {
+        var newFiles = await GetNewFiles(series);
+        _logger.LogDebug("{FileCount} new files found in path", newFiles.Count);
+
+        foreach (var newFile in newFiles)
+        {
+            _logger.LogDebug("Processing issue: {FilePath}", newFile.FilePath);
+
+            var bookFile = new BookFile(
+                Guid.NewGuid(),
+                newFile.FileName,
+                PathHelpers.GetRelativePath(newFile.FilePath, series.Library.FolderPath),
+                newFile.FileSize,
+                newFile.FileType,
+                newFile.FileLastModifiedDate,
+                newFile.PageCount,
+                _comicBookFileSystemService.GetHash(newFile.FilePath));
+
+            var comicIssue = new Book(
+                Guid.NewGuid(),
+                series.Library.Id,
+                MediaType.ComicBook,
+                newFile.Number,
+                bookFile,
+                series.Id);
+
+            comicIssue.UpdateMediaPath(
+                ApplicationHelpers.GetMediaDirectory(comicIssue.GetType().Name, comicIssue.Id));
+
+            // TODO: if settings allow parsing ComicInfoXml
+            if (newFile.ComicInfoXml != null)
+                comicIssue.Update(
+                    newFile.ComicInfoXml.Title,
+                    newFile.ComicInfoXml?.Number ?? newFile.Number,
+                    newFile.ComicInfoXml?.Summary,
+                    0,
+                    null,
+                    null,
+                    DateOnly.TryParseExact(
+                        $"{newFile.ComicInfoXml?.Year}-{newFile.ComicInfoXml?.Month}-{newFile.ComicInfoXml?.Day}",
+                        "yyyy-M-dd",
+                        CultureInfo.InvariantCulture,
+                        DateTimeStyles.None,
+                        out var coverDate)
+                        ? coverDate
+                        : null,
+                    null
+                );
+
+            try
+            {
+                _logger.LogDebug("Extracting cover image from: {FilePath}", newFile.FilePath);
+                _comicBookFileSystemService.ExtractComicCoverImage(newFile.FilePath!, comicIssue.MediaPath);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "An error occurred while extracting cover image");
+            }
+
+            comicIssue.UpdateSeries(series.Id);
+
+            _bookRepository.Add(comicIssue);
+
+            _logger.LogDebug(
+                "New issue added to library: {@ComicIssue}",
+                new
+                {
+                    comicIssue.Id,
+                    comicIssue.File.FileType,
+                    comicIssue.File.FilePath,
+                    comicIssue.LibraryId
+                });
+        }
+
+        await _unitOfWork.Commit();
+    }
+
+    private async Task<List<ComicFile>> GetNewFiles(Series series)
     {
         var newFiles = new List<ComicFile>();
 
-        var filePaths = await _comicBookFileSystemService.GetFiles(path);
+        var filePaths = await _comicBookFileSystemService.GetFiles(
+            Path.Combine(series.Library.FolderPath, series.FolderPath),
+            MediaType.ComicBook);
 
         foreach (var filePath in filePaths)
         {
-            var exists = (await _bookRepository.Get(
-                b => b.File.DirectoryPath.ToLower() ==
-                     ComicBookHelpers.GetRelativeDirectoryPath(filePath, libraryPath.Path).ToLower() &&
-                     Path.GetFileName(filePath) == b.File.FileName &&
-                     b.LibraryPathId == libraryPath.Id)).Any();
+            var exists = series.Books?.Any(
+                b => b.File.FilePath.ToLower() ==
+                     PathHelpers.GetRelativePath(filePath, series.Library.FolderPath).ToLower()) ?? false;
 
             if (exists)
                 continue;
@@ -212,11 +284,11 @@ public class ComicLibraryScannerService : IComicLibraryScannerService
             var pageCount = _comicBookFileSystemService.GetPageCount(filePath);
             var fileName = Path.GetFileName(filePath);
             var fileSize = file.Length;
-            var lastModified = file.LastAccessTimeUtc;
+            var lastModified = file.LastWriteTimeUtc;
             var number = ComicBookHelpers.ParseIssueNumber(fileName);
             var year = ComicBookHelpers.ParseYear(fileName);
             var fileFormat = Path.GetExtension(fileName);
-            var comicInfoXml = _comicBookFileSystemService.ParseComicInfoXml(filePath);
+            var comicInfoXml = _comicBookFileSystemService.ReadComicInfoXml(filePath);
             
                 newFiles.Add(new ComicFile(
                     number,
@@ -234,40 +306,47 @@ public class ComicLibraryScannerService : IComicLibraryScannerService
         return newFiles;
     }
 
-    private async Task<Guid> GetSeries(string filePath, LibraryPath libraryPath)
+    private async Task<Series> GetSeries(string seriesPath, Library library)
     {
-        var existingBookInSeries =
-            (await _bookRepository.Get(
-                b => b.LibraryId == libraryPath.LibraryId && b.File.DirectoryPath == filePath && b.Series != null))
-            .FirstOrDefault();
+        var existingSeries = (await _seriesRepository.Get(
+            s => s.FolderPath.ToLower() ==
+                 PathHelpers.GetRelativePath(seriesPath, library.FolderPath).ToLower() &&
+                 s.LibraryId == library.Id)).FirstOrDefault();
 
-        if (existingBookInSeries != null)
+        if (existingSeries != null)
         {
             _logger.LogDebug(
                 "Matched to series: {@Series}",
                 new
                 {
-                    existingBookInSeries.Series.Id,
-                    existingBookInSeries.Series.Name,
-                    existingBookInSeries.Series.Year
+                    existingSeries.Id,
+                    existingSeries.Name,
+                    existingSeries.Year
                 });
-            return existingBookInSeries.Series.Id;
+            return existingSeries;
         }
 
-        var seriesPath = Path.GetDirectoryName(Path.Combine(libraryPath.Path, filePath));
-        var seriesName = ComicBookHelpers.ParseSeriesDirectory(seriesPath!);
+        var relativeSeriesPath = PathHelpers.GetRelativePath(seriesPath, library.FolderPath);
+        var seriesName = ComicBookHelpers.ParseSeriesDirectory(new DirectoryInfo(seriesPath).Name);
         var seriesYear = ComicBookHelpers.ParseYear(seriesPath!);
 
-        var series = new Series(Guid.NewGuid(), seriesName, seriesYear, libraryPath.Id);
+        var series = new Series(
+            Guid.NewGuid(),
+            seriesName,
+            seriesYear,
+            library.Id,
+            new DirectoryInfo(seriesPath).Name,
+            relativeSeriesPath);
+
+        var firstFile = Path.Combine(library.FolderPath, Directory.GetFiles(seriesPath).OrderBy(f => f).First());
+
         series.SetMediaPath(ApplicationHelpers.GetMediaDirectory(series.GetType().Name, series.Id));
 
-        _logger.LogDebug("Extracting cover image from: {FilePath}", Path.Combine(libraryPath.Path, filePath));
+        _logger.LogDebug("Extracting cover image from: {FilePath}", firstFile);
 
         try
         {
-            _comicBookFileSystemService.ExtractComicCoverImage(
-                Path.Combine(libraryPath.Path, filePath),
-                series.MediaPath);
+            _comicBookFileSystemService.ExtractComicCoverImage(firstFile, series.MediaPath);
         }
         catch (Exception ex)
         {
@@ -285,9 +364,9 @@ public class ComicLibraryScannerService : IComicLibraryScannerService
                 series.MediaPath
             });
 
-        _seriesRepository.Add(series);
+        var newSeries = _seriesRepository.Add(series);
         await _unitOfWork.Commit();
         
-        return series.Id;
+        return newSeries;
     }
 }

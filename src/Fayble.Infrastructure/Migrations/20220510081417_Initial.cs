@@ -70,9 +70,10 @@ namespace Fayble.Infrastructure.Migrations
                     Id = table.Column<Guid>(type: "TEXT", nullable: false),
                     Name = table.Column<string>(type: "TEXT", nullable: true),
                     Type = table.Column<string>(type: "TEXT", nullable: false),
-                    Created = table.Column<DateTimeOffset>(type: "TEXT", nullable: false),
+                    FolderPath = table.Column<string>(type: "TEXT", nullable: true),
+                    CreatedDate = table.Column<DateTimeOffset>(type: "TEXT", nullable: false),
                     CreatedBy = table.Column<Guid>(type: "TEXT", nullable: false),
-                    LastModified = table.Column<DateTimeOffset>(type: "TEXT", nullable: false),
+                    LastModifiedDate = table.Column<DateTimeOffset>(type: "TEXT", nullable: false),
                     LastModifiedBy = table.Column<Guid>(type: "TEXT", nullable: false)
                 },
                 constraints: table =>
@@ -160,25 +161,6 @@ namespace Fayble.Infrastructure.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "LibraryPath",
-                columns: table => new
-                {
-                    Id = table.Column<Guid>(type: "TEXT", nullable: false),
-                    Path = table.Column<string>(type: "TEXT", nullable: true),
-                    LibraryId = table.Column<Guid>(type: "TEXT", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_LibraryPath", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_LibraryPath_Library_LibraryId",
-                        column: x => x.LibraryId,
-                        principalTable: "Library",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
                 name: "LibrarySetting",
                 columns: table => new
                 {
@@ -213,11 +195,13 @@ namespace Fayble.Infrastructure.Migrations
                     FormatId = table.Column<Guid>(type: "TEXT", nullable: true),
                     LibraryId = table.Column<Guid>(type: "TEXT", nullable: true),
                     MediaPath = table.Column<string>(type: "TEXT", nullable: true),
+                    FolderPath = table.Column<string>(type: "TEXT", nullable: true),
+                    FolderName = table.Column<string>(type: "TEXT", nullable: true),
                     Locked = table.Column<bool>(type: "INTEGER", nullable: false),
                     LastMetadataUpdate = table.Column<DateTimeOffset>(type: "TEXT", nullable: true),
-                    Created = table.Column<DateTimeOffset>(type: "TEXT", nullable: false),
+                    CreatedDate = table.Column<DateTimeOffset>(type: "TEXT", nullable: false),
                     CreatedBy = table.Column<Guid>(type: "TEXT", nullable: false),
-                    LastModified = table.Column<DateTimeOffset>(type: "TEXT", nullable: false),
+                    LastModifiedDate = table.Column<DateTimeOffset>(type: "TEXT", nullable: false),
                     LastModifiedBy = table.Column<Guid>(type: "TEXT", nullable: false)
                 },
                 constraints: table =>
@@ -401,7 +385,6 @@ namespace Fayble.Infrastructure.Migrations
                     Title = table.Column<string>(type: "TEXT", nullable: true),
                     Summary = table.Column<string>(type: "TEXT", nullable: true),
                     Number = table.Column<string>(type: "TEXT", nullable: true),
-                    PageCount = table.Column<int>(type: "INTEGER", nullable: true),
                     MediaPath = table.Column<string>(type: "TEXT", nullable: true),
                     Language = table.Column<string>(type: "TEXT", nullable: true),
                     Rating = table.Column<decimal>(type: "TEXT", nullable: false),
@@ -410,12 +393,12 @@ namespace Fayble.Infrastructure.Migrations
                     MediaType = table.Column<string>(type: "TEXT", nullable: false),
                     SeriesId = table.Column<Guid>(type: "TEXT", nullable: true),
                     LibraryId = table.Column<Guid>(type: "TEXT", nullable: true),
-                    LibraryPathId = table.Column<Guid>(type: "TEXT", nullable: true),
                     PublisherId = table.Column<Guid>(type: "TEXT", nullable: true),
                     LastMetadataUpdate = table.Column<DateTimeOffset>(type: "TEXT", nullable: true),
-                    Created = table.Column<DateTimeOffset>(type: "TEXT", nullable: false),
+                    DeletedDate = table.Column<DateTimeOffset>(type: "TEXT", nullable: true),
+                    CreatedDate = table.Column<DateTimeOffset>(type: "TEXT", nullable: false),
                     CreatedBy = table.Column<Guid>(type: "TEXT", nullable: false),
-                    LastModified = table.Column<DateTimeOffset>(type: "TEXT", nullable: false),
+                    LastModifiedDate = table.Column<DateTimeOffset>(type: "TEXT", nullable: false),
                     LastModifiedBy = table.Column<Guid>(type: "TEXT", nullable: false)
                 },
                 constraints: table =>
@@ -425,12 +408,6 @@ namespace Fayble.Infrastructure.Migrations
                         name: "FK_Book_Library_LibraryId",
                         column: x => x.LibraryId,
                         principalTable: "Library",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_Book_LibraryPath_LibraryPathId",
-                        column: x => x.LibraryPathId,
-                        principalTable: "LibraryPath",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
@@ -476,9 +453,11 @@ namespace Fayble.Infrastructure.Migrations
                 {
                     Id = table.Column<Guid>(type: "TEXT", nullable: false),
                     FileName = table.Column<string>(type: "TEXT", nullable: true),
-                    DirectoryPath = table.Column<string>(type: "TEXT", nullable: true),
+                    FilePath = table.Column<string>(type: "TEXT", nullable: true),
                     FileSize = table.Column<long>(type: "INTEGER", nullable: false),
                     FileType = table.Column<string>(type: "TEXT", nullable: true),
+                    FileHash = table.Column<string>(type: "TEXT", nullable: true),
+                    PageCount = table.Column<int>(type: "INTEGER", nullable: false),
                     FileLastModifiedDate = table.Column<DateTimeOffset>(type: "TEXT", nullable: false),
                     BookId = table.Column<Guid>(type: "TEXT", nullable: false)
                 },
@@ -549,11 +528,6 @@ namespace Fayble.Infrastructure.Migrations
                 column: "LibraryId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Book_LibraryPathId",
-                table: "Book",
-                column: "LibraryPathId");
-
-            migrationBuilder.CreateIndex(
                 name: "IX_Book_PublisherId",
                 table: "Book",
                 column: "PublisherId");
@@ -578,11 +552,6 @@ namespace Fayble.Infrastructure.Migrations
                 name: "IX_BookPerson_PeopleId",
                 table: "BookPerson",
                 column: "PeopleId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_LibraryPath_LibraryId",
-                table: "LibraryPath",
-                column: "LibraryId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_LibrarySetting_LibraryId",
@@ -728,9 +697,6 @@ namespace Fayble.Infrastructure.Migrations
 
             migrationBuilder.DropTable(
                 name: "User");
-
-            migrationBuilder.DropTable(
-                name: "LibraryPath");
 
             migrationBuilder.DropTable(
                 name: "Series");

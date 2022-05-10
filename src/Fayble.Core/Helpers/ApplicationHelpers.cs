@@ -1,14 +1,16 @@
 ﻿using System.Reflection;
 using System.Runtime.InteropServices;
 using Fayble.Core.Enums;
+using Microsoft.Extensions.Logging;
 using Serilog;
 using Serilog.Core;
+using Serilog.Events;
 
 namespace Fayble.Core.Helpers;
 
 public static class ApplicationHelpers
 {
-    public static LoggingLevelSwitch logLevel;
+    public static LoggingLevelSwitch LogLevel = new();
 
     public static Application GetApplication()
     {
@@ -89,5 +91,10 @@ public static class ApplicationHelpers
         }
 
         return configFolder;
+    }
+
+    public static void SetLogLevel(LogEventLevel logLevel)
+    {
+        LogLevel.MinimumLevel = LogEventLevel.Debug;
     }
 }

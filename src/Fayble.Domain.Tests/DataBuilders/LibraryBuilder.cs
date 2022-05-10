@@ -14,11 +14,7 @@ public class LibraryBuilder : TestDataBuilder<Library>
             .WithId(Guid.NewGuid())
             .WithName("Test Library")
             .WithType(MediaType.ComicBook)
-            .WithPaths(
-                new[]
-                {
-                    new LibraryPath( Guid.NewGuid(), string.Empty)
-                })
+            .WithFolderPath("\\")
             .WithSettings(new []
             {
                 new LibrarySetting(LibrarySettingKey.ReviewOnImport, true.ToString())
@@ -46,9 +42,9 @@ public class LibraryBuilder : TestDataBuilder<Library>
         return this;
     }
 
-    public LibraryBuilder WithPaths(IReadOnlyCollection<LibraryPath> paths)
+    public LibraryBuilder WithFolderPath(string folderPath)
     {
-        Set(i => i.Paths, paths);
+        Set(i => i.FolderPath, folderPath);
         return this;
     }
 
@@ -64,7 +60,7 @@ public class LibraryBuilder : TestDataBuilder<Library>
             Get(i => i.Id),
             Get(i => i.Name),
             Get(i => i.Type),
-            Get(i => i.Paths).Select(p => p.Path),
+            Get(i => i.FolderPath),
             Get(i => i.Settings));
 
         return library;

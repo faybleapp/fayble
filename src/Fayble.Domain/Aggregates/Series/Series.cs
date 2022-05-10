@@ -50,7 +50,7 @@ public class Series : AuditableEntity<Guid>, IAggregateRoot
     {
     }
 
-    public Series(Guid id, string name, int? year, Guid libraryId, string folderPath, string folderName) : base(id)
+    public Series(Guid id, string name, int? year, Guid libraryId, string folderName, string folderPath) : base(id)
     {
         Guard.AgainstNullOrWhitespace(name, nameof(Name));
 

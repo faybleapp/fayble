@@ -25,7 +25,8 @@ public class Book
     public string? CoverDate { get; private set; }
     public DateTimeOffset LastMetadataUpdate { get; private set; }
     public string MediaType { get; private set; }    
-    public IEnumerable<string> Tags {get; private set;}
+    public IEnumerable<string>? Tags {get; private set;}
+    public bool IsDeleted { get; private set; }
 
 
     public Book(
@@ -48,7 +49,8 @@ public class Book
         string? releaseDate,
         string? coverDate,
         string language,
-        IEnumerable<string>? tags
+        IEnumerable<string>? tags,
+        bool isDeleted
     )
     {
         Id = id;
@@ -71,6 +73,8 @@ public class Book
         CoverDate = coverDate;
         Language = language;
         Tags = tags;
+        IsDeleted = isDeleted;
         Media = new Media(mediaPath);
+
     }
 }

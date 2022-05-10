@@ -1,7 +1,8 @@
 import {
 	faBook,
-	faBookOpen,
-	faDesktop
+	faBookOpen, faChartPie,
+	faDesktop,
+	faHouseChimney
 } from "@fortawesome/free-solid-svg-icons";
 import { LibraryModal } from "components/libraryModal";
 import { useAppState } from "context/AppStateContext";
@@ -24,13 +25,31 @@ export const Sidebar = () => {
 
 	useEffect(() => {
 		var libraryId = libraries?.find((l) => pathname.includes(l.id!))?.id;
-		setActiveMenuItem(!!libraryId ? libraryId : "");
+		if (!!libraryId) {
+			setActiveMenuItem(libraryId);
+			return;
+		}
+		if (pathname === "/") {
+			setActiveMenuItem("home");
+		}
 	}, [pathname, libraries]);
 
 	return (
 		<>
 			<div className={styles.sidebar}>
 				<ul>
+					<li key="home">
+						<Link to={"/"} style={{ textDecoration: "none" }}>
+							<SidebarMenuItem
+								name="Home"
+								collapsed={!sidebarOpen}
+								id="home"
+								icon={faHouseChimney}								
+								setActive={setActiveMenuItem}
+								activeItem={activeMenuItem}
+							/>
+						</Link>
+					</li>
 					{libraries &&
 						libraries?.map((library: Library) => {
 							return (
@@ -51,6 +70,18 @@ export const Sidebar = () => {
 								</li>
 							);
 						})}
+					<li key="dashboard">
+						<Link to={"/dashboard"} style={{ textDecoration: "none" }}>
+							<SidebarMenuItem
+								name="Dashboard"
+								collapsed={!sidebarOpen}
+								id="dashboard"
+								icon={faChartPie}								
+								setActive={setActiveMenuItem}
+								activeItem={activeMenuItem}
+							/>
+						</Link>
+					</li>
 					<li>
 						<SidebarMenuItemDropdown
 							id="application"

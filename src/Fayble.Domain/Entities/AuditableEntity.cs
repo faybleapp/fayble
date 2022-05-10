@@ -2,9 +2,9 @@
 
 public interface IAuditable
 {
-    DateTimeOffset Created { get; }
+    DateTimeOffset CreatedDate { get; }
     Guid CreatedBy { get; }
-    DateTimeOffset LastModified { get; }
+    DateTimeOffset LastModifiedDate { get; }
     Guid LastModifiedBy { get; }
 
     void SetLastModified(Guid lastModifiedBy, DateTimeOffset lastModified);
@@ -21,23 +21,23 @@ public abstract class AuditableEntity<T> : IdentifiableEntity<T>, IAuditable
     {
     }
 
-    public DateTimeOffset Created { get; set; }
+    public DateTimeOffset CreatedDate { get; set; }
 
     public Guid CreatedBy { get; set; }
 
-    public DateTimeOffset LastModified { get; set; }
+    public DateTimeOffset LastModifiedDate { get; set; }
 
     public Guid LastModifiedBy { get; set; }
 
-    public void SetLastModified(Guid lastModifiedBy, DateTimeOffset lastModified)
+    public void SetLastModified(Guid lastModifiedBy, DateTimeOffset lastModifiedDate)
     {
         LastModifiedBy = lastModifiedBy;
-        LastModified = lastModified;
+        LastModifiedDate = lastModifiedDate;
     }
 
-    public void SetCreated(Guid createdBy, DateTimeOffset created)
+    public void SetCreated(Guid createdBy, DateTimeOffset createdDate)
     {
         CreatedBy = createdBy;
-        Created = created;
+        CreatedDate = createdDate;
     }
 }
