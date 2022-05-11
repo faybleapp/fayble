@@ -1,6 +1,6 @@
 import cn from "classnames";
 import { Series } from "models/api-models";
-import React from "react";
+import { ImageTypes } from "models/ui-models";
 import { Figure } from "react-bootstrap";
 import { Link, useParams } from "react-router-dom";
 import styles from "./SeriesCoverGrid.module.scss";
@@ -42,9 +42,7 @@ export const SeriesCoverGrid = ({ items }: SeriesCoverGridProps) => {
 							<div className={styles.coverContainer}>
 								<Figure.Image
 									className={cn(styles.coverImage, "shadow")}
-									src={`/api/media/${encodeURIComponent(
-										item?.media?.coverSm || ""
-									)}`}
+									src={`/api/media?id=${item?.id}&mediaRoot=${item?.mediaRoot}&fileName=${ImageTypes.CoverSm}`}
 								/>
 
 								<div className={styles.overlay}>

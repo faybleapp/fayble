@@ -26,6 +26,12 @@ export enum BackgroundTaskStatus {
     Failed = "Failed"
 }
 
+export enum ImageTypes {
+	CoverSm = "cover-250.jpg",
+	CoverMed = "cover-500.jpg",
+	CoverFull = "cover.jpg"
+}
+
 export interface SelectFieldOption {
 	value: string ;
 	label: string;

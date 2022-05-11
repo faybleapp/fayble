@@ -59,7 +59,7 @@ public static class SeedDb
                     new ("IDW Publishing")
                 };
 
-            publishers.ForEach(p => p.SetMediaPath(ApplicationHelpers.GetMediaDirectory(p.GetType().Name, p.Id)));
+            publishers.ForEach(p => p.SetMediaRoot(ApplicationHelpers.GetMediaDirectoryRoot(p.Id)));
 
             context.Publishers.AddRange(publishers);
         }

@@ -2,6 +2,7 @@
 using Fayble.Security.Authorisation;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.StaticFiles;
 
 namespace Fayble.Controllers;
 
@@ -10,10 +11,14 @@ namespace Fayble.Controllers;
 [Authorize(Policy = Policies.User)]
 public class MediaController : Controller
 {
-    [HttpGet("{mediaPath}")]
+    [HttpGet]
     [AllowAnonymous]
-    public ActionResult GetImage(string mediaPath)
+    public IActionResult GetImage(Guid id, string mediaRoot, string filename)
     {
-        return PhysicalFile(Path.Combine(ApplicationHelpers.GetAppDirectory(), mediaPath), "image/jpeg");
+        var filePath = Path.Combine(ApplicationHelpers.GetMediaDirectory(), mediaRoot, id.ToString(), filename);
+        new FileExtensionContentTypeProvider().TryGetContentType(filePath, out var contentType);
+        var file = System.IO.File.OpenRead(filePath);
+
+        return File(file, contentType ?? "image/jpeg");
     }
 }

@@ -2,6 +2,7 @@ import { faTrashCan } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import cn from "classnames";
 import { Book } from "models/api-models";
+import { ImageTypes } from "models/ui-models";
 import { BookCoverOverlay } from "pages/library/series/BookCoverOverlay";
 import { Figure } from "react-bootstrap";
 import { Link, useParams } from "react-router-dom";
@@ -37,9 +38,7 @@ export const BookItem = ({
 						[styles.deleted]: book.isDeleted,
 						[styles.overlay]: !book.isDeleted,
 					})}
-					src={`/api/media/${encodeURIComponent(
-						book?.media?.coverSm || ""
-					)}`}
+					src={`/api/media?id=${book?.id}&mediaRoot=${book?.mediaRoot}&fileName=${ImageTypes.CoverSm}`}
 				/>
 				<Link
 					key={book.id}

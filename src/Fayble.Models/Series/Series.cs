@@ -29,10 +29,10 @@ public class Series
     public Library.Library? Library { get; }
 
     public bool Read { get; }
-
-    public Media? Media { get; }
-
+    
     public bool Locked { get; }
+
+    public string MediaRoot { get; }
 
     public DateTimeOffset? LastMetadataUpdate { get; }
 
@@ -49,7 +49,7 @@ public class Series
         Guid? publisherId,
         Publisher? publisher,
         decimal rating,
-        string? mediaPath,
+        string mediaRoot,
         Library.Library? library,
         bool read,
         bool locked)
@@ -68,7 +68,7 @@ public class Series
         Rating = rating;
         Library = library;
         Read = read;
-        Media = mediaPath != null ? new Media(mediaPath) : null;
+        MediaRoot = mediaRoot;
         Locked = locked;
     }
 }

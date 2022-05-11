@@ -11,7 +11,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Fayble.Infrastructure.Migrations
 {
     [DbContext(typeof(FaybleDbContext))]
-    [Migration("20220510081417_Initial")]
+    [Migration("20220511082225_Initial")]
     partial class Initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -110,7 +110,7 @@ namespace Fayble.Infrastructure.Migrations
                     b.Property<Guid?>("LibraryId")
                         .HasColumnType("TEXT");
 
-                    b.Property<string>("MediaPath")
+                    b.Property<string>("MediaRoot")
                         .HasColumnType("TEXT");
 
                     b.Property<string>("MediaType")
@@ -327,7 +327,7 @@ namespace Fayble.Infrastructure.Migrations
                     b.Property<DateTimeOffset>("LastMetadataUpdate")
                         .HasColumnType("TEXT");
 
-                    b.Property<string>("MediaPath")
+                    b.Property<string>("MediaRoot")
                         .HasColumnType("TEXT");
 
                     b.Property<string>("Name")
@@ -402,7 +402,7 @@ namespace Fayble.Infrastructure.Migrations
                     b.Property<bool>("Locked")
                         .HasColumnType("INTEGER");
 
-                    b.Property<string>("MediaPath")
+                    b.Property<string>("MediaRoot")
                         .HasColumnType("TEXT");
 
                     b.Property<string>("Name")

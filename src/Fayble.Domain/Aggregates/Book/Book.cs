@@ -10,7 +10,7 @@ public class Book : AuditableEntity<Guid>, IAggregateRoot
     public string Title { get; private set; }
     public string Summary { get; private set; }
     public string Number { get; private set; }
-    public string MediaPath { get; private set; }
+    public string MediaRoot { get; private set; }
     public string Language { get; private set; }
     public decimal Rating { get; private set; }
     public DateOnly? ReleaseDate { get; private set; }
@@ -72,11 +72,6 @@ public class Book : AuditableEntity<Guid>, IAggregateRoot
         Tags = tags;
     }
 
-    public void UpdateMediaPath(string mediaPath)
-    {
-        MediaPath = mediaPath;
-    }
-
     public void UpdateSeries(Guid seriesId)
     {
         SeriesId = seriesId;
@@ -90,6 +85,11 @@ public class Book : AuditableEntity<Guid>, IAggregateRoot
     public void Restore()
     {
         DeletedDate = null;
+    }
+
+    public void SetMediaRoot(string mediaRoot)
+    {
+        MediaRoot = mediaRoot;
     }
 
     public void UpdateReadStatus(Guid userId, bool read)

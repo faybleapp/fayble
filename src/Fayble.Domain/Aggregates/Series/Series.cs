@@ -36,7 +36,7 @@ public class Series : AuditableEntity<Guid>, IAggregateRoot
 
     public virtual ICollection<Book.Book> Books { get; private set; }
 
-    public string MediaPath { get; private set; }
+    public string MediaRoot { get; private set; }
 
     public string FolderPath { get; private set; }
 
@@ -83,10 +83,9 @@ public class Series : AuditableEntity<Guid>, IAggregateRoot
         PublisherId = publisherId;
         ParentSeriesId = parentSeriesId;
     }
-
-    public void SetMediaPath(string path)
+    public void SetMediaRoot(string mediaRoot)
     {
-        MediaPath = path;
+        MediaRoot = mediaRoot;
     }
 
     public bool IsRead(Guid userId)

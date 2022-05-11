@@ -5,14 +5,13 @@ public class Book
     public Guid Id { get; private set; }
     public string Title { get; private set; }
     public string Summary { get; private set; }
-    public int? PageCount { get; private set; }
-    public string MediaPath { get; private set; }
+    public int? PageCount { get; private set; }    
     public string FileName { get; private set; }
     public string FileType { get; private set; }
     public string FilePath { get; private set; }
     public double FileSize { get; private set; }
     public decimal Rating { get; private set; }
-    public Media Media { get; private set; }
+    public string MediaRoot { get; private set; }
     public Publisher? Publisher { get; private set; }
     public bool Read { get; private set; }
     public DateTimeOffset Created { get; private set; }
@@ -33,8 +32,7 @@ public class Book
         Guid id,
         string title,
         string summary,
-        int? pageCount,
-        string mediaPath,
+        int? pageCount,        
         string fileName,
         string fileType,
         double fileSize,
@@ -50,14 +48,14 @@ public class Book
         string? coverDate,
         string language,
         IEnumerable<string>? tags,
-        bool isDeleted
+        bool isDeleted,
+        string mediaRoot
     )
     {
         Id = id;
         Title = title;
         Summary = summary;
-        PageCount = pageCount;
-        MediaPath = mediaPath;
+        PageCount = pageCount;        
         FileName = fileName;
         FileType = fileType;
         FileSize = fileSize;
@@ -74,7 +72,7 @@ public class Book
         Language = language;
         Tags = tags;
         IsDeleted = isDeleted;
-        Media = new Media(mediaPath);
+        MediaRoot = mediaRoot;
 
     }
 }

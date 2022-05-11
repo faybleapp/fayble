@@ -46,13 +46,12 @@ export interface Book {
     title: string;
     summary: string;
     pageCount: number | undefined;
-    mediaPath: string;
     fileName: string;
     fileType: string;
     filePath: string;
     fileSize: number;
     rating: number;
-    media: Media;
+    mediaRoot: string;
     publisher: Publisher | undefined;
     read: boolean;
     created: Date;
@@ -67,12 +66,6 @@ export interface Book {
     mediaType: string;
     tags: string[] | undefined;
     isDeleted: boolean;
-}
-
-export interface Media {
-    coverFull: string | undefined;
-    coverMed: string | undefined;
-    coverSm: string | undefined;
 }
 
 export interface Publisher {
@@ -97,8 +90,8 @@ export interface Series {
     rating: number;
     library: Library | undefined;
     read: boolean;
-    media: Media | undefined;
     locked: boolean;
+    mediaRoot: string;
     lastMetadataUpdate: Date | undefined;
 }
 

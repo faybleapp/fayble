@@ -1,7 +1,6 @@
 import { useBackgroundTaskState } from "context";
 import { BackgroundTask } from "models/api-models";
 import { BackgroundTaskStatus } from "models/ui-models";
-import React from "react";
 import { Offcanvas, Spinner } from "react-bootstrap";
 import styles from "./BackgroundTaskSidebar.module.scss";
 
@@ -49,7 +48,7 @@ export const BackgroundTaskSidebar = ({
 											: {task.itemName}
 										</div>
 										<div className={styles.taskDescription}>
-											- {task.description}...
+											- {`${task.description} `}
 											<Spinner
 												animation="border"
 												size="sm"

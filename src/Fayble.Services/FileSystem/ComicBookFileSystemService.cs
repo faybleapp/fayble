@@ -6,6 +6,7 @@ using Fayble.Domain.Repositories;
 using Fayble.Models.FileSystem;
 using Microsoft.Extensions.Logging;
 using SharpCompress.Archives;
+using SixLabors.ImageSharp;
 
 namespace Fayble.Services.FileSystem;
 
@@ -46,27 +47,34 @@ public class ComicBookFileSystemService : FileSystemService, IComicBookFileSyste
         return images.Count();
     }
 
-    public void ExtractComicCoverImage(string filePath, string mediaPath)
+    public void ExtractComicCoverImage(string filePath, string mediaRoot, Guid id)
     {
         using var archive = ArchiveFactory.Open(filePath);
-        var image =
+        var extractedImage =
             archive.Entries.Where(
                 x =>
                     x.Key.ToLower().EndsWith(".jpg") || x.Key.ToLower().EndsWith(".jpeg") ||
                     x.Key.ToLower().EndsWith(".png") ||
-                    x.Key.ToLower().EndsWith(".bmp")).OrderBy(x => x.Key).FirstOrDefault();
+                    x.Key.ToLower().EndsWith(".bmp")).MinBy(x => x.Key);
     
-        var folderPath = Path.Combine(ApplicationHelpers.GetAppDirectory(), mediaPath);
+        var folderPath = Path.Combine(ApplicationHelpers.GetMediaDirectory(), mediaRoot, id.ToString());
         if (!Directory.Exists(folderPath))
         {
             Directory.CreateDirectory(folderPath);
         }
-    
-        var path = Path.Combine(ApplicationHelpers.GetAppDirectory(), mediaPath, "cover.jpg");
-    
-        image.WriteToFile(path);
+
+        if (extractedImage == null)
+            return;
+
+        var tempFile = Path.Combine(Path.GetTempPath(), Guid.NewGuid().ToString());
+        extractedImage.WriteToFile(tempFile);
+        
+        using var img = Image.Load(tempFile);
+        var path = Path.Combine(folderPath, "cover.jpg");
+        img.SaveAsJpeg(path);
         ImageHelpers.ResizeImage(path, 250);
         ImageHelpers.ResizeImage(path, 500);
+        File.Delete(tempFile);
     }
     
     public ComicInfoXml? ReadComicInfoXml(string filePath)

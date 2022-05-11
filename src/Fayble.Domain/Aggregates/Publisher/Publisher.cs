@@ -8,7 +8,7 @@ public class Publisher : IdentifiableEntity<Guid>, IAggregateRoot
 
     public string Description { get; private set; }
 
-    public string MediaPath { get; private set; }
+    public string MediaRoot { get; private set; }
 
     public DateTimeOffset LastMetadataUpdate { get; private set; }
 
@@ -23,8 +23,8 @@ public class Publisher : IdentifiableEntity<Guid>, IAggregateRoot
         Description = description;
     }
 
-    public void SetMediaPath(string mediaPath)
+    public void SetMediaRoot(string mediaRoot)
     {
-        MediaPath = mediaPath;
+        MediaRoot = mediaRoot;
     }
 }

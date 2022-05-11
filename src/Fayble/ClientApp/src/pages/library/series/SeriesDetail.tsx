@@ -1,6 +1,7 @@
 import { StarRating } from "components/starRating";
 import { Series } from "models/api-models";
-import React, { useEffect, useState } from "react";
+import { ImageTypes } from "models/ui-models";
+import { useEffect, useState } from "react";
 import { Image } from "react-bootstrap";
 import { useUpdateSeries } from "services";
 import styles from "./SeriesDetail.module.scss";
@@ -28,10 +29,7 @@ export const SeriesDetail = (props: SeriesDetailProps) => {
 		<div className={styles.container}>
 			<Image
 				className={styles.cover}
-				src={
-					series &&
-					`/api/media/${encodeURIComponent(series.media?.coverSm!)}`
-				}
+				src={`/api/media?id=${series?.id}&mediaRoot=${series?.mediaRoot}&fileName=${ImageTypes.CoverSm}`}
 			/>
 			<div className={styles.detailsPanel}>
 				<div className={styles.detailsTitle}>

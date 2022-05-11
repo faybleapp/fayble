@@ -40,22 +40,38 @@ public static class ApplicationHelpers
         return fullPath;
     }
 
-    public static string GetMediaDirectory(string type, Guid id)
+    public static string GetMediaDirectoryRoot(Guid id)
     {
-        var folder = 0;
-        var rootPath = Path.Combine(GetAppDirectory(), "Media", type);
-        var path = Path.Combine(rootPath, folder.ToString());
+        var rootFolder = 0;
+        var rootPath = GetMediaDirectory();
+        var path = Path.Combine(rootPath, rootFolder.ToString());
 
         while (Directory.Exists(path) && Directory.GetDirectories(path).Count() >= 5000)
         {
-            folder++;
-            path = Path.Combine(rootPath, folder.ToString());
+            rootFolder++;
+            path = Path.Combine(rootPath, rootFolder.ToString());
         }
 
         var pathWithId = Path.Combine(path, id.ToString());
-        if (!Directory.Exists(pathWithId)) Directory.CreateDirectory(pathWithId);
 
-        return Path.Combine("Media", type, folder.ToString(), id.ToString());
+        if (!Directory.Exists(pathWithId))
+        {
+            Directory.CreateDirectory(pathWithId);
+        }
+
+        return Path.Combine(rootFolder.ToString());
+    }
+
+    public static string GetMediaDirectory()
+    {
+        var mediaFolder = Path.Combine(GetAppDirectory(), "Media");
+
+        if (!Directory.Exists(mediaFolder))
+        {
+            Directory.CreateDirectory(mediaFolder);
+        }
+
+        return mediaFolder;
     }
 
     public static string GetTokenSigningKey()

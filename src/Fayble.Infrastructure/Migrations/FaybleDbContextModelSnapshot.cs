@@ -108,7 +108,7 @@ namespace Fayble.Infrastructure.Migrations
                     b.Property<Guid?>("LibraryId")
                         .HasColumnType("TEXT");
 
-                    b.Property<string>("MediaPath")
+                    b.Property<string>("MediaRoot")
                         .HasColumnType("TEXT");
 
                     b.Property<string>("MediaType")
@@ -325,7 +325,7 @@ namespace Fayble.Infrastructure.Migrations
                     b.Property<DateTimeOffset>("LastMetadataUpdate")
                         .HasColumnType("TEXT");
 
-                    b.Property<string>("MediaPath")
+                    b.Property<string>("MediaRoot")
                         .HasColumnType("TEXT");
 
                     b.Property<string>("Name")
@@ -400,7 +400,7 @@ namespace Fayble.Infrastructure.Migrations
                     b.Property<bool>("Locked")
                         .HasColumnType("INTEGER");
 
-                    b.Property<string>("MediaPath")
+                    b.Property<string>("MediaRoot")
                         .HasColumnType("TEXT");
 
                     b.Property<string>("Name")

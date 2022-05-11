@@ -13,7 +13,6 @@ public static class Mappings
             entity.Title,
             entity.Summary,
             entity.File.PageCount,
-            entity.MediaPath,
             entity.File.FileName,
             entity.File.FileType,
             Math.Round(Convert.ToDouble(entity.File.FileSize / 1024) / 1024, 2),
@@ -28,7 +27,8 @@ public static class Mappings
             entity.ReleaseDate?.ToString("yyyy-MM-dd"),
             entity.CoverDate?.ToString("yyyy-MM"),
             entity.Language,
-            entity.Tags?.Select(t => t.Name).OrderBy(t => t), 
-            entity.DeletedDate != null);
+            entity.Tags?.Select(t => t.Name).OrderBy(t => t),
+            entity.DeletedDate != null,
+            entity.MediaRoot);
     }
 }

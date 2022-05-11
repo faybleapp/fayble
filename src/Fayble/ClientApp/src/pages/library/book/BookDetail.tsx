@@ -1,6 +1,7 @@
 import { StarRating } from "components/starRating";
 import { Book } from "models/api-models";
-import React, { useEffect, useState } from "react";
+import { ImageTypes } from "models/ui-models";
+import { useEffect, useState } from "react";
 import { Image } from "react-bootstrap";
 import { useUpdateBook } from "services/book";
 import styles from "./BookDetail.module.scss";
@@ -28,10 +29,7 @@ export const BookDetail = (props: BookDetailProps) => {
 		<div className={styles.container}>
 			<Image
 				className={styles.cover}
-				src={
-					book &&
-					`/api/media/${encodeURIComponent(book.media?.coverSm!)}`
-				}
+				src={`/api/media?id=${book?.id}&mediaRoot=${book?.mediaRoot}&filename=${ImageTypes.CoverSm}`}
 			/>
 			<div className={styles.detailsPanel}>
 				<div className={styles.detailsTitle}>
@@ -42,7 +40,10 @@ export const BookDetail = (props: BookDetailProps) => {
 					</h4>
 
 					<div className={styles.rating}>
-						<StarRating rating={book.rating} onChange={ratingChanged}/>
+						<StarRating
+							rating={book.rating}
+							onChange={ratingChanged}
+						/>
 					</div>
 				</div>
 

@@ -20,7 +20,7 @@ public static class Mappings
             entity.PublisherId,
             entity.Publisher?.ToModel(),
             entity.Rating,
-            entity.MediaPath,
+            entity.MediaRoot,
             entity.Library.ToModel(),
             userId != null && entity.IsRead((Guid)userId),
             entity.Locked);

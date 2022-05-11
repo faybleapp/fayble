@@ -58,7 +58,8 @@ public class ComicLibraryScannerService : IComicLibraryScannerService
             libraryId,
             library.Name,
             BackgroundTaskType.LibraryScan.ToString(),
-            BackgroundTaskStatus.Running.ToString());
+            BackgroundTaskStatus.Running.ToString(), 
+            "Scanning");
 
         try
         {
@@ -97,9 +98,6 @@ public class ComicLibraryScannerService : IComicLibraryScannerService
 
     private async Task Scan(Library library)
     {
-        _backgroundTask.UpdateDescription("Scanning new books");
-        await _hubContext.Clients.All.SendAsync("BackgroundTaskUpdated", _backgroundTask);
-
         _logger.LogDebug("Retrieving new files from library paths");
 
         var seriesDirectories = await _comicBookFileSystemService.GetSeriesDirectories(library.FolderPath);
@@ -107,6 +105,10 @@ public class ComicLibraryScannerService : IComicLibraryScannerService
         foreach (var seriesDirectory in seriesDirectories)
         {
             var series = await GetSeries(seriesDirectory, library);
+
+            _backgroundTask.UpdateDescription($"Scanning {series.FolderName}");
+            await _hubContext.Clients.All.SendAsync("BackgroundTaskUpdated", _backgroundTask);
+
             await ScanExistingBooks(series);
             await ScanNewBooks(series);
         }
@@ -115,6 +117,7 @@ public class ComicLibraryScannerService : IComicLibraryScannerService
     private async Task ScanExistingBooks(Series series)
     {
         _logger.LogInformation("Scanning existing books for Series: {Series}", series.Name);
+
         if (series.Books == null || !series.Books.Any())
         {
             _logger.LogDebug("No existing books.");
@@ -192,7 +195,7 @@ public class ComicLibraryScannerService : IComicLibraryScannerService
         foreach (var newFile in newFiles)
         {
             _logger.LogDebug("Processing issue: {FilePath}", newFile.FilePath);
-
+            
             var bookFile = new BookFile(
                 Guid.NewGuid(),
                 newFile.FileName,
@@ -202,7 +205,7 @@ public class ComicLibraryScannerService : IComicLibraryScannerService
                 newFile.FileLastModifiedDate,
                 newFile.PageCount,
                 _comicBookFileSystemService.GetHash(newFile.FilePath));
-
+            
             var comicIssue = new Book(
                 Guid.NewGuid(),
                 series.Library.Id,
@@ -211,8 +214,7 @@ public class ComicLibraryScannerService : IComicLibraryScannerService
                 bookFile,
                 series.Id);
 
-            comicIssue.UpdateMediaPath(
-                ApplicationHelpers.GetMediaDirectory(comicIssue.GetType().Name, comicIssue.Id));
+            comicIssue.SetMediaRoot(ApplicationHelpers.GetMediaDirectoryRoot(comicIssue.Id));
 
             // TODO: if settings allow parsing ComicInfoXml
             if (newFile.ComicInfoXml != null)
@@ -237,7 +239,7 @@ public class ComicLibraryScannerService : IComicLibraryScannerService
             try
             {
                 _logger.LogDebug("Extracting cover image from: {FilePath}", newFile.FilePath);
-                _comicBookFileSystemService.ExtractComicCoverImage(newFile.FilePath!, comicIssue.MediaPath);
+                _comicBookFileSystemService.ExtractComicCoverImage(newFile.FilePath!, comicIssue.MediaRoot, comicIssue.Id);
             }
             catch (Exception ex)
             {
@@ -340,13 +342,13 @@ public class ComicLibraryScannerService : IComicLibraryScannerService
 
         var firstFile = Path.Combine(library.FolderPath, Directory.GetFiles(seriesPath).OrderBy(f => f).First());
 
-        series.SetMediaPath(ApplicationHelpers.GetMediaDirectory(series.GetType().Name, series.Id));
+        series.SetMediaRoot(ApplicationHelpers.GetMediaDirectoryRoot(series.Id));
 
         _logger.LogDebug("Extracting cover image from: {FilePath}", firstFile);
 
         try
         {
-            _comicBookFileSystemService.ExtractComicCoverImage(firstFile, series.MediaPath);
+            _comicBookFileSystemService.ExtractComicCoverImage(firstFile, series.MediaRoot, series.Id);
         }
         catch (Exception ex)
         {
@@ -361,7 +363,7 @@ public class ComicLibraryScannerService : IComicLibraryScannerService
                 series.Name,
                 series.Volume,
                 series.LibraryId,
-                series.MediaPath
+                MediaPath = series.MediaRoot
             });
 
         var newSeries = _seriesRepository.Add(series);

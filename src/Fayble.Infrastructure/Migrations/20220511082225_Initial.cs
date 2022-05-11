@@ -101,7 +101,7 @@ namespace Fayble.Infrastructure.Migrations
                     Id = table.Column<Guid>(type: "TEXT", nullable: false),
                     Name = table.Column<string>(type: "TEXT", nullable: true),
                     Description = table.Column<string>(type: "TEXT", nullable: true),
-                    MediaPath = table.Column<string>(type: "TEXT", nullable: true),
+                    MediaRoot = table.Column<string>(type: "TEXT", nullable: true),
                     LastMetadataUpdate = table.Column<DateTimeOffset>(type: "TEXT", nullable: false)
                 },
                 constraints: table =>
@@ -194,7 +194,7 @@ namespace Fayble.Infrastructure.Migrations
                     PublisherId = table.Column<Guid>(type: "TEXT", nullable: true),
                     FormatId = table.Column<Guid>(type: "TEXT", nullable: true),
                     LibraryId = table.Column<Guid>(type: "TEXT", nullable: true),
-                    MediaPath = table.Column<string>(type: "TEXT", nullable: true),
+                    MediaRoot = table.Column<string>(type: "TEXT", nullable: true),
                     FolderPath = table.Column<string>(type: "TEXT", nullable: true),
                     FolderName = table.Column<string>(type: "TEXT", nullable: true),
                     Locked = table.Column<bool>(type: "INTEGER", nullable: false),
@@ -385,7 +385,7 @@ namespace Fayble.Infrastructure.Migrations
                     Title = table.Column<string>(type: "TEXT", nullable: true),
                     Summary = table.Column<string>(type: "TEXT", nullable: true),
                     Number = table.Column<string>(type: "TEXT", nullable: true),
-                    MediaPath = table.Column<string>(type: "TEXT", nullable: true),
+                    MediaRoot = table.Column<string>(type: "TEXT", nullable: true),
                     Language = table.Column<string>(type: "TEXT", nullable: true),
                     Rating = table.Column<decimal>(type: "TEXT", nullable: false),
                     ReleaseDate = table.Column<DateOnly>(type: "TEXT", nullable: true),
