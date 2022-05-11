@@ -1,8 +1,10 @@
 @import "../../scss/variables";
 
 .series {
-	margin-right: 25px !important;
-	width: 140px;
+	margin-right: 25px;
+	margin-bottom: 30px;
+	width: 150px;
+	height: 100%;
 }
 
 .coverContainer {
@@ -15,7 +17,7 @@
 		}
 
 		.coverImage {
-			filter: blur(1px) brightness(70%);
+			filter: blur(1px) brightness(60%);
 			transition: 0.3s;
 		}
 	}
@@ -23,11 +25,13 @@
 
 .coverImage {
 	border-radius: 4px;
-	width: 140px;
-	max-height: 230px !important;
+	margin-bottom: 0px !important;
+	width: 100%;
+	height: 225px !important;
 }
 
 .caption {
+	margin-top: 13px;
 	padding-left: 4px;
 	font-size: 13px !important;
 

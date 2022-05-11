@@ -34,7 +34,7 @@ export const SeriesCoverGrid = ({ items }: SeriesCoverGridProps) => {
 	// };
 
 	return (
-		<>
+		<div>
 			{items &&
 				items.map((item) => {
 					return (
@@ -78,6 +78,6 @@ export const SeriesCoverGrid = ({ items }: SeriesCoverGridProps) => {
 						</Figure>
 					);
 				})}
-		</>
+		</div>
 	);
 };
