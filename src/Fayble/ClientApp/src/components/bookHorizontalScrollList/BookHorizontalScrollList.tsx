@@ -3,11 +3,11 @@ import {
 	faChevronRight
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { BookItem } from "components/bookItem";
 import { BookModal } from "components/bookModal";
+import { CoverItem } from "components/coverItem";
 import { Book } from "models/api-models";
 import { MediaType } from "models/ui-models";
-import React, { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Button } from "react-bootstrap";
 import styles from "./BookHorizontalScrollList.module.scss";
 
@@ -38,9 +38,12 @@ export const BookHorizontalScrollList = ({
 	};
 
 	useEffect(() => {
-		console.log(scrollListRef.current?.scrollWidth );
+		console.log(scrollListRef.current?.scrollWidth);
 		console.log(scrollListRef.current?.clientWidth);
-	},[scrollListRef.current?.clientWidth, scrollListRef.current?.scrollWidth])
+	}, [
+		scrollListRef.current?.clientWidth,
+		scrollListRef.current?.scrollWidth,
+	]);
 
 	useEffect(() => {
 		setShowControls(
@@ -75,8 +78,8 @@ export const BookHorizontalScrollList = ({
 			</div>
 			<div className={styles.list} ref={scrollListRef} id="list">
 				{books.map((book) => (
-					<BookItem
-						book={book}
+					<CoverItem
+						item={book}
 						title={
 							book.mediaType === MediaType.Book
 								? book.title
@@ -84,13 +87,13 @@ export const BookHorizontalScrollList = ({
 										book.series?.year || book.series?.volume
 								  })`
 						}
-						subtitle={
+						firstSubtitle={
 							book.mediaType === MediaType.Book
 								? undefined
 								: `Issue #${book.number.padStart(3, "0")}`
 						}
-						hideMenu
-					/>
+						link={`/library/${book.library?.id}/series/${book.series?.id}/book/${book.id}`}
+					/>				
 				))}
 			</div>
 			{selectedBook && (

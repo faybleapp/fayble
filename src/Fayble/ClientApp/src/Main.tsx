@@ -10,7 +10,7 @@ import { Library } from "pages/library";
 import { Book } from "pages/library/book";
 import { Series } from "pages/library/series";
 import { Login } from "pages/login";
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { Route, Routes, useLocation, useNavigate } from "react-router-dom";
 import { useSystemConfiguration } from "services/system";
 import styles from "./Main.module.scss";

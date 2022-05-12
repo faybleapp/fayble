@@ -1,24 +1,22 @@
 @import "../../scss/variables";
 
-.series {
-	margin-right: 2px;
+.item {
+	margin-right: 25px;
 	margin-bottom: 30px;
-	width: 150px;
+	width: 145px;
 	height: 100%;
 }
 
 .coverContainer {
 	position: relative;
 	cursor: pointer;
-
 	&:hover {
-		.overlay {
-			opacity: 1;
-		}
-
 		.coverImage {
 			filter: blur(1px) brightness(60%);
 			transition: 0.3s;
+		}
+		.overlay {
+			opacity: 1 !important;
 		}
 	}
 }
@@ -31,7 +29,7 @@
 }
 
 .caption {
-	margin-top: 13px;
+	margin-top: 10px;
 	padding-left: 4px;
 	font-size: 13px !important;
 
@@ -54,13 +52,26 @@
 	}
 }
 
+.deleted {
+	filter: blur(1px) brightness(50%) !important;
+}
+
 .overlay {
+	opacity: 0;
 	position: absolute;
 	top: 0;
 	left: 0;
 	width: 100%;
 	height: 100%;
-	opacity: 0;
+}
+
+.deletedIcon {
+	left: 50%;
+	position: absolute;
+	top: 50%;
+	transform: translate(-50%, -50%);
+	font-size: 20px;
+	color: #cd0404;
 }
 
 .link {
