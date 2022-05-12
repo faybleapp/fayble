@@ -3,7 +3,7 @@ import { Container } from "components/container";
 import { LibraryHeader } from "components/libraryHeader";
 import { LibraryModal } from "components/libraryModal";
 import { BreadcrumbItem, ViewType } from "models/ui-models";
-import React, { useState } from "react";
+import { useState } from "react";
 import { Image } from "react-bootstrap";
 import { useParams } from "react-router-dom";
 import { useLibrary, useLibrarySeries } from "services/library";

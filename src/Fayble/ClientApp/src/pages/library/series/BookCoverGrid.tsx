@@ -1,7 +1,6 @@
-import { BookItem } from "components/bookItem";
+import { CoverItem } from "components/coverItem";
 import { Book } from "models/api-models";
 import { MediaType } from "models/ui-models";
-import React from "react";
 import styles from "./BookCoverGrid.module.scss";
 
 interface BookCoverGridProps {
@@ -10,15 +9,6 @@ interface BookCoverGridProps {
 }
 
 export const BookCoverGrid = ({ books, title }: BookCoverGridProps) => {
-	// const { libraryId, seriesId } = useParams<{
-	// 	libraryId: string;
-	// 	seriesId: string;
-	// }>();
-
-	// const markRead = (id: string) => {};
-
-	// const edit = (id: string) => {};
-
 	return (
 		<>
 			<div className={styles.gridTitle}>
@@ -27,14 +17,16 @@ export const BookCoverGrid = ({ books, title }: BookCoverGridProps) => {
 			{books &&
 				books.map((book) => {
 					return (
-						<BookItem
-							book={book}
+						<CoverItem
+							item={book}
 							title={
 								book.mediaType === MediaType.Book
 									? book.title
 									: `Issue #${book.number.padStart(3, "0")}`
 							}
-							subtitle={`${book.pageCount} pages`}
+							firstSubtitle={`${book.pageCount} pages`}
+							link={`/library/${book.library?.id}/series/${book.series?.id}/book/${book.id}`}
+							isDeleted={book.isDeleted}
 						/>
 					);
 				})}
