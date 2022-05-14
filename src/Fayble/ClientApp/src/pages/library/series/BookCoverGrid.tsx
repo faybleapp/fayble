@@ -1,3 +1,4 @@
+import { BookMenu } from "components/bookMenu";
 import { CoverItem } from "components/coverItem";
 import { Book } from "models/api-models";
 import { MediaType } from "models/ui-models";
@@ -27,6 +28,8 @@ export const BookCoverGrid = ({ books, title }: BookCoverGridProps) => {
 							firstSubtitle={`${book.pageCount} pages`}
 							link={`/library/${book.library?.id}/series/${book.series?.id}/book/${book.id}`}
 							isDeleted={book.isDeleted}
+							menuItems={<BookMenu />}
+							lazyLoad={books.length > 100}
 						/>
 					);
 				})}
