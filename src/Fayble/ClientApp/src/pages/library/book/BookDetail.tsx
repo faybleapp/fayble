@@ -1,8 +1,8 @@
+import { Image } from "components/image";
 import { StarRating } from "components/starRating";
 import { Book } from "models/api-models";
 import { ImageTypes } from "models/ui-models";
 import { useEffect, useState } from "react";
-import { Image } from "react-bootstrap";
 import { useUpdateBook } from "services/book";
 import styles from "./BookDetail.module.scss";
 

@@ -1,10 +1,12 @@
-import { faTrashCan } from "@fortawesome/free-solid-svg-icons";
+import { faBars, faTrashCan } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import cn from "classnames";
+
+import { Image } from "components/image";
 import { Book, Series } from "models/api-models";
 import { ImageTypes } from "models/ui-models";
-import { SeriesCoverOverlay } from "pages/library/SeriesCoverOverlay";
-import { Figure } from "react-bootstrap";
+import { useState } from "react";
+import { DropdownButton } from "react-bootstrap";
 import { Link } from "react-router-dom";
 import styles from "./CoverItem.module.scss";
 interface CoverItemProps {
@@ -14,18 +16,9 @@ interface CoverItemProps {
 	secondSubtitle?: string;
 	link: string;
 	isDeleted?: boolean;
-	menu?: React.ReactNode;
+	lazyLoad?: boolean;
+	menuItems?: React.ReactNode;
 }
-
-const edit = (id: string) => {
-	//setSelectedSeriesId(id);
-	//setShowEditSeriesModal(true);
-};
-
-const markReadClick = (id: string) => {
-	//setSelectedSeriesId(id);
-	//setShowMarkReadModal(true);
-};
 
 export const CoverItem = ({
 	item,
@@ -33,33 +26,48 @@ export const CoverItem = ({
 	firstSubtitle,
 	secondSubtitle,
 	link,
-	isDeleted,
-	menu,
+	lazyLoad = false,
+	isDeleted = false,
+	menuItems,
 }: CoverItemProps) => {
+	const [hovered, setHovered] = useState<boolean>(false);
+
+	const handleHover = (hovered: boolean) => {
+		setHovered(hovered);
+	};
+
 	return (
-		<Figure key={item.id} className={styles.item}>
-			<div className={styles.coverContainer}>
-				<Figure.Image
-					className={cn(styles.coverImage, "shadow", {
-						[styles.deleted]: isDeleted,
-					})}
-					src={`/api/media?id=${item?.id}&mediaRoot=${item?.mediaRoot}&fileName=${ImageTypes.CoverSm}`}
-				/>
+		<div key={item.id} className={styles.item}>
+			<div
+				className={styles.coverContainer}
+				onMouseOver={() => handleHover(true)}
+				onMouseLeave={() => handleHover(false)}>
+				<Link key={item.id} to={link}>
+					<Image
+						className={cn(styles.coverImage, "shadow", {
+							[styles.dimmed]: hovered || isDeleted,
+						})}
+						lazyLoad={lazyLoad}
+						src={`/api/media?id=${item?.id}&mediaRoot=${item?.mediaRoot}&fileName=${ImageTypes.CoverSm}`}
+					/>
+				</Link>
 				{isDeleted ? (
 					<div className={styles.deletedIcon}>
 						<FontAwesomeIcon icon={faTrashCan} size="lg" />
 					</div>
 				) : null}
-				<div className={styles.overlay}>
-					<Link key={item.id} to={link}>
-						<SeriesCoverOverlay
-							edit={() => edit(item.id)}
-							markRead={() => markReadClick(item.id)}
-						/>
-					</Link>
-				</div>
+
+				{menuItems && (
+					<DropdownButton
+						className={cn(styles.menuDropDown, {
+							[styles.visible]: hovered,
+						})}
+						title={<FontAwesomeIcon icon={faBars} />}>
+						{menuItems}
+					</DropdownButton>
+				)}
 			</div>
-			<Figure.Caption className={styles.caption}>
+			<div className={styles.caption}>
 				<Link className={styles.link} key={item.id} to={link}>
 					<div className={styles.title}>{title}</div>
 				</Link>
@@ -69,7 +77,7 @@ export const CoverItem = ({
 				{secondSubtitle && (
 					<div className={styles.subtitle}>{secondSubtitle}</div>
 				)}
-			</Figure.Caption>
-		</Figure>
+			</div>
+		</div>
 	);
 };

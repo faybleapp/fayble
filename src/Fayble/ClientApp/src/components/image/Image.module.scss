@@ -1,0 +1,15 @@
+@import "../../scss/variables";
+
+.imageContainer {
+	position: relative;
+}
+.placeholder {
+	background-color: $transparent-background;
+}
+
+.image {
+	position: absolute;
+	height: 100%;
+	width: 100%;
+    border-radius: 4px;
+}
