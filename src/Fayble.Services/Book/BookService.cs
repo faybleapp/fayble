@@ -75,7 +75,7 @@ public class BookService : IBookService
 
         if (book.MediaType == MediaType.Book)
         {
-            var authorId = book.People.FirstOrDefault(p => p.Type == PersonType.Author)?.Id;
+            var authorId = book.People.FirstOrDefault(p => p.PersonType == PersonType.Author)?.Id;
             if (authorId != null)
                 relatedBooks.BooksByAuthor = (await _bookRepository.Get(b => b.People.Any(p => p.Id == authorId)))
                     .Take(40).Select(b => b.ToModel()).ToList();
@@ -87,7 +87,7 @@ public class BookService : IBookService
         }
         else
         {
-            var writerId = book.People.FirstOrDefault(p => p.Type == PersonType.Author)?.Id;
+            var writerId = book.People.FirstOrDefault(p => p.PersonType == PersonType.Author)?.Id;
             if (writerId == null)
                 relatedBooks.BooksByWriter =
                     (await _bookRepository.Get(b => b.People.Any(p => p.Id == writerId)))
