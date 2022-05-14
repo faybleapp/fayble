@@ -1,4 +1,4 @@
-﻿using Fayble.Domain.Aggregates.Book;
+using Fayble.Domain.Aggregates.Book;
 using Fayble.Domain.Enums;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;

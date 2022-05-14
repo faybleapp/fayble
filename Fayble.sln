@@ -25,6 +25,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Fayble.BackgroundServices",
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Fayble.Domain.Tests", "src\Fayble.Domain.Tests\Fayble.Domain.Tests.csproj", "{1EFFF192-D23C-4D18-A451-B928D523BFFA}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Fayble.Database", "Fayble.Database\Fayble.Database.csproj", "{62E49928-50A1-4B96-A13D-6F83691BB82A}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -71,6 +73,10 @@ Global
 		{1EFFF192-D23C-4D18-A451-B928D523BFFA}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{1EFFF192-D23C-4D18-A451-B928D523BFFA}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{1EFFF192-D23C-4D18-A451-B928D523BFFA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{62E49928-50A1-4B96-A13D-6F83691BB82A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{62E49928-50A1-4B96-A13D-6F83691BB82A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{62E49928-50A1-4B96-A13D-6F83691BB82A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{62E49928-50A1-4B96-A13D-6F83691BB82A}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

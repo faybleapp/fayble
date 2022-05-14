@@ -1,32 +1,23 @@
 ﻿using Fayble.Core.Helpers;
 using Fayble.Domain.Aggregates.FileType;
-using Fayble.Domain.Aggregates.Library;
 using Fayble.Domain.Aggregates.Publisher;
 using Fayble.Domain.Aggregates.SystemConfiguration;
 using Fayble.Domain.Aggregates.User;
 using Fayble.Domain.Enums;
 using Fayble.Security.Models;
 using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.Identity;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace Fayble.Infrastructure;
 
-public static class SeedDb
+public static class MigrateAndSeed
 {
-    public static void MigrateAndSeedDb(this IApplicationBuilder app)
+    public static void MigrateAndSeedDatabase(this IApplicationBuilder app)
     {
         using var serviceScope = app.ApplicationServices.GetRequiredService<IServiceScopeFactory>().CreateScope();
         using var context = serviceScope.ServiceProvider.GetService<FaybleDbContext>();
-        context?.Migrate(); 
+        Fayble.Database.Database.Migrate(); 
         context?.Seed();
-    }
-
-    private static void Migrate(this FaybleDbContext context)
-    {
-        if (context.Database.GetPendingMigrations().Any())
-            context.Database.Migrate();
     }
 
     private static void Seed(this FaybleDbContext context)
@@ -47,7 +38,6 @@ public static class SeedDb
                     new("mobi", MediaType.Book)
                 });
         }
-
 
         if (!context.Publishers.Any())
         {
@@ -93,7 +83,6 @@ public static class SeedDb
                     Id = Guid.NewGuid(),
                     Name = UserRoles.User,
                     NormalizedName = UserRoles.User.ToUpper()
-
                 });
         }
     }

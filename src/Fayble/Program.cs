@@ -5,6 +5,7 @@ using Fayble.BackgroundServices;
 using Fayble.BackgroundServices.ComicLibrary;
 using Fayble.Core.Helpers;
 using Fayble.Core.Hubs;
+using Fayble.Database;
 using Fayble.Domain;
 using Fayble.Domain.Aggregates.User;
 using Fayble.Domain.Repositories;
@@ -31,6 +32,7 @@ using Newtonsoft.Json.Serialization;
 using Serilog;
 using Serilog.Core.Enrichers;
 using Serilog.Events;
+using Database = Fayble.Database.Database;
 
 
 IConfiguration config = new ConfigurationBuilder()
@@ -175,7 +177,6 @@ builder.Services.AddInMemoryRateLimiting();
 builder.Services.AddSingleton<IRateLimitConfiguration, RateLimitConfiguration>();
 
 var app = builder.Build();
-
 app.UseSerilogRequestLogging(
     options =>
     {
@@ -240,7 +241,7 @@ app.UseAuthentication();
 
 app.UseAuthorization();
 
-app.MigrateAndSeedDb();
+app.MigrateAndSeedDatabase();
 
 app.Run();
 

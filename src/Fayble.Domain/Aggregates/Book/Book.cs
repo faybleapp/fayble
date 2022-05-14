@@ -13,8 +13,8 @@ public class Book : AuditableEntity<Guid>, IAggregateRoot
     public string MediaRoot { get; private set; }
     public string Language { get; private set; }
     public decimal Rating { get; private set; }
-    public DateOnly? ReleaseDate { get; private set; }
-    public DateOnly? CoverDate { get; private set; }
+    public DateTime? ReleaseDate { get; private set; }
+    public DateTime? CoverDate { get; private set; }
     public MediaType MediaType { get; private set; }
     public BookFile File { get; private set; }
     public Guid? SeriesId { get; private set; }
@@ -67,8 +67,8 @@ public class Book : AuditableEntity<Guid>, IAggregateRoot
         Summary = summary;
         Rating = rating;
         Language = language;
-        ReleaseDate = releaseDate;
-        CoverDate = coverDate;
+        ReleaseDate = releaseDate?.ToDateTime(TimeOnly.MinValue);
+        CoverDate = coverDate?.ToDateTime(TimeOnly.MinValue);
         Tags = tags;
     }
 

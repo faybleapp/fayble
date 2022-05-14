@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk.Web">
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
 
   <PropertyGroup>
     <TargetFramework>net6.0</TargetFramework>
@@ -51,6 +51,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\Fayble.Database\Fayble.Database.csproj" />
     <ProjectReference Include="..\Fayble.BackgroundServices\Fayble.BackgroundServices.csproj" />
     <ProjectReference Include="..\Fayble.Core\Fayble.Core.csproj" />
     <ProjectReference Include="..\Fayble.Models\Fayble.Models.csproj" />
