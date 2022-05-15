@@ -17,6 +17,7 @@ using Fayble.Security.Models;
 using Fayble.Services.Book;
 using Fayble.Services.FileSystem;
 using Fayble.Services.Library;
+using Fayble.Services.Person;
 using Fayble.Services.Publisher;
 using Fayble.Services.Series;
 using Fayble.Services.System;
@@ -153,6 +154,7 @@ builder.Services.AddScoped<IFileTypeRepository, FileTypeRepository>();
 builder.Services.AddScoped<IRefreshTokenRepository, RefreshTokenRepository>();
 builder.Services.AddScoped<IPublisherRepository, PublisherRepository>();
 builder.Services.AddScoped<IBookTagRepository, BookTagRepository>();
+builder.Services.AddScoped<IPersonRepository, PersonRepository>();
 
 // Register Services
 builder.Services.AddScoped<ILibraryService, LibraryService>();
@@ -164,6 +166,7 @@ builder.Services.AddScoped<IPublisherService, PublisherService>();
 builder.Services.AddScoped<IBookService, BookService>();
 builder.Services.AddScoped<ITagService, TagService>();
 builder.Services.AddScoped<ISystemService, SystemService>();
+builder.Services.AddScoped<IPersonService, PersonService>();
 
 
 // Register Background Services

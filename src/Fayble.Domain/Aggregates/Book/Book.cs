@@ -28,9 +28,9 @@ public class Book : AuditableEntity<Guid>, IAggregateRoot
 
     private readonly List<ReadHistory> _readHistory = new ();
     public virtual IReadOnlyCollection<ReadHistory> ReadHistory => _readHistory;
-    private readonly List<Person.Person> _people= new();
-    public virtual IReadOnlyCollection<Person.Person> People => _people;
-
+        
+    private readonly List<BookPerson> _people= new();
+    public virtual IReadOnlyCollection<BookPerson> People => _people;
     public ICollection<BookTag> Tags { get; set; }
     
     public Book()
@@ -60,7 +60,8 @@ public class Book : AuditableEntity<Guid>, IAggregateRoot
         string language,
         DateOnly? releaseDate,
         DateOnly? coverDate,
-        ICollection<BookTag> tags)
+        ICollection<BookTag> tags,
+        IEnumerable<BookPerson> people)
     {
         Title = title;
         Number = number;
@@ -70,6 +71,12 @@ public class Book : AuditableEntity<Guid>, IAggregateRoot
         ReleaseDate = releaseDate?.ToDateTime(TimeOnly.MinValue);
         CoverDate = coverDate?.ToDateTime(TimeOnly.MinValue);
         Tags = tags;
+        
+        if (people != null)
+        {
+            UpdatePeople(people?.ToArray());    
+        }
+        
     }
 
     public void UpdateSeries(Guid seriesId)
@@ -106,5 +113,19 @@ public class Book : AuditableEntity<Guid>, IAggregateRoot
     {
         return true;
         // return _readHistory.Any(x => x.UserId == userId);
+    }
+
+    private void UpdatePeople(BookPerson[] people)
+    {
+        var updatedIds = people.Select(c => c.PersonId).ToArray();
+        var existingIds = _people.Select(i => i.PersonId).ToArray();
+        var itemsToRemove = existingIds.Except(updatedIds);
+        foreach (var itemToRemove in itemsToRemove)
+        {
+            _people.Remove(_people.Find(i => i.PersonId == itemToRemove));
+        }
+
+        var itemsToAdd = updatedIds.Except(existingIds);
+        _people.AddRange(people.Where(c => itemsToAdd.Contains(c.PersonId)));
     }
 }

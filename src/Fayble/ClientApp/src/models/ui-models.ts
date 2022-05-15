@@ -26,7 +26,22 @@ export enum BackgroundTaskStatus {
     Failed = "Failed"
 }
 
-export enum ImageTypes {
+export enum RoleType {
+	Author = "Author",
+	Writer = "Writer",
+	Inker = "Inker",
+	Editor = "Editor",
+	Penciller = "Penciller",
+	Letterer = "Letterer",
+	Colorist = "Colorist",
+    CoverArtist = "CoverArtist",
+	Translator = "Translator",
+	Other = "Other"
+	
+	
+}
+
+export enum ImageType {
 	CoverSm = "cover-250.jpg",
 	CoverMed = "cover-500.jpg",
 	CoverFull = "cover.jpg"

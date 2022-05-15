@@ -1,11 +1,13 @@
 ﻿using Fayble.Core.Extensions;
 using Fayble.Domain;
-using Fayble.Domain.Aggregates.People;
+using Fayble.Domain.Aggregates;
+using Fayble.Domain.Aggregates.Person;
 using Fayble.Domain.Aggregates.Tag;
 using Fayble.Domain.Enums;
 using Fayble.Domain.Repositories;
 using Fayble.Models.Book;
 using Microsoft.Extensions.Logging;
+using BookPerson = Fayble.Domain.Aggregates.BookPerson;
 
 namespace Fayble.Services.Book;
 
@@ -15,6 +17,7 @@ public class BookService : IBookService
     private readonly ILogger _logger;
     private readonly ISeriesRepository _seriesRepository;
     private readonly IBookTagRepository _tagRepository;
+    private readonly IPersonRepository _personRepository;
     private readonly IUnitOfWork _unitOfWork;
 
     public BookService(
@@ -22,13 +25,15 @@ public class BookService : IBookService
         IBookRepository bookRepository,
         IUnitOfWork unitOfWork,
         IBookTagRepository tagRepository,
-        ISeriesRepository seriesRepository)
+        ISeriesRepository seriesRepository,
+        IPersonRepository personRepository)
     {
         _logger = logger;
         _bookRepository = bookRepository;
         _unitOfWork = unitOfWork;
         _tagRepository = tagRepository;
         _seriesRepository = seriesRepository;
+        _personRepository = personRepository;
     }
 
     public async Task<Models.Book.Book?> Get(Guid id)
@@ -40,6 +45,7 @@ public class BookService : IBookService
     {
         var entity = await _bookRepository.Get(id);
         var tags = await UpdateTags(book.Tags);
+        var people = await UpdatePeople(book);
 
         entity.Update(
             book.Title,
@@ -49,9 +55,18 @@ public class BookService : IBookService
             book.Language,
             DateOnly.TryParseExact(book.ReleaseDate, "yyyy-MM-dd", out var releaseDate) ? releaseDate : null,
             DateOnly.TryParseExact(book.CoverDate, "yyyy-MM", out var coverDate) ? coverDate : null,
-            tags);
+            tags, 
+            people);
 
-        await _unitOfWork.Commit();
+        try
+        {
+            await _unitOfWork.Commit();
+        }
+        catch (Exception e)
+        {
+            
+            throw;
+        }
 
         await CleanTags();
 
@@ -75,22 +90,21 @@ public class BookService : IBookService
 
         if (book.MediaType == MediaType.Book)
         {
-            var authorId = book.People.FirstOrDefault(p => p.PersonType == PersonType.Author)?.Id;
+            var authorId = book.People.FirstOrDefault(p => p.Role == RoleType.Author)?.PersonId;
             if (authorId != null)
-                relatedBooks.BooksByAuthor = (await _bookRepository.Get(b => b.People.Any(p => p.Id == authorId)))
+                relatedBooks.BooksByAuthor = (await _bookRepository.Get(b => b.People.Any(p => p.Role == RoleType.Author && p.PersonId == authorId)))
                     .Take(40).Select(b => b.ToModel()).ToList();
 
             if (book.PublisherId != null)
                 relatedBooks.BooksByPublisher =
-                    (await _bookRepository.Get(b => b.People.Any(p => p.Id == book.PublisherId)))
-                    .Take(40).Select(b => b.ToModel()).ToList();
+                    (await _bookRepository.Get(b => b.PublisherId == book.PublisherId)).Take(40).Select(b => b.ToModel()).ToList();
         }
         else
         {
-            var writerId = book.People.FirstOrDefault(p => p.PersonType == PersonType.Author)?.Id;
+            var writerId = book.People.FirstOrDefault(p => p.Role == RoleType.Writer)?.PersonId;
             if (writerId == null)
                 relatedBooks.BooksByWriter =
-                    (await _bookRepository.Get(b => b.People.Any(p => p.Id == writerId)))
+                    (await _bookRepository.Get(b => b.People.Any(p => p.Role == RoleType.Writer && p.PersonId == writerId)))
                     .Take(40).Select(b => b.ToModel()).ToList();
         }
 
@@ -109,6 +123,25 @@ public class BookService : IBookService
         }
 
         return relatedBooks;
+    }
+
+    private async Task<IEnumerable<BookPerson>> UpdatePeople(UpdateBook book)
+    {
+        var people = new List<BookPerson>();
+
+        foreach (var person in book.People)
+        {
+            var personEntity = await _personRepository.GetByName(person.Name);
+            if (personEntity == null)
+            {
+                personEntity = _personRepository.Add(new Domain.Aggregates.Person.Person(Guid.NewGuid(), person.Name));
+                await _unitOfWork.Commit();
+            }
+
+            people.Add(new BookPerson(book.Id, personEntity.Id, Enum.Parse<RoleType>(person.Role)));
+        }
+
+        return people;
     }
 
     private async Task<ICollection<BookTag>> UpdateTags(IEnumerable<string> newTags)

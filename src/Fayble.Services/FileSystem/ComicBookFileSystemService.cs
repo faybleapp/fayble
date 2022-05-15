@@ -90,7 +90,7 @@ public class ComicBookFileSystemService : FileSystemService, IComicBookFileSyste
         var deserializer = new XmlSerializer(typeof(ComicInfoXml), new XmlRootAttribute("ComicInfo"));
         var xDoc = new XmlDocument();
         xDoc.LoadXml(xml);
-        return (ComicInfoXml)deserializer.Deserialize(new StringReader(xDoc.InnerXml));
+        return deserializer.Deserialize(new StringReader(xDoc.InnerXml)) as ComicInfoXml;
     }
   
 }

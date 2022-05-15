@@ -1,13 +1,12 @@
 import { Book } from "models/api-models";
-import React from "react";
 import { Container } from "react-bootstrap";
-import styles from "./BookFileInfo.module.scss";
+import styles from "./BookFileInfoTab.module.scss";
 
-interface BookFileInfoProps {
+interface BookFileInfoTabProps {
 	book: Book;
 }
 
-export const BookFileInfo = ({ book }: BookFileInfoProps) => {
+export const BookFileInfoTab = ({ book }: BookFileInfoTabProps) => {
 	return (
 		<Container>
 			<div className={styles.label}>File Name</div>

@@ -1,7 +1,7 @@
 import { Image } from "components/image";
 import { StarRating } from "components/starRating";
 import { Book } from "models/api-models";
-import { ImageTypes } from "models/ui-models";
+import { ImageType } from "models/ui-models";
 import { useEffect, useState } from "react";
 import { useUpdateBook } from "services/book";
 import styles from "./BookDetail.module.scss";
@@ -29,7 +29,7 @@ export const BookDetail = (props: BookDetailProps) => {
 		<div className={styles.container}>
 			<Image
 				className={styles.cover}
-				src={`/api/media?id=${book?.id}&mediaRoot=${book?.mediaRoot}&filename=${ImageTypes.CoverSm}`}
+				src={`/api/media?id=${book?.id}&mediaRoot=${book?.mediaRoot}&filename=${ImageType.CoverSm}`}
 			/>
 			<div className={styles.detailsPanel}>
 				<div className={styles.detailsTitle}>

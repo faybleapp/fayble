@@ -25,6 +25,7 @@ public class Book
     public DateTimeOffset LastMetadataUpdate { get; private set; }
     public string MediaType { get; private set; }    
     public IEnumerable<string>? Tags {get; private set;}
+    public IEnumerable<BookPerson>? People { get; private set; }
     public bool IsDeleted { get; private set; }
 
 
@@ -49,8 +50,8 @@ public class Book
         string language,
         IEnumerable<string>? tags,
         bool isDeleted,
-        string mediaRoot
-    )
+        string mediaRoot,
+        IEnumerable<BookPerson>? people)
     {
         Id = id;
         Title = title;
@@ -73,6 +74,6 @@ public class Book
         Tags = tags;
         IsDeleted = isDeleted;
         MediaRoot = mediaRoot;
-
+        People = people;
     }
 }

@@ -9,6 +9,11 @@ using Microsoft.Extensions.Logging;
 
 namespace Fayble.BackgroundServices;
 
+public interface IBackgroundTaskService
+{
+    Task Run(Guid itemId, BackgroundTaskType taskType);
+}
+
 public class BackgroundTaskService : IBackgroundTaskService
 {
     private readonly IBackgroundTaskRepository _backgroundTaskRepository;

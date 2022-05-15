@@ -26,7 +26,6 @@ public class BackgroundTaskHub : Hub
     public override async Task OnConnectedAsync()
     {
         var runningTasks = await _backgroundTaskRepository.Get(t => t.Status == BackgroundTaskStatus.Running);
-        //var runningTasks = await _unitOfWork.TaskRepository.Get();
         await Clients.Caller.SendAsync("Tasks", runningTasks.Select(t =>
             new BackgroundTask(t.Id, t.ItemId, t.Type.ToString())));
     }

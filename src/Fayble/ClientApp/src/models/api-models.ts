@@ -65,6 +65,7 @@ export interface Book {
     lastMetadataUpdate: Date;
     mediaType: string;
     tags: string[] | undefined;
+    people: BookPerson[] | undefined;
     isDeleted: boolean;
 }
 
@@ -108,6 +109,15 @@ export interface LibrarySettings {
     seriesFolders: boolean;
 }
 
+export interface Person {
+    id: string | undefined;
+    name: string;
+}
+
+export interface BookPerson extends Person {
+    role: string;
+}
+
 export interface UpdateBook {
     id: string;
     title: string | undefined;
@@ -120,6 +130,7 @@ export interface UpdateBook {
     language: string | undefined;
     review: string | undefined;
     tags: string[];
+    people: BookPerson[];
 }
 
 export interface RelatedBooks {

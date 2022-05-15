@@ -4,7 +4,7 @@ import cn from "classnames";
 
 import { Image } from "components/image";
 import { Book, Series } from "models/api-models";
-import { ImageTypes } from "models/ui-models";
+import { ImageType } from "models/ui-models";
 import { useState } from "react";
 import { DropdownButton } from "react-bootstrap";
 import { Link } from "react-router-dom";
@@ -48,7 +48,7 @@ export const CoverItem = ({
 							[styles.dimmed]: hovered || isDeleted,
 						})}
 						lazyLoad={lazyLoad}
-						src={`/api/media?id=${item?.id}&mediaRoot=${item?.mediaRoot}&fileName=${ImageTypes.CoverSm}`}
+						src={`/api/media?id=${item?.id}&mediaRoot=${item?.mediaRoot}&fileName=${ImageType.CoverSm}`}
 					/>
 				</Link>
 				{isDeleted ? (
