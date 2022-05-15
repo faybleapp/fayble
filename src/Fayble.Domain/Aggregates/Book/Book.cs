@@ -79,6 +79,45 @@ public class Book : AuditableEntity<Guid>, IAggregateRoot
         
     }
 
+    public void UpdateFromMetadata(
+        string? title,
+        string? number,
+        string? summary,
+        DateOnly? coverDate,
+        ICollection<BookTag>? tags,
+        IEnumerable<BookPerson>? people)
+    {
+        if (!string.IsNullOrEmpty(title))
+        {
+            Title = title;
+        }
+
+        if (!string.IsNullOrEmpty(number))
+        {
+            Number = number;
+        }
+
+        if (!string.IsNullOrEmpty(summary))
+        {
+            Summary = Summary;
+        }
+
+        if (coverDate != null)
+        {
+            CoverDate = coverDate?.ToDateTime(TimeOnly.MinValue); ;
+        }
+
+        if (tags != null)
+        {
+            Tags = tags;
+        }
+
+        if (people != null)
+        {
+            UpdatePeople(people?.ToArray());
+        }
+    }
+
     public void UpdateSeries(Guid seriesId)
     {
         SeriesId = seriesId;

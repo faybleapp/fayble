@@ -169,9 +169,8 @@ public class ScannerService
                     _comicBookFileSystemService.GetHash(file.FullName),
                     _comicBookFileSystemService.GetPageCount(file.FullName));
 
-
-
-
+                // TODO: if settings allow parsing ComicInfoXml
+                await UpdateFromComicInfo(book);
 
                 continue;
             }
@@ -246,13 +245,10 @@ public class ScannerService
 
         // TODO: if settings allow parsing ComicInfoXml
         if (comicInfo != null)
-            book.Update(
+            book.UpdateFromMetadata(
                 comicInfo?.Title,
                 comicInfo?.Number,
                 comicInfo?.Summary,
-                0,
-                null,
-                null,
                 DateOnly.TryParseExact(
                     $"{comicInfo?.Year}-{comicInfo?.Month}-{comicInfo?.Day}",
                     "yyyy-M-dd",
