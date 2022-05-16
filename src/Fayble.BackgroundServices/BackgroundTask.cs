@@ -27,7 +27,7 @@ public class BackgroundTask
     }
 
     
-    public void Update(string description, string? status)
+    public void Update(string description, string? status = null)
     {
         if (status != null)
         {

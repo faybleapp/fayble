@@ -14,7 +14,7 @@ internal static class Mappings
             entity.FolderPath,
             new LibrarySettings(
                 bool.Parse(entity.GetSetting(LibrarySettingKey.ReviewOnImport)),
-                bool.Parse(entity.GetSetting(LibrarySettingKey.SeriesFolders))));
+                bool.Parse(entity.GetSetting(LibrarySettingKey.ReviewOnImport))));
     }
 
     public static IEnumerable<LibrarySetting> ToEntity(this LibrarySettings settings)
@@ -22,7 +22,7 @@ internal static class Mappings
         var librarySettings = new List<LibrarySetting>
         {
             new(LibrarySettingKey.ReviewOnImport, settings.ReviewOnImport.ToString()),
-            new(LibrarySettingKey.SeriesFolders, settings.SeriesFolders.ToString())
+            new(LibrarySettingKey.ReviewOnImport, settings.SeriesFolders.ToString())
         };
 
         return librarySettings;
