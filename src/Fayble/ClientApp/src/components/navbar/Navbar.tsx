@@ -8,7 +8,8 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import cn from "classnames";
 import { BackgroundTaskSidebar } from "components/backgroundTaskSidebar";
 import { useAppState, useBackgroundTaskState } from "context";
-import React, { useState } from "react";
+import { clearAuthConfig } from "helpers/authenticationHelpers";
+import { useState } from "react";
 import {
 	FormControl,
 	Nav,
@@ -20,6 +21,7 @@ import styles from "./Navbar.module.scss";
 
 export const NavbarMenu = () => {
 	const navigate = useNavigate();
+	
 	const { sidebarOpen, setSidebarOpen } = useAppState();
 
 	const [showBackgroundTaskSidebar, setShowBackgroundTaskSidebar] =
@@ -29,7 +31,7 @@ export const NavbarMenu = () => {
 	const activeTasks = backgroundTasks && backgroundTasks.length > 0;
 
 	const logout = () => {
-		// clearAuthConfig();
+		clearAuthConfig();
 		navigate("/");
 	};
 

@@ -1,8 +1,8 @@
-import { Container } from "components/container";
 import { LibraryHeader } from "components/libraryHeader";
+import { PageContainer } from "components/pageContainer";
 import { SeriesModal } from "components/seriesModal";
 import { BreadcrumbItem, ViewType } from "models/ui-models";
-import React, { useState } from "react";
+import { useState } from "react";
 import { useParams } from "react-router-dom";
 import { useSeries, useSeriesBooks } from "services/series";
 import { BookCoverGrid } from "./BookCoverGrid";
@@ -10,8 +10,7 @@ import styles from "./Series.module.scss";
 import { SeriesDetail } from "./SeriesDetail";
 
 export const Series = () => {
-	const { libraryId, seriesId } = useParams<{
-		libraryId: string;
+	const { seriesId } = useParams<{
 		seriesId: string;
 	}>();
 
@@ -26,21 +25,21 @@ export const Series = () => {
 	const breadCrumbItems: BreadcrumbItem[] = [
 		{
 			name: (series && series?.library?.name) || "",
-			link: `/library/${libraryId}`,
+			link: `/library/${series?.library?.id}`,
 		},
 		{
 			name: (series && series?.name) || "",
-			link: `/library/${libraryId}/series/${seriesId}`,
+			link: `/library/${series?.library?.id}/series/${seriesId}`,
 			active: true,
 		},
 	];
 
 	return (
-		<Container loading={isLoadingSeries || isLoadingBooks}>
+		<PageContainer loading={isLoadingSeries || isLoadingBooks}>
 			{series && (
 				<>
 					<LibraryHeader
-						libraryId={libraryId!}
+						libraryId={series?.library?.id!}
 						libraryView={ViewType.CoverGrid}
 						navItems={breadCrumbItems}
 						changeView={() => {}}
@@ -57,6 +56,6 @@ export const Series = () => {
 					</div>
 				</>
 			)}
-		</Container>
+		</PageContainer>
 	);
 };

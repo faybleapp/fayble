@@ -19,7 +19,7 @@ export const SeriesCoverGrid = ({ items }: SeriesCoverGridProps) => {
 									item.volume ?? item.year
 								}`}
 								secondSubtitle={`${item.bookCount} Issues`}
-								link={`/library/${item.library?.id}/series/${item.id}`}
+								link={`/series/${item.id}`}
 							/>							
 						</>
 					);
