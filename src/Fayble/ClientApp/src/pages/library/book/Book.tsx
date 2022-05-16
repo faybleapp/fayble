@@ -1,10 +1,10 @@
 import { BookHorizontalScrollList } from "components/bookHorizontalScrollList";
 import { BookModal } from "components/bookModal";
-import { Container } from "components/container";
 import { LibraryHeader } from "components/libraryHeader";
+import { PageContainer } from "components/pageContainer";
 import { getBookType } from "helpers/bookHelpers";
 import { BreadcrumbItem, ViewType } from "models/ui-models";
-import React, { useState } from "react";
+import { useState } from "react";
 import { useParams } from "react-router-dom";
 import { useBook, useRelatedBooks } from "services/book";
 import { BookDetail } from "./BookDetail";
@@ -40,7 +40,7 @@ export const Book = () => {
 	];
 
 	return (
-		<Container loading={isLoadingBook}>
+		<PageContainer loading={isLoadingBook}>
 			{book && (
 				<>
 					<LibraryHeader
@@ -96,6 +96,6 @@ export const Book = () => {
 					/>
 				</>
 			)}
-		</Container>
+		</PageContainer>
 	);
 };

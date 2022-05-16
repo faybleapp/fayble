@@ -1,18 +1,10 @@
 @import "../../scss/variables";
 
-.spinner {
-	display: block;
-	position: fixed;
+.spinner {	
+	position: absolute;
 	z-index: 1031;
 	color: $accent-color;
 	top: 50%;
-	 
-	&.sidebarOpen {
-		right: calc(50% - ($sidebar-open-width / 2));
-	 }
-
-	&.sidebarClosed {
-		right: calc(50% - ($sidebar-closed-width / 2));
-	 }
+	right: 50%;
 }
 
