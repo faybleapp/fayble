@@ -16,7 +16,7 @@ public static class MigrateAndSeed
     {
         using var serviceScope = app.ApplicationServices.GetRequiredService<IServiceScopeFactory>().CreateScope();
         using var context = serviceScope.ServiceProvider.GetService<FaybleDbContext>();
-        Fayble.Database.Database.Migrate(); 
+        Database.Database.Migrate(); 
         context?.Seed();
     }
 

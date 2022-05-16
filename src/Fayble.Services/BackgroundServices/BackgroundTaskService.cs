@@ -1,13 +1,12 @@
-﻿using Fayble.BackgroundServices.ComicLibrary;
-using Fayble.Core.Hubs;
-using Fayble.Domain;
+﻿using Fayble.Domain;
 using Fayble.Domain.Aggregates.BackgroundTask;
 using Fayble.Domain.Repositories;
+using Fayble.Services.BackgroundServices.Services;
 using Microsoft.AspNetCore.SignalR;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 
-namespace Fayble.BackgroundServices;
+namespace Fayble.Services.BackgroundServices;
 
 public interface IBackgroundTaskService
 {
@@ -46,25 +45,36 @@ public class BackgroundTaskService : IBackgroundTaskService
         switch (taskType)
         {
             case BackgroundTaskType.LibraryScan:
-                LibraryScan(itemId, task);
+                await LibraryScan(itemId, task.Id);
                 break;
             case BackgroundTaskType.SeriesScan:
+                await SeriesScan(itemId, task.Id);
                 break;
             default:
                 return;
         }
     }
 
-    private void LibraryScan(Guid libraryId, Domain.Aggregates.BackgroundTask.BackgroundTask task)
+    private async Task LibraryScan(Guid libraryId, Guid taskId)
     {
-        _queue.QueueBackgroundWorkItem(
+        await _queue.QueueBackgroundWorkItemAsync(
             async token =>
             {
                 using var scope = _serviceScopeFactory.CreateScope();
                 var scopedServices = scope.ServiceProvider;
-                var comicLibraryScanner = scopedServices.GetService<IComicLibraryScannerService>();
-
-                await comicLibraryScanner.Run(libraryId, task.Id);
+                var comicLibraryScanner = scopedServices.GetService<IScannerService>()!;
+                await comicLibraryScanner.LibraryScan(libraryId, taskId);
+            });
+    }
+    private async Task SeriesScan(Guid seriesId, Guid taskId)
+    {
+       await _queue.QueueBackgroundWorkItemAsync(
+            async token =>
+            {
+                using var scope = _serviceScopeFactory.CreateScope();
+                var scopedServices = scope.ServiceProvider;
+                var comicLibraryScanner = scopedServices.GetService<IScannerService>()!;
+                await comicLibraryScanner.SeriesScan(seriesId, taskId);
             });
     }
 }

@@ -34,7 +34,7 @@ export const Book = () => {
 		},
 		{
 			name: (book && `Issue #${book?.number.padStart(3, "0")}`) || "",
-			link: `/library/${book?.library?.id}/series/${book?.series?.id}/book/${book?.id}`,
+			link: `/library/${book?.library?.id}/book/${book?.id}`,
 			active: true,
 		},
 	];

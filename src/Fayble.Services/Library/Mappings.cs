@@ -21,8 +21,8 @@ internal static class Mappings
     {
         var librarySettings = new List<LibrarySetting>
         {
-            new(LibrarySettingKey.ReviewOnImport, settings.ReviewOnImport.ToString()),
-            new(LibrarySettingKey.ReviewOnImport, settings.SeriesFolders.ToString())
+            new(LibrarySettingKey.ReviewOnImport, settings.ReviewOnImport.ToString())
+            
         };
 
         return librarySettings;

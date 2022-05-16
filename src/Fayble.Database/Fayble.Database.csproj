@@ -11,7 +11,7 @@
     </ItemGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\src\Fayble.Core\Fayble.Core.csproj" />
+      <ProjectReference Include="..\Fayble.Core\Fayble.Core.csproj" />      
     </ItemGroup>
 
     <ItemGroup>

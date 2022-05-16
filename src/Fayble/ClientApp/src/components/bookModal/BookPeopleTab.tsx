@@ -154,17 +154,19 @@ export const BookPeopleTab = ({ book, formik }: BookPeopleTabProps) => {
 					options={peopleOptions}
 				/>
 				<MultiSelectField
-					name="cover"
+					name="coverArtist"
 					creatable
 					clearable
 					value={
 						formik.values.people
-							?.filter((person) => person.role === RoleType.Cover)
+							?.filter(
+								(person) => person.role === RoleType.CoverArtist
+							)
 							.map((person) => person.name) || []
 					}
-					label="Cover"
+					label="Cover Artist"
 					onChange={(selectedValues) => {
-						onChange(RoleType.Cover, selectedValues);
+						onChange(RoleType.CoverArtist, selectedValues);
 					}}
 					options={peopleOptions}
 				/>

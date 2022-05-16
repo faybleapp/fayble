@@ -17,14 +17,14 @@ export const Routes = () => {
 			children: [
 				{
 					path: "/library/:libraryId",
-					element: <Library />,
+					element: <Library />,                    
 				},
 				{
-					path: "/series/:seriesId",
+					path: "/library/:libraryId/series/:seriesId",
 					element: <Series />,
 				},
 				{
-					path: "/book/:bookId",
+					path: "/library/:libraryId/book/:bookId",
 					element: <Book />,
 				},
 			],

@@ -30,8 +30,8 @@ export interface RefreshTokenRequest {
 export interface BackgroundTask {
     id: string;
     itemId: string | undefined;
-    itemName: string;
-    status: string;
+    itemName: string | undefined;
+    status: string | undefined;
     description: string | undefined;
     type: string;
 }
