@@ -1,7 +1,7 @@
 import Notfound from "assets/notfound2.svg";
-import { Container } from "components/container";
 import { LibraryHeader } from "components/libraryHeader";
 import { LibraryModal } from "components/libraryModal";
+import { PageContainer } from "components/pageContainer";
 import { BreadcrumbItem, ViewType } from "models/ui-models";
 import { useState } from "react";
 import { Image } from "react-bootstrap";
@@ -13,8 +13,8 @@ import { SeriesCoverGrid } from "./SeriesCoverGrid";
 
 export const Library = () => {
 	const { libraryId } = useParams<{ libraryId: string }>();
-	const { data: library } = useLibrary(libraryId!);
-	const { data: series } = useLibrarySeries(libraryId!);
+	const { data: library, isLoading: isLoadingLibrary } = useLibrary(libraryId!);
+	const { data: series, isLoading: isLoadingSeries  } = useLibrarySeries(libraryId!);
 	const [showLibraryModal, setShowLibraryModal] = useState<boolean>(false);
 	const [view, setView] = useState<ViewType>(ViewType.CoverGrid);
 
@@ -27,7 +27,7 @@ export const Library = () => {
 	];
 
 	return (
-		<Container>
+		<PageContainer loading={isLoadingLibrary || isLoadingSeries}>
 			{library && (
 				<>
 					<LibraryHeader
@@ -65,6 +65,6 @@ export const Library = () => {
 					/>
 				</>
 			)}
-		</Container>
+		</PageContainer>
 	);
 };
