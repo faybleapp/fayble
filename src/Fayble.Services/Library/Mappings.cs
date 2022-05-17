@@ -14,15 +14,15 @@ internal static class Mappings
             entity.FolderPath,
             new LibrarySettings(
                 bool.Parse(entity.GetSetting(LibrarySettingKey.ReviewOnImport)),
-                bool.Parse(entity.GetSetting(LibrarySettingKey.ReviewOnImport))));
+                bool.Parse(entity.GetSetting(LibrarySettingKey.UseComicInfo))));
     }
 
     public static IEnumerable<LibrarySetting> ToEntity(this LibrarySettings settings)
     {
         var librarySettings = new List<LibrarySetting>
         {
-            new(LibrarySettingKey.ReviewOnImport, settings.ReviewOnImport.ToString())
-            
+            new(LibrarySettingKey.ReviewOnImport, settings.ReviewOnImport.ToString()),
+            new(LibrarySettingKey.UseComicInfo, settings.UseComicInfo.ToString())
         };
 
         return librarySettings;

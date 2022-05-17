@@ -1,8 +1,7 @@
 import { MultiSelectField } from "components/form/multiSelectField";
 import { FormikProps } from "formik";
-import { Book, Person } from "models/api-models";
+import { Book, BookPerson, Person } from "models/api-models";
 import { RoleType, SelectFieldOption } from "models/ui-models";
-import { useEffect } from "react";
 import { Container, Form } from "react-bootstrap";
 import { MultiValue } from "react-select";
 import { usePeople } from "services/person";
@@ -32,23 +31,18 @@ export const BookPeopleTab = ({ book, formik }: BookPeopleTabProps) => {
 		role: RoleType,
 		selectedValues: MultiValue<SelectFieldOption> | null
 	) => {
-		formik.setFieldValue(
-			"people",
+		const newPeople =
 			selectedValues?.map((option) => ({
 				name: option.value,
 				role: role,
-			}))
+			})) || [];
+		formik.setFieldValue(
+			"people",
+			(formik.values.people || [])
+				.filter((people) => people.role !== role)
+				.concat(newPeople as BookPerson[])
 		);
 	};
-
-	useEffect(() => {
-		console.log(
-			formik.values.people
-				?.filter((person) => person.role === RoleType.Writer)
-				.map((person) => person.name) || []
-		);
-		console.log(book);
-	}, [formik.values.people, book]);
 
 	return (
 		<Container>
@@ -179,7 +173,7 @@ export const BookPeopleTab = ({ book, formik }: BookPeopleTabProps) => {
 							?.filter((person) => person.role === RoleType.Other)
 							.map((person) => person.name) || []
 					}
-					label="Cover"
+					label="Other"
 					onChange={(selectedValues) => {
 						onChange(RoleType.Other, selectedValues);
 					}}

@@ -106,7 +106,7 @@ export interface Library {
 
 export interface LibrarySettings {
     reviewOnImport: boolean;
-    seriesFolders: boolean;
+    useComicInfo: boolean;
 }
 
 export interface Person {

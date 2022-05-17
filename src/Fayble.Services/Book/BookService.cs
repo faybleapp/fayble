@@ -58,15 +58,7 @@ public class BookService : IBookService
             tags, 
             people);
 
-        try
-        {
-            await _unitOfWork.Commit();
-        }
-        catch (Exception e)
-        {
-            
-            throw;
-        }
+        await _unitOfWork.Commit();
 
         await CleanTags();
 

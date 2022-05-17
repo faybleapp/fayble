@@ -71,9 +71,9 @@ public class ComicBookFileSystemService : FileSystemService, IComicBookFileSyste
         
         using var img = Image.Load(tempFile);
         var path = Path.Combine(folderPath, "cover.jpg");
-        img.SaveAsJpeg(path);
-        ImageHelpers.ResizeImage(path, 250);
-        ImageHelpers.ResizeImage(path, 500);
+        ImageHelpers.SaveImage(img, path, 1000);
+        ImageHelpers.SaveImage(img, path, 250);
+        ImageHelpers.SaveImage(img, path, 500);
         File.Delete(tempFile);
     }
     

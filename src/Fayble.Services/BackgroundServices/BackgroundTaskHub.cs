@@ -1,7 +1,7 @@
-﻿using Fayble.Domain;
-using Fayble.Domain.Aggregates.BackgroundTask;
+﻿using Fayble.Domain.Aggregates.BackgroundTask;
 using Fayble.Domain.Repositories;
 using Microsoft.AspNetCore.SignalR;
+using BackgroundTask = Fayble.Models.BackgroundTask.BackgroundTask;
 
 namespace Fayble.Services.BackgroundServices;
 
@@ -13,11 +13,14 @@ public class BackgroundTaskHub : Hub
     {
         _backgroundTaskRepository = backgroundTaskRepository;
     }
-    
+
     public override async Task OnConnectedAsync()
     {
         var runningTasks = await _backgroundTaskRepository.Get(t => t.Status == BackgroundTaskStatus.Running);
-        await Clients.Caller.SendAsync("Tasks", runningTasks.Select(t =>
-            new Models.BackgroundTask.BackgroundTask(t.Id, t.ItemId, t.Type.ToString())));
+        await Clients.Caller.SendAsync(
+            "BackgroundTasks",
+            runningTasks.Select(
+                t =>
+                    new BackgroundTask(t.Id, t.ItemId, t.ItemName,  t.Type.ToString(), t.Status.ToString())));
     }
 }

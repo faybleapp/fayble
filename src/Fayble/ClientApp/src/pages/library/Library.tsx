@@ -13,8 +13,12 @@ import { SeriesCoverGrid } from "./SeriesCoverGrid";
 
 export const Library = () => {
 	const { libraryId } = useParams<{ libraryId: string }>();
-	const { data: library, isLoading: isLoadingLibrary } = useLibrary(libraryId!);
-	const { data: series, isLoading: isLoadingSeries  } = useLibrarySeries(libraryId!);
+	const { data: library, isLoading: isLoadingLibrary } = useLibrary(
+		libraryId!
+	);
+	const { data: series, isLoading: isLoadingSeries } = useLibrarySeries(
+		libraryId!
+	);
 	const [showLibraryModal, setShowLibraryModal] = useState<boolean>(false);
 	const [view, setView] = useState<ViewType>(ViewType.CoverGrid);
 
@@ -38,21 +42,18 @@ export const Library = () => {
 						openEditModal={() => setShowLibraryModal(true)}
 					/>
 					{series && series.length === 0 ? (
-						<>
-							<div className={styles.emptyLibraryImageContainer}>
-								<div>
-									<Image
-										className={styles.emptyLibraryImage}
-										src={Notfound}
-										alt="React Logo"
-									/>
-									<p className={styles.emptyLibraryText}>
-										There are no items in this library.
-									</p>
-								</div>
+						<div className={styles.emptyLibraryImageContainer}>
+							<div>
+								<Image
+									className={styles.emptyLibraryImage}
+									src={Notfound}
+									alt="React Logo"
+								/>
+								<p className={styles.emptyLibraryText}>
+									There are no items in this library.
+								</p>
 							</div>
-							<div className={styles.emptyLibraryText}></div>
-						</>
+						</div>
 					) : view === ViewType.CoverGrid ? (
 						<SeriesCoverGrid items={series || []} />
 					) : (

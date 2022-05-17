@@ -38,14 +38,6 @@ export const BookHorizontalScrollList = ({
 	};
 
 	useEffect(() => {
-		console.log(scrollListRef.current?.scrollWidth);
-		console.log(scrollListRef.current?.clientWidth);
-	}, [
-		scrollListRef.current?.clientWidth,
-		scrollListRef.current?.scrollWidth,
-	]);
-
-	useEffect(() => {
 		setShowControls(
 			scrollListRef.current?.scrollWidth >
 				scrollListRef.current?.clientWidth

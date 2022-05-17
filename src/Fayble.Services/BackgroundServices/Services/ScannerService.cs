@@ -74,7 +74,9 @@ public class ScannerService : IScannerService
         }
         finally
         {
+            _logger.LogInformation("Scanning series complete: {SeriesId}", seriesId);
             await SendClientUpdate("Complete", BackgroundTaskStatus.Complete, "BackgroundTaskCompleted");
+            
         }
     }
 
@@ -92,7 +94,7 @@ public class ScannerService : IScannerService
 
             await UpdateTaskStatus(BackgroundTaskStatus.Running);
             await SendClientUpdate("Scanning", BackgroundTaskStatus.Running, "BackgroundTaskStarted");
-            _logger.LogInformation("Scanning library for new books: {LibraryId}", libraryId);
+            _logger.LogInformation("Scanning library: {LibraryId}", libraryId);
             await ScanLibrary(library);
             await UpdateTaskStatus(BackgroundTaskStatus.Complete);
         }
@@ -103,6 +105,7 @@ public class ScannerService : IScannerService
         }
         finally
         {
+            _logger.LogInformation("Scanning library complete: {LibraryId}", libraryId);
             await SendClientUpdate("Complete", BackgroundTaskStatus.Complete, "BackgroundTaskCompleted");
         }
     }
@@ -110,8 +113,7 @@ public class ScannerService : IScannerService
 
     private async Task ScanLibrary(Domain.Aggregates.Library.Library library)
     {
-        _logger.LogDebug("Retrieving new files from library paths");
-
+        _logger.LogDebug("Retrieving series directories");
         var seriesDirectories = await _comicBookFileSystemService.GetSeriesDirectories(library.FolderPath);
         foreach (var seriesDirectory in seriesDirectories)
         {
@@ -122,8 +124,6 @@ public class ScannerService : IScannerService
 
     private async Task ScanSeries(Domain.Aggregates.Series.Series series)
     {
-        await SendClientUpdate($"Scanning {series.FolderName}");
-
         await ScanExistingBooks(series);
         await ScanNewBooks(series);
     }
@@ -169,7 +169,7 @@ public class ScannerService : IScannerService
 
                 if (Convert.ToBoolean(series.Library.GetSetting(LibrarySettingKey.UseComicInfo)))
                 {
-                    await UpdateFromComicInfo(book);
+                    await UpdateFromComicInfo(book, file.FullName);
                 }
 
                 continue;
@@ -178,7 +178,7 @@ public class ScannerService : IScannerService
             _logger.LogDebug("File not modified: {File}", file.FullName);
         }
 
-        _logger.LogInformation("Scanning existing books for series: {Series}", series.Name);
+        _logger.LogInformation("Scanning existing books complete");
         await _unitOfWork.Commit();
     }
 
@@ -186,6 +186,12 @@ public class ScannerService : IScannerService
     {
         _logger.LogInformation("Scanning new books for series: {Series}", series.Name);
         var newFiles = await GetNewFiles(series);
+        
+        if (!newFiles.Any())
+        {
+            _logger.LogDebug("No new books");
+            return;
+        }
 
         foreach (var newFile in newFiles)
         {
@@ -201,7 +207,7 @@ public class ScannerService : IScannerService
                 newFile.PageCount,
                 _comicBookFileSystemService.GetHash(newFile.FilePath));
 
-            var comicIssue = new Domain.Aggregates.Book.Book(
+            var book = new Domain.Aggregates.Book.Book(
                 Guid.NewGuid(),
                 series.Library.Id,
                 MediaType.ComicBook,
@@ -209,68 +215,51 @@ public class ScannerService : IScannerService
                 bookFile,
                 series.Id);
 
-            comicIssue.SetMediaRoot(ApplicationHelpers.GetMediaDirectoryRoot(comicIssue.Id));
+            book.SetMediaRoot(ApplicationHelpers.GetMediaDirectoryRoot(book.Id));
 
-            // TODO: if settings allow parsing ComicInfoXml
-            if (newFile.ComicInfoXml != null)
-                comicIssue.Update(
-                    newFile.ComicInfoXml.Title,
-                    newFile.ComicInfoXml?.Number ?? newFile.Number,
-                    newFile.ComicInfoXml?.Summary,
-                    0,
-                    null,
-                    null,
-                    DateOnly.TryParseExact(
-                        $"{newFile.ComicInfoXml?.Year}-{newFile.ComicInfoXml?.Month}-{newFile.ComicInfoXml?.Day}",
-                        "yyyy-M-dd",
-                        CultureInfo.InvariantCulture,
-                        DateTimeStyles.None,
-                        out var coverDate)
-                        ? coverDate
-                        : null,
-                    null,
-                    null
-                );
-
+            if (Convert.ToBoolean(series.Library.GetSetting(LibrarySettingKey.UseComicInfo)))
+            {
+                await UpdateFromComicInfo(book, newFile.FilePath);
+            }
+            
             try
             {
                 _logger.LogDebug("Extracting cover image from: {FilePath}", newFile.FilePath);
-                _comicBookFileSystemService.ExtractComicCoverImage(newFile.FilePath!, comicIssue.MediaRoot, comicIssue.Id);
+                _comicBookFileSystemService.ExtractComicCoverImage(newFile.FilePath!, book.MediaRoot, book.Id);
             }
             catch (Exception ex)
             {
                 _logger.LogError(ex, "An error occurred while extracting cover image");
             }
 
-            comicIssue.UpdateSeries(series.Id);
+            book.UpdateSeries(series.Id);
 
-            _bookRepository.Add(comicIssue);
+            _bookRepository.Add(book);
 
             _logger.LogDebug(
                 "New issue added to library: {@ComicIssue}",
                 new
                 {
-                    comicIssue.Id,
-                    comicIssue.File.FileType,
-                    comicIssue.File.FilePath,
-                    comicIssue.LibraryId
+                    book.Id,
+                    book.File.FileType,
+                    book.File.FilePath,
+                    book.LibraryId
                 });
         }
-
+        
+        _logger.LogDebug("Scanning new books complete");
         await _unitOfWork.Commit();
     }
 
     private async Task<List<ComicFile>> GetNewFiles(Domain.Aggregates.Series.Series series)
     {
         var newFiles = new List<ComicFile>();
-
-        var filePaths = await _comicBookFileSystemService.GetFiles(
-            Path.Combine(series.Library.FolderPath, series.FolderPath),
-            MediaType.ComicBook);
+        var path = Path.Combine(series.Library.FolderPath, series.FolderPath);
+        var filePaths = await _comicBookFileSystemService.GetFiles(path, MediaType.ComicBook);
 
         foreach (var filePath in filePaths)
         {
-            _logger.LogDebug("Scanning directory for new files: {Directory}", filePath);
+            
             var exists = series.Books?.Any(
                 b => b.File.FilePath.ToLower() ==
                      PathHelpers.GetRelativePath(filePath, series.Library.FolderPath).ToLower()) ?? false;
@@ -305,9 +294,9 @@ public class ScannerService : IScannerService
         return newFiles;
     }
 
-    private async Task UpdateFromComicInfo(Domain.Aggregates.Book.Book book)
+    private async Task UpdateFromComicInfo(Domain.Aggregates.Book.Book book, string filepath)
     {
-        var file = new FileInfo(Path.Combine(book.Library.FolderPath, book.File.FilePath));
+        var file = new FileInfo(filepath);
         var comicInfo = _comicBookFileSystemService.ReadComicInfoXml(file.FullName);
 
         if (comicInfo == null) return;
@@ -400,6 +389,7 @@ public class ScannerService : IScannerService
 
     private async Task<Domain.Aggregates.Series.Series> GetSeries(string seriesPath, Domain.Aggregates.Library.Library library)
     {
+        _logger.LogDebug("Retrieving series for directory: {SeriesPath}", seriesPath);
         var existingSeries = (await _seriesRepository.Get(
             s => s.FolderPath.ToLower() ==
                  PathHelpers.GetRelativePath(seriesPath, library.FolderPath).ToLower() &&
@@ -418,6 +408,7 @@ public class ScannerService : IScannerService
             return existingSeries;
         }
 
+        _logger.LogDebug("Series does not exist, creating");
         var relativeSeriesPath = PathHelpers.GetRelativePath(seriesPath, library.FolderPath);
         var seriesName = ComicBookHelpers.ParseSeriesDirectory(new DirectoryInfo(seriesPath).Name);
         var seriesYear = ComicBookHelpers.ParseYear(seriesPath!);
@@ -446,7 +437,7 @@ public class ScannerService : IScannerService
         }
 
         _logger.LogDebug(
-            "No existing Series found in database, adding new series: {@Series}",
+            "Creating series: {@Series}",
             new
             {
                 series.Id,
@@ -466,7 +457,6 @@ public class ScannerService : IScannerService
     {
         var task = await _backgroundTaskRepository.Get(_backgroundTask.Id);
         task.UpdateStatus(status);
-        _backgroundTaskRepository.Update(task);
         await _unitOfWork.Commit();
     }
 

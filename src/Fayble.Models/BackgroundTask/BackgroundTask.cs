@@ -10,14 +10,6 @@ public class BackgroundTask
     public string Type { get; }
 
 
-    public BackgroundTask(Guid id, Guid? itemId, string type, string? description = null)
-    {
-        Id = id;
-        ItemId = itemId;
-        Type = type;
-        Description = description;
-    }
-
     public BackgroundTask(
         Guid id,
         Guid? itemId,

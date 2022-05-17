@@ -20,7 +20,7 @@ const initialLibraryState: Library = {
 	name: "",
 	libraryType: "ComicBook",
 	folderPath: "",
-	settings: { reviewOnImport: true, seriesFolders: false },
+	settings: { reviewOnImport: true, useComicInfo: false },
 };
 
 export const LibraryModal = ({ show, library, close }: LibraryModalProps) => {
@@ -56,7 +56,7 @@ export const LibraryModal = ({ show, library, close }: LibraryModalProps) => {
 		createLibrary.mutate([null, updatedLibrary], {
 			onSuccess: () => {
 				close();
-			},
+			}
 		});
 	};
 
