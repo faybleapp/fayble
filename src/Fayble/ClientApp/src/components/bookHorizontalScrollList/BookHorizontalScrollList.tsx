@@ -38,14 +38,6 @@ export const BookHorizontalScrollList = ({
 	};
 
 	useEffect(() => {
-		console.log(scrollListRef.current?.scrollWidth);
-		console.log(scrollListRef.current?.clientWidth);
-	}, [
-		scrollListRef.current?.clientWidth,
-		scrollListRef.current?.scrollWidth,
-	]);
-
-	useEffect(() => {
 		setShowControls(
 			scrollListRef.current?.scrollWidth >
 				scrollListRef.current?.clientWidth
@@ -92,7 +84,7 @@ export const BookHorizontalScrollList = ({
 								? undefined
 								: `Issue #${book.number.padStart(3, "0")}`
 						}
-						link={`/library/${book.library?.id}/series/${book.series?.id}/book/${book.id}`}
+						link={`/library/${book.library?.id}/book/${book.id}`}
 					/>				
 				))}
 			</div>

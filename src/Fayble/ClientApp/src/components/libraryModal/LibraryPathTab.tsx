@@ -41,8 +41,7 @@ export const LibraryPathTab = ({
 		try {
 			valid = await pathExists(sanitisedPath);
 		} catch (error) {
-			toast.error("An error occured while validating path");
-			console.log(error);
+			toast.error("An error occured while validating path");			
 			setValidatingPath(false);
 			return;
 		}

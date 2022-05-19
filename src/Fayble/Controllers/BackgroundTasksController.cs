@@ -1,10 +1,10 @@
-﻿using Fayble.BackgroundServices;
-using Fayble.Domain.Aggregates.BackgroundTask;
+﻿using Fayble.Domain.Aggregates.BackgroundTask;
 using Fayble.Models.BackgroundTask;
 using Fayble.Security.Authorisation;
+using Fayble.Services.BackgroundServices;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using BackgroundTask = Fayble.BackgroundServices.BackgroundTask;
+using BackgroundTask = Fayble.Models.BackgroundTask.BackgroundTask;
 
 
 namespace Fayble.Controllers;

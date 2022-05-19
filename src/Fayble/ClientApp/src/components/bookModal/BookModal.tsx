@@ -1,12 +1,12 @@
 import { ModalTabs } from "components/modalTabs";
 import { useFormik } from "formik";
 import { Book } from "models/api-models";
-import React from "react";
 import { Button, Modal, Spinner, Tab } from "react-bootstrap";
 import { useUpdateBook } from "services/book";
 import { BookDetailsTab } from "./BookDetailsTab";
-import { BookFileInfo } from "./BookFileInfo";
+import { BookFileInfoTab } from "./BookFileInfoTab";
 import styles from "./BookModal.module.scss";
+import { BookPeopleTab } from "./BookPeopleTab";
 
 interface BookModalProps {
 	book: Book;
@@ -30,7 +30,7 @@ export const BookModal = ({ book, show, close }: BookModalProps) => {
 		validateOnMount: true,
 	});
 
-	const onExited = () => formik.resetForm()
+	const onExited = () => formik.resetForm();
 
 	return (
 		<Modal size="lg" show={show} onHide={close} onExited={onExited}>
@@ -44,12 +44,12 @@ export const BookModal = ({ book, show, close }: BookModalProps) => {
 					<Tab eventKey="details" title="Details">
 						<BookDetailsTab book={book} formik={formik} />
 					</Tab>
-					<Tab eventKey="people" title="People">						
+					<Tab eventKey="people" title="People">
+						<BookPeopleTab book={book} formik={formik} />
 					</Tab>
-					<Tab eventKey="metadata" title="Metadata">						
-					</Tab>
+					<Tab eventKey="metadata" title="Metadata"></Tab>
 					<Tab eventKey="fileInfo" title="File Info">
-						<BookFileInfo book={book} />
+						<BookFileInfoTab book={book} />
 					</Tab>
 				</ModalTabs>
 			</Modal.Body>

@@ -22,6 +22,7 @@ namespace Fayble.Services.FileSystem
             return Directory.EnumerateFiles(directory, "*.*").Where(
                 f => extensions.Contains(Path.GetExtension(f).Replace(".", "").ToLowerInvariant()));
         }
+
         public string GetHash(string filePath)
         {
             using var md5 = MD5.Create();

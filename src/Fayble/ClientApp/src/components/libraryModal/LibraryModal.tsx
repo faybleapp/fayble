@@ -1,6 +1,6 @@
 import { ModalTabs } from "components/modalTabs";
 import { Library } from "models/api-models";
-import React, { useState } from "react";
+import { useState } from "react";
 import { Container, Modal, Tab } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
 import { useCreateLibrary, useDeleteLibrary, useUpdateLibrary } from "services";
@@ -20,7 +20,7 @@ const initialLibraryState: Library = {
 	name: "",
 	libraryType: "ComicBook",
 	folderPath: "",
-	settings: { reviewOnImport: true, seriesFolders: false },
+	settings: { reviewOnImport: true, useComicInfo: false },
 };
 
 export const LibraryModal = ({ show, library, close }: LibraryModalProps) => {
@@ -56,7 +56,7 @@ export const LibraryModal = ({ show, library, close }: LibraryModalProps) => {
 		createLibrary.mutate([null, updatedLibrary], {
 			onSuccess: () => {
 				close();
-			},
+			}
 		});
 	};
 

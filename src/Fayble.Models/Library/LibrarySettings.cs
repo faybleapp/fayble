@@ -3,11 +3,11 @@
 public class LibrarySettings
 {
     public bool ReviewOnImport { get; }
-    public bool SeriesFolders { get;  }
+    public bool UseComicInfo { get;  }
 
-    public LibrarySettings(bool reviewOnImport, bool seriesFolders)
+    public LibrarySettings(bool reviewOnImport, bool useComicInfo)
     {
         ReviewOnImport = reviewOnImport;
-        SeriesFolders = seriesFolders;
+        UseComicInfo = useComicInfo;
     }
 }

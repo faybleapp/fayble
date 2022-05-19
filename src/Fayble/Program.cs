@@ -1,10 +1,7 @@
 ﻿using System.Text;
 using AspNetCoreRateLimit;
 using Fayble;
-using Fayble.BackgroundServices;
-using Fayble.BackgroundServices.ComicLibrary;
 using Fayble.Core.Helpers;
-using Fayble.Core.Hubs;
 using Fayble.Database;
 using Fayble.Domain;
 using Fayble.Domain.Aggregates.User;
@@ -14,9 +11,12 @@ using Fayble.Infrastructure.Repositories;
 using Fayble.Models.Configuration;
 using Fayble.Security.Authorisation;
 using Fayble.Security.Models;
+using Fayble.Services.BackgroundServices;
+using Fayble.Services.BackgroundServices.Services;
 using Fayble.Services.Book;
 using Fayble.Services.FileSystem;
 using Fayble.Services.Library;
+using Fayble.Services.Person;
 using Fayble.Services.Publisher;
 using Fayble.Services.Series;
 using Fayble.Services.System;
@@ -60,7 +60,7 @@ Log.Logger = new LoggerConfiguration()
     .CreateBootstrapLogger();
 
 Log.Information("Starting...");
-Log.Information("Application directory: {directory}", ApplicationHelpers.GetAppDirectory());
+Log.Information("Application directory: {Directory}", ApplicationHelpers.GetAppDirectory());
 
 
 var builder = WebApplication.CreateBuilder(args);
@@ -153,17 +153,19 @@ builder.Services.AddScoped<IFileTypeRepository, FileTypeRepository>();
 builder.Services.AddScoped<IRefreshTokenRepository, RefreshTokenRepository>();
 builder.Services.AddScoped<IPublisherRepository, PublisherRepository>();
 builder.Services.AddScoped<IBookTagRepository, BookTagRepository>();
+builder.Services.AddScoped<IPersonRepository, PersonRepository>();
 
 // Register Services
 builder.Services.AddScoped<ILibraryService, LibraryService>();
 builder.Services.AddScoped<ISeriesService, SeriesService>();
-builder.Services.AddScoped<IComicLibraryScannerService, ComicLibraryScannerService>();
+builder.Services.AddScoped<IScannerService, ScannerService>();
 builder.Services.AddScoped<IComicBookFileSystemService, ComicBookFileSystemService>();
 builder.Services.AddScoped<Fayble.Security.Services.Authentication.IAuthenticationService, Fayble.Security.Services.Authentication.AuthenticationService>();
 builder.Services.AddScoped<IPublisherService, PublisherService>();
 builder.Services.AddScoped<IBookService, BookService>();
 builder.Services.AddScoped<ITagService, TagService>();
 builder.Services.AddScoped<ISystemService, SystemService>();
+builder.Services.AddScoped<IPersonService, PersonService>();
 
 
 // Register Background Services

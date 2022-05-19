@@ -1,4 +1,6 @@
-﻿using Fayble.Services.Library;
+﻿using Fayble.Models.Book;
+using Fayble.Services.Library;
+using Fayble.Services.Person;
 using Fayble.Services.Publisher;
 using Fayble.Services.Series;
 
@@ -29,6 +31,12 @@ public static class Mappings
             entity.Language,
             entity.Tags?.Select(t => t.Name).OrderBy(t => t),
             entity.DeletedDate != null,
-            entity.MediaRoot);
+            entity.MediaRoot,
+            entity.People?.Select(p => p.ToModel()));
+    }
+
+    private static BookPerson ToModel(this Domain.Aggregates.BookPerson entity)
+    {
+        return new BookPerson(entity.PersonId, entity.Person.Name, entity.Role.ToString());
     }
 }

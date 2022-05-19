@@ -23,8 +23,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\Fayble.Database\Fayble.Database.csproj" />
     <ProjectReference Include="..\Fayble.Core\Fayble.Core.csproj" />
+    <ProjectReference Include="..\Fayble.Database\Fayble.Database.csproj" />
     <ProjectReference Include="..\Fayble.Domain\Fayble.Domain.csproj" />
     <ProjectReference Include="..\Fayble.Security\Fayble.Security.csproj" />
   </ItemGroup>

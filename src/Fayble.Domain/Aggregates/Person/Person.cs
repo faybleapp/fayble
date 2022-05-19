@@ -1,21 +1,18 @@
-﻿using Fayble.Domain.Aggregates.People;
-using Fayble.Domain.Entities;
+﻿using Fayble.Domain.Entities;
 
 namespace Fayble.Domain.Aggregates.Person
 {
-    public class Person: IdentifiableEntity<Guid>
+    public class Person: IdentifiableEntity<Guid>, IAggregateRoot
     {
         public string Name { get; private set; }
-        public PersonType PersonType { get; private set; }
-
-        public ICollection<Book.Book> Books { get; private set; }
+        private readonly List<BookPerson> _books = new();
+        public virtual IReadOnlyCollection<BookPerson> Books => _books;
 
         public Person(){}
 
-        public Person(Guid id, string name, PersonType personType) : base(id)
+        public Person(Guid id, string name) : base(id)
         {
             Name = name;
-            PersonType = personType;
         }
     }
 }

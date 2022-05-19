@@ -26,7 +26,7 @@ export const BookCoverGrid = ({ books, title }: BookCoverGridProps) => {
 									: `Issue #${book.number.padStart(3, "0")}`
 							}
 							firstSubtitle={`${book.pageCount} pages`}
-							link={`/series/${book.series?.id}/book/${book.id}`}
+							link={`/library/${book.library?.id}/book/${book.id}`}
 							isDeleted={book.isDeleted}
 							menuItems={<BookMenu />}
 							lazyLoad={books.length > 100}

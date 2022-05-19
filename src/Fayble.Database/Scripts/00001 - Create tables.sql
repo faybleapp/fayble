@@ -1,6 +1,7 @@
 ﻿CREATE TABLE "BackgroundTask" (
     "Id" TEXT NOT NULL CONSTRAINT "PK_BackgroundTask" PRIMARY KEY,
     "ItemId" TEXT NULL,
+    "ItemName" TEXT NULL,
     "Type" TEXT NOT NULL,
     "Started" TEXT NOT NULL,
     "Status" TEXT NOT NULL,
@@ -37,8 +38,7 @@ CREATE TABLE "Library" (
 
 CREATE TABLE "Person" (
     "Id" TEXT NOT NULL CONSTRAINT "PK_Person" PRIMARY KEY,
-    "Name" TEXT NOT NULL,
-    "PersonType" TEXT NOT NULL
+    "Name" TEXT NOT NULL    
 );
 
 CREATE TABLE "Publisher" (
@@ -221,11 +221,12 @@ CREATE TABLE "BookFile" (
 );
 
 CREATE TABLE "BookPerson" (
-    "BooksId" TEXT NOT NULL,
-    "PeopleId" TEXT NOT NULL,
-    CONSTRAINT "PK_BookPerson" PRIMARY KEY ("BooksId", "PeopleId"),
-    CONSTRAINT "FK_BookPerson_Book_BooksId" FOREIGN KEY ("BooksId") REFERENCES "Book" ("Id") ON DELETE CASCADE,
-    CONSTRAINT "FK_BookPerson_Person_PeopleId" FOREIGN KEY ("PeopleId") REFERENCES "Person" ("Id") ON DELETE CASCADE
+    "BookId" TEXT NOT NULL,
+    "PersonId" TEXT NOT NULL,
+    "Role" TEXT NOT NULL,
+    CONSTRAINT "PK_BookPerson" PRIMARY KEY ("BookId", "PersonId", "Role"),
+    CONSTRAINT "FK_BookPerson_Book_BookId" FOREIGN KEY ("BookId") REFERENCES "Book" ("Id") ON DELETE CASCADE,
+    CONSTRAINT "FK_BookPerson_Person_PersonId" FOREIGN KEY ("PersonId") REFERENCES "Person" ("Id") ON DELETE CASCADE
 );
 
 CREATE TABLE "ReadHistory" (

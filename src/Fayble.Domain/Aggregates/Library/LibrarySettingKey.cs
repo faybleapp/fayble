@@ -3,5 +3,6 @@
 public enum LibrarySettingKey
 {
     ReviewOnImport,
-    SeriesFolders
+    HashFiles,
+    UseComicInfo
 }

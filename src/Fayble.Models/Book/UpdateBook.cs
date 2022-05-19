@@ -16,6 +16,8 @@ public class
     public string? Language { get; }
     public string? Review { get; }
     public string[] Tags { get; }
+    
+    public List<BookPerson> People { get; }
 
     public UpdateBook(
         Guid id,
@@ -28,7 +30,8 @@ public class
         string? title,
         string? language,
         string? review,
-        string[] tags)
+        string[] tags,
+        List<BookPerson> people)
     {
         Id = id;
         Notes = notes;
@@ -41,6 +44,7 @@ public class
         Language = language;
         Review = review;
         Tags = tags;
+        People = people;
     }
 
 

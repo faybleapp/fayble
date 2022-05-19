@@ -6,7 +6,7 @@
 	flex-direction: column;
 }
 .body {
-	height: 100%;
+	height: calc(100% - 56px);
 	display: flex;
 	flex-direction: row;
 }

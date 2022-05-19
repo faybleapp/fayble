@@ -13,6 +13,7 @@ public class LibraryService : ILibraryService
     private readonly ILibraryRepository _libraryRepository;
     private readonly ISeriesRepository _seriesRepository;
     private readonly IUnitOfWork _unitOfWork;
+    
 
 
     public LibraryService(

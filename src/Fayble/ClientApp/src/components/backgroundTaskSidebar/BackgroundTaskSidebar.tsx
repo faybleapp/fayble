@@ -37,7 +37,7 @@ export const BackgroundTaskSidebar = ({
 			<Offcanvas.Body className={styles.body}>
 				<h6 className={styles.taskHeading}>Running Tasks</h6>
 				<div className={styles.taskSection}>
-					{runningTasks.length > 0
+					{!!runningTasks
 						? runningTasks.map((task) => {
 								return (
 									<>
@@ -47,13 +47,18 @@ export const BackgroundTaskSidebar = ({
 												.trim()}
 											: {task.itemName}
 										</div>
-										<div className={styles.taskDescription}>
-											- {`${task.description} `}
-											<Spinner
-												animation="border"
-												size="sm"
-											/>
-										</div>
+										{task.description && (
+											<div
+												className={
+													styles.taskDescription
+												}>
+												- {`${task.description} `}
+												<Spinner
+													animation="border"
+													size="sm"
+												/>
+											</div>
+										)}
 									</>
 								);
 						  })
@@ -62,7 +67,7 @@ export const BackgroundTaskSidebar = ({
 
 				<h6 className={styles.taskHeading}>Queued Tasks</h6>
 				<div className={styles.taskSection}>
-					{queuedTasks.length > 0
+					{!!queuedTasks
 						? queuedTasks.map((task) => {
 								return (
 									<div>

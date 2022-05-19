@@ -5,6 +5,7 @@ public class BackgroundTask : IdentifiableEntity<Guid>, IAggregateRoot
 {
     public Guid? ItemId { get; private set; }
 
+    public string ItemName { get; private set; }
     public BackgroundTaskType Type { get; private set; }
 
     public DateTimeOffset Started { get; private set; }
@@ -15,9 +16,10 @@ public class BackgroundTask : IdentifiableEntity<Guid>, IAggregateRoot
 
     private BackgroundTask() { }
 
-    public BackgroundTask(Guid? itemId, BackgroundTaskType type, Guid? startedBy = null)
+    public BackgroundTask(Guid? itemId, string itemName, BackgroundTaskType type, Guid? startedBy = null)
     {
         ItemId = itemId;
+        ItemName = itemName;
         Type = type;
         StartedBy = startedBy;
         Started = DateTimeOffset.UtcNow;

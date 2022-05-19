@@ -10,7 +10,7 @@ import styles from "./Main.module.scss";
 
 export const Main = () => {
 	const loggedIn = isAuthenticated();
-	const navigate = useNavigate();	
+	const navigate = useNavigate();
 	const { data: systemConfiguration } = useSystemConfiguration();
 
 	useEffect(() => {
@@ -24,7 +24,9 @@ export const Main = () => {
 		<>
 			{loggedIn && (
 				<div className={styles.container}>
-					<NavbarMenu />
+					<div>
+						<NavbarMenu />
+					</div>
 					<div className={styles.body}>
 						<div
 							className={cn(
@@ -34,7 +36,7 @@ export const Main = () => {
 							<Sidebar />
 						</div>
 						<div className={styles.main}>
-							<div className={styles.pageContent}>
+							<div className={styles.pageContent} id="main-page-content">
 								<Outlet />
 							</div>
 						</div>

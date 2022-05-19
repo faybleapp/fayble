@@ -1,7 +1,7 @@
 import { Image } from "components/image";
 import { StarRating } from "components/starRating";
 import { Series } from "models/api-models";
-import { ImageTypes } from "models/ui-models";
+import { ImageType } from "models/ui-models";
 import { useEffect, useState } from "react";
 import { useUpdateSeries } from "services";
 import styles from "./SeriesDetail.module.scss";
@@ -29,7 +29,7 @@ export const SeriesDetail = (props: SeriesDetailProps) => {
 
 			<Image
 				className={styles.cover}
-				src={`/api/media?id=${series?.id}&mediaRoot=${series?.mediaRoot}&fileName=${ImageTypes.CoverSm}`}
+				src={`/api/media?id=${series?.id}&mediaRoot=${series?.mediaRoot}&fileName=${ImageType.CoverSm}`}
 			/>
 			<div className={styles.detailsPanel}>
 				<div className={styles.detailsTitle}>

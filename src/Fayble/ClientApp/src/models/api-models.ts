@@ -30,8 +30,8 @@ export interface RefreshTokenRequest {
 export interface BackgroundTask {
     id: string;
     itemId: string | undefined;
-    itemName: string;
-    status: string;
+    itemName: string | undefined;
+    status: string | undefined;
     description: string | undefined;
     type: string;
 }
@@ -65,6 +65,7 @@ export interface Book {
     lastMetadataUpdate: Date;
     mediaType: string;
     tags: string[] | undefined;
+    people: BookPerson[] | undefined;
     isDeleted: boolean;
 }
 
@@ -105,7 +106,16 @@ export interface Library {
 
 export interface LibrarySettings {
     reviewOnImport: boolean;
-    seriesFolders: boolean;
+    useComicInfo: boolean;
+}
+
+export interface Person {
+    id: string | undefined;
+    name: string;
+}
+
+export interface BookPerson extends Person {
+    role: string;
 }
 
 export interface UpdateBook {
@@ -120,6 +130,7 @@ export interface UpdateBook {
     language: string | undefined;
     review: string | undefined;
     tags: string[];
+    people: BookPerson[];
 }
 
 export interface RelatedBooks {
