@@ -14,6 +14,6 @@ public class PersonService : IPersonService
 
     public async Task<IEnumerable<Models.Person>> GetPeople()
     {
-        return (await _personRepository.Get()).Select(p => p.ToModel());
+        return (await _personRepository.Get()).Select(p => p.ToModel()).OrderBy(p => p.Name);
     }
 }

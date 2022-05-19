@@ -4,7 +4,6 @@ import { TextField } from "components/form/textField";
 import { ModalTabs } from "components/modalTabs";
 import { useFormik } from "formik";
 import { Series } from "models/api-models";
-import React from "react";
 import {
 	Button,
 	Col,
@@ -73,6 +72,7 @@ export const SeriesModal = ({ series, show, close }: SeriesModalProps) => {
 								<TextField
 									name="name"
 									label="Name"
+									locked={true}
 									error={
 										formik.touched?.name &&
 										formik.errors?.name

@@ -1,0 +1,17 @@
+@import "../../scss/variables";
+
+.lock {
+	background: $secondary-color !important;
+	border-color: $secondary-color !important;
+    
+    cursor: pointer;
+}
+
+.locked {
+	color: $accent-color !Important;
+}
+
+.unlocked {
+	color: white !important;
+}
+
