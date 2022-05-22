@@ -1,4 +1,7 @@
-﻿namespace Fayble.Models.Book;
+﻿using Fayble.Domain.Aggregates.Book;
+using Fayble.Domain.Entities;
+
+namespace Fayble.Models.Book;
 
 public class Book
 {
@@ -26,8 +29,8 @@ public class Book
     public string MediaType { get; private set; }    
     public IEnumerable<string>? Tags {get; private set;}
     public IEnumerable<BookPerson>? People { get; private set; }
+    public BookFieldLocks FieldLocks { get; private set; }
     public bool IsDeleted { get; private set; }
-
 
     public Book(
         Guid id,
@@ -51,7 +54,9 @@ public class Book
         IEnumerable<string>? tags,
         bool isDeleted,
         string mediaRoot,
-        IEnumerable<BookPerson>? people)
+        IEnumerable<BookPerson>? people,
+        BookFieldLocks fieldLocks
+        )
     {
         Id = id;
         Title = title;
@@ -75,5 +80,6 @@ public class Book
         IsDeleted = isDeleted;
         MediaRoot = mediaRoot;
         People = people;
+        FieldLocks = fieldLocks;
     }
 }

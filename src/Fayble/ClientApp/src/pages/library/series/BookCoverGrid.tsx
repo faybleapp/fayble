@@ -19,6 +19,7 @@ export const BookCoverGrid = ({ books, title }: BookCoverGridProps) => {
 				books.map((book) => {
 					return (
 						<CoverItem
+							key={book.id}
 							item={book}
 							title={
 								book.mediaType === MediaType.Book

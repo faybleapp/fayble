@@ -71,6 +71,7 @@ export const BookHorizontalScrollList = ({
 			<div className={styles.list} ref={scrollListRef} id="list">
 				{books.map((book) => (
 					<CoverItem
+						key={book.id}
 						item={book}
 						title={
 							book.mediaType === MediaType.Book

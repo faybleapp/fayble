@@ -1,4 +1,6 @@
-﻿namespace Fayble.Models.Series;
+﻿using Fayble.Domain.Entities;
+
+namespace Fayble.Models.Series;
 
 public class Series
 {
@@ -33,7 +35,7 @@ public class Series
     public bool Locked { get; }
 
     public string MediaRoot { get; }
-
+    
     public DateTimeOffset? LastMetadataUpdate { get; }
 
     public Series(

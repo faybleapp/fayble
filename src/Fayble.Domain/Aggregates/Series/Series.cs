@@ -1,4 +1,5 @@
-﻿using Fayble.Domain.Entities;
+using Fayble.Domain.Aggregates.Book;
+using Fayble.Domain.Entities;
 
 namespace Fayble.Domain.Aggregates.Series;
 

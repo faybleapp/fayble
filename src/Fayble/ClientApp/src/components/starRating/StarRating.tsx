@@ -2,7 +2,7 @@ import { faStar as faStarEmpty } from "@fortawesome/free-regular-svg-icons";
 import { faStar as faStarFull } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import cn from "classnames";
-import React, { useState } from "react";
+import { useState } from "react";
 import styles from "./StarRating.module.scss";
 
 interface StarRatingProps {
@@ -30,6 +30,7 @@ export const StarRating = ({ rating, onChange }: StarRatingProps) => {
 		for (let i = 0; i <= 5; i++) {
 			stars.push(
 				<span
+					key={i.toString()}
 					onMouseOver={() => setHoverRating(i)}
 					onMouseLeave={() => setHoverRating(null)}
 					onClick={() => onChange(i)}>

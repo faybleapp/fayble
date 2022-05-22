@@ -1,9 +1,10 @@
 import cn from "classnames";
 import { FieldLock } from "components/fieldLock";
-import React, { useState } from "react";
+import { LockableField } from "models/ui-models";
+import React from "react";
 import { Form, InputGroup } from "react-bootstrap";
 
-interface TextFieldProps {
+interface TextFieldProps extends LockableField {
 	name: string;
 	label?: string;
 	className?: string;
@@ -11,11 +12,8 @@ interface TextFieldProps {
 	value?: string;
 	secure?: boolean;
 	placeholder?: string;
-	lockable?: boolean;
-	locked?: boolean;
 	onBlur?: (event: React.FocusEvent<HTMLInputElement>) => void;
 	onChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
-	onLock?: (locked: boolean) => void;
 }
 
 export const TextField = ({
@@ -29,11 +27,8 @@ export const TextField = ({
 	onChange,
 	onBlur,
 	onLock,
-	lockable = true,
 	locked = false,
 }: TextFieldProps) => {
-	const [led, setLocked] = useState<boolean>(false);
-
 	return (
 		<Form.Group className={cn(className, "mb-3")}>
 			{label && <Form.Label>{label}</Form.Label>}
@@ -41,18 +36,18 @@ export const TextField = ({
 				<Form.Control
 					name={name}
 					type={secure ? "password" : "text"}
-					isInvalid={!!error}					
-					value={value}
+					isInvalid={!!error}
+					value={value || ""}
 					onBlur={onBlur}
-					onChange={onChange}					
+					onChange={(e: any) => {
+						if (onLock) {
+							onLock(true);
+						}
+						onChange(e);
+					}}
 					placeholder={placeholder}
 				/>
-				<FieldLock
-					locked={led}
-					onClick={(a) => {
-						setLocked(a);
-					}}
-				/>
+				{onLock && <FieldLock locked={locked} onClick={onLock} />}
 			</InputGroup>
 			<Form.Control.Feedback type="invalid">
 				{error}
@@ -60,6 +55,3 @@ export const TextField = ({
 		</Form.Group>
 	);
 };
-function usEffect(arg0: () => void, arg1: boolean[]) {
-	throw new Error("Function not implemented.");
-}

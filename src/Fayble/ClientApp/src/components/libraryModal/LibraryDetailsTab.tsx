@@ -1,7 +1,6 @@
 import { SelectField } from "components/form/selectField";
 import { TextField } from "components/form/textField";
 import { Library } from "models/api-models";
-import React from "react";
 import { Form } from "react-bootstrap";
 
 interface LibraryDetailsTabProps {
@@ -47,7 +46,7 @@ export const LibraryDetailsTab = ({
 			/>
 			<TextField
 				name="name"
-				label="Library Name"
+				label="Library Name"				
 				value={library?.name}
 				onChange={(e) =>
 					handleInputChange(

@@ -238,6 +238,19 @@ CREATE TABLE "ReadHistory" (
     CONSTRAINT "FK_ReadHistory_User_UserId" FOREIGN KEY ("UserId") REFERENCES "User" ("Id") ON DELETE CASCADE
 );
 
+CREATE TABLE "BookFieldLocks" (
+    "BookId" TEXT NOT NULL CONSTRAINT "PK_BookFieldLocks" PRIMARY KEY,
+    "Title" INTEGER NOT NULL,
+    "Summary" INTEGER NOT NULL,
+    "Number" INTEGER NOT NULL,
+    "Language" INTEGER NOT NULL,
+    "Rating" INTEGER NOT NULL,
+    "ReleaseDate" INTEGER NOT NULL,
+    "CoverDate" INTEGER NOT NULL,
+    "Tags" INTEGER NOT NULL,
+    CONSTRAINT "FK_BookFieldLocks_Book_BookId" FOREIGN KEY ("BookId") REFERENCES "Book" ("Id") ON DELETE CASCADE
+);
+
 CREATE INDEX "IX_Book_LibraryId" ON "Book" ("LibraryId");
 
 CREATE INDEX "IX_Book_PublisherId" ON "Book" ("PublisherId");
@@ -281,3 +294,5 @@ CREATE INDEX "IX_UserRole_RoleId" ON "UserRole" ("RoleId");
 CREATE INDEX "IX_UserRoleClaim_RoleId" ON "UserRoleClaim" ("RoleId");
 
 CREATE INDEX "IX_UserSetting_UserId" ON "UserSetting" ("UserId");
+
+CREATE INDEX "IX_BookFieldLocks_Bookid" ON "BookFieldLocks" ("BookId");

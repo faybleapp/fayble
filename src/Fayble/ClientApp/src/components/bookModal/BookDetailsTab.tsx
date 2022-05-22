@@ -30,6 +30,10 @@ export const BookDetailsTab = ({ formik }: BookDetailsTabProps) => {
 				<TextField
 					name="title"
 					label="Title"
+					locked={formik.values.fieldLocks.title}
+					onLock={(lock: boolean) =>
+						formik.setFieldValue("fieldLocks.title", lock)
+					}
 					value={formik.values.title}
 					onChange={formik.handleChange}
 				/>
@@ -38,6 +42,10 @@ export const BookDetailsTab = ({ formik }: BookDetailsTabProps) => {
 						<TextField
 							name="number"
 							label="Number"
+							locked={formik.values.fieldLocks.number}
+							onLock={(lock: boolean) =>
+								formik.setFieldValue("fieldLocks.number", lock)
+							}
 							value={formik.values.number}
 							onChange={formik.handleChange}
 						/>
@@ -50,7 +58,14 @@ export const BookDetailsTab = ({ formik }: BookDetailsTabProps) => {
 							searchable
 							value={formik.values.language}
 							options={languageSelectOptions}
-							onChange={(selectedValue) => {												
+							locked={formik.values.fieldLocks.language}
+							onLock={(lock: boolean) =>
+								formik.setFieldValue(
+									"fieldLocks.language",
+									lock
+								)
+							}
+							onChange={(selectedValue) => {
 								formik.setFieldValue(
 									"language",
 									selectedValue as string
@@ -64,6 +79,13 @@ export const BookDetailsTab = ({ formik }: BookDetailsTabProps) => {
 						<DatePickerField
 							name="releaseDate"
 							label="Release Date"
+							locked={formik.values.fieldLocks.releaseDate}
+							onLock={(lock: boolean) =>
+								formik.setFieldValue(
+									"fieldLocks.releaseDate",
+									lock
+								)
+							}
 							onChange={formik.handleChange}
 							value={formik.values.releaseDate}
 						/>
@@ -73,6 +95,13 @@ export const BookDetailsTab = ({ formik }: BookDetailsTabProps) => {
 							name="coverDate"
 							label="Cover Date"
 							type="month"
+							locked={formik.values.fieldLocks.coverDate}
+							onLock={(lock: boolean) =>
+								formik.setFieldValue(
+									"fieldLocks.coverDate",
+									lock
+								)
+							}
 							onChange={formik.handleChange}
 							value={formik.values.coverDate}
 						/>
@@ -81,6 +110,10 @@ export const BookDetailsTab = ({ formik }: BookDetailsTabProps) => {
 				<TextAreaField
 					name="summary"
 					label="Summary"
+					locked={formik.values.fieldLocks.summary}
+					onLock={(lock: boolean) =>
+						formik.setFieldValue("fieldLocks.summary", lock)
+					}
 					value={formik.values.summary}
 					onChange={formik.handleChange}
 					rows={3}
@@ -89,8 +122,12 @@ export const BookDetailsTab = ({ formik }: BookDetailsTabProps) => {
 					name="tags"
 					creatable
 					clearable
+					locked={formik.values.fieldLocks.tags}
+					onLock={(lock: boolean) =>
+						formik.setFieldValue("fieldLocks.tags", lock)
+					}
 					value={formik.values.tags || []}
-					label="Tags"
+					label="Tags"					
 					onChange={(selectedValues) => {
 						formik.setFieldValue(
 							"tags",

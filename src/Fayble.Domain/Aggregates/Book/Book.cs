@@ -25,14 +25,14 @@ public class Book : AuditableEntity<Guid>, IAggregateRoot
     public Publisher.Publisher Publisher { get; private set; }
     public DateTimeOffset? LastMetadataUpdate { get; private set; }
     public DateTimeOffset? DeletedDate { get; private set; }
+    public BookFieldLocks FieldLocks { get; private set; }
+    public ICollection<BookTag> Tags { get; set; }
 
     private readonly List<ReadHistory> _readHistory = new ();
     public virtual IReadOnlyCollection<ReadHistory> ReadHistory => _readHistory;
-        
     private readonly List<BookPerson> _people= new();
     public virtual IReadOnlyCollection<BookPerson> People => _people;
-    public ICollection<BookTag> Tags { get; set; }
-    
+
     public Book()
     {
     }
@@ -42,7 +42,7 @@ public class Book : AuditableEntity<Guid>, IAggregateRoot
         Guid libraryId,
         MediaType mediaType,
         string number,
-        BookFile file, 
+        BookFile file,
         Guid? seriesId = null) : base(id)
     {
         LibraryId = libraryId;
@@ -50,6 +50,7 @@ public class Book : AuditableEntity<Guid>, IAggregateRoot
         Number = number;
         File = file;
         SeriesId = seriesId;
+        FieldLocks = new BookFieldLocks(id);
     }
 
     public void Update(

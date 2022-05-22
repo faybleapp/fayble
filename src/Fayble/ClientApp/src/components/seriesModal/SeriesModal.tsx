@@ -71,8 +71,7 @@ export const SeriesModal = ({ series, show, close }: SeriesModalProps) => {
 							<Form>
 								<TextField
 									name="name"
-									label="Name"
-									locked={true}
+									label="Name"									
 									error={
 										formik.touched?.name &&
 										formik.errors?.name
@@ -84,7 +83,7 @@ export const SeriesModal = ({ series, show, close }: SeriesModalProps) => {
 									<Col>
 										<NumberField
 											name="year"
-											label="Year"
+											label="Year"											
 											error={
 												formik.touched.year &&
 												formik.errors.year
@@ -96,7 +95,7 @@ export const SeriesModal = ({ series, show, close }: SeriesModalProps) => {
 									<Col>
 										<TextField
 											name="volume"
-											label="Volume"
+											label="Volume"											
 											error={
 												formik.touched.volume &&
 												formik.errors.volume
@@ -111,7 +110,7 @@ export const SeriesModal = ({ series, show, close }: SeriesModalProps) => {
 										<SelectField
 											name="publisherId"
 											label="Publisher"
-											clearable
+											clearable											
 											searchable
 											value={formik.values.publisherId}
 											onChange={(selectedValue) => {												

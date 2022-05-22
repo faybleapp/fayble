@@ -66,6 +66,7 @@ export interface Book {
     mediaType: string;
     tags: string[] | undefined;
     people: BookPerson[] | undefined;
+    fieldLocks: BookFieldLocks;
     isDeleted: boolean;
 }
 
@@ -116,6 +117,17 @@ export interface Person {
 
 export interface BookPerson extends Person {
     role: string;
+}
+
+export interface BookFieldLocks {
+    title: boolean;
+    summary: boolean;
+    number: boolean;
+    language: boolean;
+    rating: boolean;
+    releaseDate: boolean;
+    coverDate: boolean;
+    tags: boolean;
 }
 
 export interface UpdateBook {

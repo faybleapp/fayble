@@ -17,7 +17,8 @@ public class SeriesRepository : RepositoryBase<FaybleDbContext, Series, Guid>, I
             .ThenInclude(s => s.ReadHistory)
             .Include(s => s.Books)
             .ThenInclude(s => s.File)
-            
+            .Include(s => s.Books)
+            .ThenInclude(b =>b.FieldLocks)
             // TODO: Include when user identity is setup
             //.ThenInclude(s => s.User)
             .Include(s => s.Library)
