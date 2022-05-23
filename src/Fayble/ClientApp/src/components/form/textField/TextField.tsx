@@ -1,8 +1,10 @@
 import cn from "classnames";
+import { FieldLock } from "components/fieldLock";
+import { LockableField } from "models/ui-models";
 import React from "react";
-import { Form } from "react-bootstrap";
+import { Form, InputGroup } from "react-bootstrap";
 
-interface TextFieldProps {
+interface TextFieldProps extends LockableField {
 	name: string;
 	label?: string;
 	className?: string;
@@ -24,19 +26,29 @@ export const TextField = ({
 	placeholder,
 	onChange,
 	onBlur,
+	onLock,
+	locked = false,
 }: TextFieldProps) => {
 	return (
 		<Form.Group className={cn(className, "mb-3")}>
 			{label && <Form.Label>{label}</Form.Label>}
-			<Form.Control
-				name={name}
-				type={secure ? "password" : "text"}
-				isInvalid={!!error}
-				value={value}
-				onBlur={onBlur}
-				onChange={onChange}
-				placeholder={placeholder}
-			/>
+			<InputGroup>
+				<Form.Control
+					name={name}
+					type={secure ? "password" : "text"}
+					isInvalid={!!error}
+					value={value || ""}
+					onBlur={onBlur}
+					onChange={(e: any) => {
+						if (onLock) {
+							onLock(true);
+						}
+						onChange(e);
+					}}
+					placeholder={placeholder}
+				/>
+				{onLock && <FieldLock locked={locked} onClick={onLock} />}
+			</InputGroup>
 			<Form.Control.Feedback type="invalid">
 				{error}
 			</Form.Control.Feedback>

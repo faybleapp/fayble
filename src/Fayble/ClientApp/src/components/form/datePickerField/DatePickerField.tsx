@@ -1,8 +1,10 @@
 import cn from "classnames";
+import { FieldLock } from "components/fieldLock";
+import { LockableField } from "models/ui-models";
 import React from "react";
-import { Form } from "react-bootstrap";
+import { Form, InputGroup } from "react-bootstrap";
 
-interface DatePickerFieldProps {
+interface DatePickerFieldProps extends LockableField {
 	name: string;
 	label: string;
 	className?: string;
@@ -20,18 +22,28 @@ export const DatePickerField = ({
 	value,
 	type,
 	onChange,
-}: DatePickerFieldProps) => {	
+	onLock,
+	locked = false,
+}: DatePickerFieldProps) => {
 	return (
 		<Form.Group className={cn(className, "mb-3")}>
 			<Form.Label>{label}</Form.Label>
-			<Form.Control
-				name={name}
-                max="9999-12-31"                
-				type={type ?? "date"}
-				isInvalid={!!error}
-				value={value}
-				onChange={onChange}
-			/>
+			<InputGroup>
+				<Form.Control
+					name={name}
+					max="9999-12-31"
+					type={type ?? "date"}
+					isInvalid={!!error}
+					value={value || ""}
+					onChange={(e: any) => {
+						if (onLock) {
+							onLock(true);
+						}
+						onChange(e);
+					}}
+				/>
+				{onLock && <FieldLock locked={locked} onClick={onLock} />}
+			</InputGroup>
 			<Form.Control.Feedback type="invalid">
 				{error}
 			</Form.Control.Feedback>

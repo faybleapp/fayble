@@ -14,9 +14,11 @@ public class BookRepository : RepositoryBase<FaybleDbContext, Book, Guid>, IBook
     {
         return Context.Set<Book>()
             .Include(b => b.Series)
+            .ThenInclude(s => s.FieldLocks)
             .Include(b => b.Library)
             .ThenInclude(l => l.Settings)
             .Include(b => b.Tags)
+            .Include(b => b.FieldLocks)
             .Include(b => b.File)
             .Include(b => b.People)
             .ThenInclude(p => p.Person)

@@ -19,7 +19,7 @@ export const BookModal = ({ book, show, close }: BookModalProps) => {
 
 	const formik = useFormik<Book>({
 		initialValues: book,
-		enableReinitialize: true,
+		enableReinitialize: true,		
 		onSubmit: (values: Book) => {
 			updateBook.mutate([values.id, values], {
 				onSuccess: () => {

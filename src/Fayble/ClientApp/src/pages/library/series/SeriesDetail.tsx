@@ -26,7 +26,6 @@ export const SeriesDetail = (props: SeriesDetailProps) => {
 
 	return (
 		<div className={styles.container}>
-
 			<Image
 				className={styles.cover}
 				src={`/api/media?id=${series?.id}&mediaRoot=${series?.mediaRoot}&fileName=${ImageType.CoverSm}`}
@@ -34,9 +33,11 @@ export const SeriesDetail = (props: SeriesDetailProps) => {
 			<div className={styles.detailsPanel}>
 				<div className={styles.detailsTitle}>
 					<h4>{series?.name}</h4>
-
 					<div className={styles.rating}>
-						<StarRating rating={series.rating} onChange={ratingChanged}/>
+						<StarRating
+							rating={series.rating}
+							onChange={ratingChanged}
+						/>
 					</div>
 				</div>
 				<hr />

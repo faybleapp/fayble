@@ -16,7 +16,8 @@ public class
     public string? Language { get; }
     public string? Review { get; }
     public string[] Tags { get; }
-    
+    public BookFieldLocks FieldLocks { get; }
+
     public List<BookPerson> People { get; }
 
     public UpdateBook(
@@ -31,7 +32,8 @@ public class
         string? language,
         string? review,
         string[] tags,
-        List<BookPerson> people)
+        List<BookPerson> people,
+        BookFieldLocks fieldLocks)
     {
         Id = id;
         Notes = notes;
@@ -45,6 +47,7 @@ public class
         Review = review;
         Tags = tags;
         People = people;
+        FieldLocks = fieldLocks;
     }
 
 

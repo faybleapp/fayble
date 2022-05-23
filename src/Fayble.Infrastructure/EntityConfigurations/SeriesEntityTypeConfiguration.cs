@@ -14,6 +14,10 @@ public class SeriesEntityTypeConfiguration : IEntityTypeConfiguration<Series>
             .WithMany()
             .HasForeignKey(e => e.ParentSeriesId);
 
+        builder.HasOne(e => e.FieldLocks)
+            .WithOne()
+            .HasForeignKey<SeriesFieldLocks>(e => e.SeriesId);
+
         builder.HasMany(e => e.Books)
             .WithOne(x => x.Series)
             .HasForeignKey(x => x.SeriesId)

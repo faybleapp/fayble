@@ -66,6 +66,7 @@ export interface Book {
     mediaType: string;
     tags: string[] | undefined;
     people: BookPerson[] | undefined;
+    fieldLocks: BookFieldLocks;
     isDeleted: boolean;
 }
 
@@ -94,6 +95,7 @@ export interface Series {
     locked: boolean;
     mediaRoot: string;
     lastMetadataUpdate: Date | undefined;
+    fieldLocks: SeriesFieldLocks;
 }
 
 export interface Library {
@@ -109,6 +111,15 @@ export interface LibrarySettings {
     useComicInfo: boolean;
 }
 
+export interface SeriesFieldLocks {
+    name: boolean;
+    volume: boolean;
+    summary: boolean;
+    notes: boolean;
+    year: boolean;
+    rating: boolean;
+}
+
 export interface Person {
     id: string | undefined;
     name: string;
@@ -116,6 +127,27 @@ export interface Person {
 
 export interface BookPerson extends Person {
     role: string;
+}
+
+export interface BookFieldLocks {
+    title: boolean;
+    summary: boolean;
+    number: boolean;
+    language: boolean;
+    rating: boolean;
+    releaseDate: boolean;
+    coverDate: boolean;
+    tags: boolean;
+    authors: boolean;
+    writers: boolean;
+    inkers: boolean;
+    editors: boolean;
+    pencillers: boolean;
+    letterers: boolean;
+    colorists: boolean;
+    coverArtists: boolean;
+    translators: boolean;
+    other: boolean;
 }
 
 export interface UpdateBook {
@@ -130,6 +162,7 @@ export interface UpdateBook {
     language: string | undefined;
     review: string | undefined;
     tags: string[];
+    fieldLocks: BookFieldLocks;
     people: BookPerson[];
 }
 

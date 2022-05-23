@@ -1,11 +1,12 @@
-import { SelectFieldOption } from "models/ui-models";
-import React from "react";
-import { Form } from "react-bootstrap";
+import cn from "classnames";
+import { FieldLock } from "components/fieldLock";
+import { LockableField, SelectFieldOption } from "models/ui-models";
+import { Form, InputGroup } from "react-bootstrap";
 import Select, { ActionMeta, MultiValue, StylesConfig } from "react-select";
 import CreatableSelect from "react-select/creatable";
 import styles from "./MultiSelectField.module.scss";
 
-interface SelectFieldProps {
+interface SelectFieldProps extends LockableField {
 	name: string;
 	label: string;
 	className?: string;
@@ -16,7 +17,7 @@ interface SelectFieldProps {
 	value: string[];
 	placeholder?: string;
 	options: SelectFieldOption[] | [];
-	onChange?: (
+	onChange: (
 		options: MultiValue<SelectFieldOption> | null,
 		action: ActionMeta<OptionTypeBase>
 	) => void;
@@ -41,6 +42,8 @@ export const MultiSelectField = ({
 	value,
 	options,
 	onChange,
+	locked = false,
+	onLock,
 }: SelectFieldProps) => {
 	const selectStyle: StylesConfig<OptionTypeBase, boolean> = {
 		control: (provided) => ({
@@ -90,45 +93,56 @@ export const MultiSelectField = ({
 	return (
 		<Form.Group className="mb-3">
 			<Form.Label>{label}</Form.Label>
-			{creatable ? (
-				<CreatableSelect
-					isMulti
-					name={name}
-					isDisabled={disabled}
-					className={className}
-					styles={selectStyle}
-					isClearable={clearable}
-					isSearchable={searchable}
-					defaultValue={null}
-					value={
-						options
-							.filter(
+			<InputGroup>
+				{creatable ? (
+					<CreatableSelect
+						isMulti
+						name={name}
+						isDisabled={disabled}
+						className={cn(className, styles.select, {
+							[styles.lockable]: onLock,
+						})}
+						styles={selectStyle}
+						isClearable={clearable}
+						isSearchable={searchable}
+						defaultValue={null}
+						value={
+							options.filter(
 								(option) => value.indexOf(option.label) >= 0
 							) || []
-					}
-					options={options}
-					onChange={onChange}
-					isValidNewOption={handleIsValidNewOption}
-				/>
-			) : (
-				<Select
-					isMulti
-					name={name}
-					isDisabled={disabled}
-					className={className}
-					styles={selectStyle}
-					isClearable={clearable}
-					isSearchable={searchable}
-					defaultValue={null}
-					value={
-						options.filter(
-							(option) => value.indexOf(option.value) >= 0
-						) || []
-					}
-					options={options}
-					onChange={onChange}
-				/>
-			)}
+						}
+						options={options}
+						onChange={(o: any, a: any) => {
+							if (onLock){
+								onLock(true)
+							}
+							onChange(o, a);
+						}}
+						isValidNewOption={handleIsValidNewOption}
+					/>
+				) : (
+					<Select
+						isMulti
+						name={name}
+						isDisabled={disabled}
+						className={cn(className, styles.select, {
+							[styles.lockable]: onLock,
+						})}
+						styles={selectStyle}
+						isClearable={clearable}
+						isSearchable={searchable}
+						defaultValue={null}
+						value={
+							options.filter(
+								(option) => value.indexOf(option.value) >= 0
+							) || []
+						}
+						options={options}
+						onChange={onChange}
+					/>
+				)}
+				{onLock && <FieldLock locked={locked} onClick={onLock} />}
+			</InputGroup>
 		</Form.Group>
 	);
 };

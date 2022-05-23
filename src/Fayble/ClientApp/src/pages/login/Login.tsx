@@ -57,13 +57,13 @@ export const Login = () => {
 							<TextField
 								className={styles.loginField}
 								name="username"
-								placeholder="Username"
+								placeholder="Username"											
 								value={formik.values.username}
 								onChange={formik.handleChange}
 							/>
 							<TextField
 								className={styles.loginField}
-								name="password"
+								name="password"								
 								placeholder="Password"
 								value={formik.values.password}
 								secure

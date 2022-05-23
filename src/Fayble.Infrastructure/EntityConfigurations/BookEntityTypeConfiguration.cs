@@ -16,6 +16,10 @@ public class BookEntityTypeConfiguration : IEntityTypeConfiguration<Book>
             .HasForeignKey(x => x.SeriesId)
             .OnDelete(DeleteBehavior.Cascade);
 
+        builder.HasOne(e => e.FieldLocks)
+            .WithOne()
+            .HasForeignKey<BookFieldLocks>(e => e.BookId);
+
         builder.HasMany(e => e.ReadHistory)
             .WithOne()
             .HasForeignKey(x => x.BookId);

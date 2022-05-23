@@ -59,3 +59,8 @@ export interface HorizontalListItem {
 	image: string;
 	link: string;
 }
+
+export interface LockableField {	
+	locked?: boolean;	
+	onLock?: (locked: boolean) => void;
+}

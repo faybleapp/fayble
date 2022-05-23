@@ -11,8 +11,9 @@ export const SeriesCoverGrid = ({ items }: SeriesCoverGridProps) => {
 			{items &&
 				items.map((item) => {
 					return (
-						<>
+						
 							<CoverItem
+								key={item.id}
 								item={item}
 								title={item.name || "Untitled"}
 								firstSubtitle={`Volume ${
@@ -21,7 +22,7 @@ export const SeriesCoverGrid = ({ items }: SeriesCoverGridProps) => {
 								secondSubtitle={`${item.bookCount} Issues`}
 								link={`/library/${item.library?.id}/series/${item.id}`}
 							/>							
-						</>
+						
 					);
 				})}
 		</div>
