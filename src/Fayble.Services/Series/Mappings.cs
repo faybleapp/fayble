@@ -1,4 +1,5 @@
 ﻿
+using Fayble.Models.Series;
 using Fayble.Services.Library;
 using Fayble.Services.Publisher;
 
@@ -23,7 +24,18 @@ public static class Mappings
             entity.MediaRoot,
             entity.Library.ToModel(),
             userId != null && entity.IsRead((Guid)userId),
-            entity.Locked);
+            entity.Locked, entity.FieldLocks.ToModel());
+    }
+
+    public static SeriesFieldLocks ToModel(this Domain.Aggregates.Series.SeriesFieldLocks entity)
+    {
+        return new SeriesFieldLocks(
+            entity.Name,
+            entity.Volume,
+            entity.Summary,
+            entity.Notes,
+            entity.Year,
+            entity.Rating);
     }
 }
 

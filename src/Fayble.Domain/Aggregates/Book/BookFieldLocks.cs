@@ -14,6 +14,16 @@ public class BookFieldLocks
     public bool ReleaseDate { get; private set; } = false;
     public bool CoverDate { get; private set; } = false;
     public bool Tags { get; private set; } = false;
+    public bool Authors { get; private set; } = false;
+    public bool Writers { get; private set; } = false;
+    public bool Inkers { get; private set; } = false;
+    public bool Editors { get; private set; } = false;
+    public bool Pencillers { get; private set; } = false;
+    public bool Letterers { get; private set; } = false;
+    public bool Colorists { get; private set; } = false;
+    public bool CoverArtists { get; private set; } = false;
+    public bool Translators { get; private set; } = false;
+    public bool Other { get; private set; } = false;
 
 
     public BookFieldLocks() { }
@@ -22,9 +32,7 @@ public class BookFieldLocks
     {
         BookId = bookId;
     }
-
     
-
     public void UpdateLock(string field, bool locked)
     {
         var property = GetType().GetProperty(field);

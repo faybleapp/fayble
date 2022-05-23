@@ -155,6 +155,11 @@ public class Book : AuditableEntity<Guid>, IAggregateRoot
         // return _readHistory.Any(x => x.UserId == userId);
     }
 
+    public void UpdateFieldLock(string field, bool locked)
+    {
+        FieldLocks.UpdateLock(field, locked);
+    }
+
     private void UpdatePeople(BookPerson[] people)
     {
         var updatedIds = people.Select(c => c.PersonId).ToArray();

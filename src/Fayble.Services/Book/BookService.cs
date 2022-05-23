@@ -58,6 +58,12 @@ public class BookService : IBookService
             tags, 
             people);
 
+
+        foreach (var fieldLockProperty in book.FieldLocks.GetType().GetProperties())
+        {
+            entity.UpdateFieldLock(fieldLockProperty.Name, (bool) fieldLockProperty.GetValue(book.FieldLocks)!);
+        }
+
         await _unitOfWork.Commit();
 
         await CleanTags();

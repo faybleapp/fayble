@@ -51,6 +51,10 @@ export const BookPeopleTab = ({ book, formik }: BookPeopleTabProps) => {
 					name="writers"
 					creatable
 					clearable
+					locked={formik.values.fieldLocks.writers}
+					onLock={(lock: boolean) =>
+						formik.setFieldValue("fieldLocks.writers", lock)
+					}
 					value={
 						formik.values.people
 							?.filter(
@@ -68,6 +72,10 @@ export const BookPeopleTab = ({ book, formik }: BookPeopleTabProps) => {
 					name="inkers"
 					creatable
 					clearable
+					locked={formik.values.fieldLocks.inkers}
+					onLock={(lock: boolean) =>
+						formik.setFieldValue("fieldLocks.inkers", lock)
+					}
 					value={
 						formik.values.people
 							?.filter((person) => person.role === RoleType.Inker)
@@ -83,6 +91,10 @@ export const BookPeopleTab = ({ book, formik }: BookPeopleTabProps) => {
 					name="editors"
 					creatable
 					clearable
+					locked={formik.values.fieldLocks.editors}
+					onLock={(lock: boolean) =>
+						formik.setFieldValue("fieldLocks.editors", lock)
+					}
 					value={
 						formik.values.people
 							?.filter(
@@ -100,6 +112,10 @@ export const BookPeopleTab = ({ book, formik }: BookPeopleTabProps) => {
 					name="pencillers"
 					creatable
 					clearable
+					locked={formik.values.fieldLocks.pencillers}
+					onLock={(lock: boolean) =>
+						formik.setFieldValue("fieldLocks.pencillers", lock)
+					}
 					value={
 						formik.values.people
 							?.filter(
@@ -117,6 +133,10 @@ export const BookPeopleTab = ({ book, formik }: BookPeopleTabProps) => {
 					name="letterers"
 					creatable
 					clearable
+					locked={formik.values.fieldLocks.letterers}
+					onLock={(lock: boolean) =>
+						formik.setFieldValue("fieldLocks.letterers", lock)
+					}
 					value={
 						formik.values.people
 							?.filter(
@@ -131,9 +151,13 @@ export const BookPeopleTab = ({ book, formik }: BookPeopleTabProps) => {
 					options={peopleOptions}
 				/>
 				<MultiSelectField
-					name="colorist"
+					name="colorists"
 					creatable
 					clearable
+					locked={formik.values.fieldLocks.colorists}
+					onLock={(lock: boolean) =>
+						formik.setFieldValue("fieldLocks.colorists", lock)
+					}
 					value={
 						formik.values.people
 							?.filter(
@@ -148,9 +172,13 @@ export const BookPeopleTab = ({ book, formik }: BookPeopleTabProps) => {
 					options={peopleOptions}
 				/>
 				<MultiSelectField
-					name="coverArtist"
+					name="coverArtists"
 					creatable
 					clearable
+					locked={formik.values.fieldLocks.coverArtists}
+					onLock={(lock: boolean) =>
+						formik.setFieldValue("fieldLocks.coverArtists", lock)
+					}
 					value={
 						formik.values.people
 							?.filter(
@@ -158,7 +186,7 @@ export const BookPeopleTab = ({ book, formik }: BookPeopleTabProps) => {
 							)
 							.map((person) => person.name) || []
 					}
-					label="Cover Artist"
+					label="Cover Artists"
 					onChange={(selectedValues) => {
 						onChange(RoleType.CoverArtist, selectedValues);
 					}}
@@ -168,6 +196,10 @@ export const BookPeopleTab = ({ book, formik }: BookPeopleTabProps) => {
 					name="other"
 					creatable
 					clearable
+					locked={formik.values.fieldLocks.other}
+					onLock={(lock: boolean) =>
+						formik.setFieldValue("fieldLocks.other", lock)
+					}
 					value={
 						formik.values.people
 							?.filter((person) => person.role === RoleType.Other)

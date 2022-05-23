@@ -32,21 +32,30 @@ public static class Mappings
             entity.DeletedDate != null,
             entity.MediaRoot,
             entity.People?.Select(p => p.ToModel()),
-            entity.FieldLocks.ToModel()
-            );
+            entity.FieldLocks.ToModel());
     }
 
     public static BookFieldLocks ToModel(this Domain.Aggregates.Book.BookFieldLocks entity)
     {
         return new BookFieldLocks(
-            entity.CoverDate,
-            entity.Language,
+            entity.Title,
+            entity.Summary,
             entity.Number,
+            entity.Language,
             entity.Rating,
             entity.ReleaseDate,
-            entity.Summary,
-            entity.Title, 
-            entity.Tags);
+            entity.CoverDate, 
+            entity.Tags, 
+            entity.Authors,
+            entity.Writers,
+            entity.Inkers,
+            entity.Editors,
+            entity.Pencillers,
+            entity.Letterers,
+            entity.Colorists,
+            entity.CoverArtists,
+            entity.Translators,
+            entity.Other);
     }
 
     private static BookPerson ToModel(this Domain.Aggregates.BookPerson entity)

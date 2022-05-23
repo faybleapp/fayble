@@ -5,38 +5,23 @@ namespace Fayble.Models.Series;
 public class Series
 {
     public Guid Id { get;  }
-
     public string? Name { get;  }
-
     public string? Volume { get;  }
-
     public string? Summary { get; }
-
     public string? Notes { get; }
-
     public int? Year { get; }
-
     public int? BookCount { get; }
-
     public Guid? ParentSeriesId { get; }
-
     public Series? ParentSeries { get; }
-
     public Guid? PublisherId { get; }
-
     public Publisher? Publisher { get; }
-
     public decimal Rating { get; }
-
     public Library.Library? Library { get; }
-
     public bool Read { get; }
-    
     public bool Locked { get; }
-
     public string MediaRoot { get; }
-    
     public DateTimeOffset? LastMetadataUpdate { get; }
+    public SeriesFieldLocks FieldLocks { get; }
 
     public Series(
         Guid id,
@@ -54,7 +39,8 @@ public class Series
         string mediaRoot,
         Library.Library? library,
         bool read,
-        bool locked)
+        bool locked, 
+        SeriesFieldLocks fieldLocks)
     {
         Id = id;
         Name = name;
@@ -72,5 +58,6 @@ public class Series
         Read = read;
         MediaRoot = mediaRoot;
         Locked = locked;
+        FieldLocks = fieldLocks;
     }
 }

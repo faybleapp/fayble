@@ -18,13 +18,14 @@ public class SeriesRepository : RepositoryBase<FaybleDbContext, Series, Guid>, I
             .Include(s => s.Books)
             .ThenInclude(s => s.File)
             .Include(s => s.Books)
-            .ThenInclude(b =>b.FieldLocks)
+            .ThenInclude(b => b.FieldLocks)
             // TODO: Include when user identity is setup
             //.ThenInclude(s => s.User)
             .Include(s => s.Library)
             .ThenInclude(l => l.Settings)
             .Include(s => s.Library)
             .Include(s => s.ParentSeries)
-            .Include(s => s.Publisher);
+            .Include(s => s.Publisher)
+            .Include(s => s.FieldLocks);
     }
 }
