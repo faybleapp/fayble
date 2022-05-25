@@ -269,6 +269,8 @@ CREATE TABLE "SeriesFieldLocks" (
     "Notes" INTEGER NOT NULL,
     "Year" INTEGER NOT NULL,
     "Rating" INTEGER NOT NULL,
+    "PublisherId" INTEGER NOT NULL,
+    "ParentSeriesId" INTEGER NOT NULL,
     CONSTRAINT "FK_SeriesFieldLocks_Series_SeriesId" FOREIGN KEY ("SeriesId") REFERENCES "Series" ("Id") ON DELETE CASCADE
 );
 

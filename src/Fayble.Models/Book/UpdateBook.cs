@@ -17,7 +17,6 @@ public class
     public string? Review { get; }
     public string[] Tags { get; }
     public BookFieldLocks FieldLocks { get; }
-
     public List<BookPerson> People { get; }
 
     public UpdateBook(

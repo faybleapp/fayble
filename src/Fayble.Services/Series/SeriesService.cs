@@ -58,6 +58,11 @@ public class SeriesService : ISeriesService
             series.PublisherId,
             series.ParentSeriesId);
 
+        foreach (var fieldLockProperty in series.FieldLocks.GetType().GetProperties())
+        {
+            entity.UpdateFieldLock(fieldLockProperty.Name, (bool)fieldLockProperty.GetValue(series.FieldLocks)!);
+        }
+
         await _unitOfWork.Commit();
 
         return entity.ToModel();

@@ -8,7 +8,6 @@ interface NumberFieldProps {
 	className?: string;
 	error?: string | false | undefined;
 	value?: number;
-	lockable?: boolean;
 	locked?: boolean;
 	onLock?: (locked: boolean) => void;
 	onChange: (event: React.ChangeEvent<unknown>) => void;
@@ -20,7 +19,6 @@ export const NumberField = ({
 	className,
 	error,
 	value,
-	lockable = false,
 	locked = false,
 	onChange,
 	onLock,
@@ -34,14 +32,14 @@ export const NumberField = ({
 					type="number"
 					isInvalid={!!error}
 					value={value}
-					onChange={onChange}
+					onChange={(e: any) => {
+						if (onLock) {
+							onLock(true);
+						}
+						onChange(e);
+					}}
 				/>
-				{lockable && onLock && (
-					<FieldLock
-						locked={locked}
-						onClick={onLock}
-					/>
-				)}
+				{onLock && <FieldLock locked={locked} onClick={onLock} />}
 			</InputGroup>
 			<Form.Control.Feedback type="invalid">
 				{error}

@@ -35,7 +35,9 @@ public static class Mappings
             entity.Summary,
             entity.Notes,
             entity.Year,
-            entity.Rating);
+            entity.Rating,
+            entity.PublisherId, 
+            entity.ParentSeriesId);
     }
 }
 

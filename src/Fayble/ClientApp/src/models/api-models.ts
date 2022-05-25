@@ -118,6 +118,8 @@ export interface SeriesFieldLocks {
     notes: boolean;
     year: boolean;
     rating: boolean;
+    publisherId: boolean;
+    parentSeriesId: boolean;
 }
 
 export interface Person {
@@ -185,6 +187,7 @@ export interface UpdateSeries {
     rating: number;
     publisherId: string | undefined;
     parentSeriesId: string | undefined;
+    fieldLocks: SeriesFieldLocks;
 }
 
 export interface FirstRun {

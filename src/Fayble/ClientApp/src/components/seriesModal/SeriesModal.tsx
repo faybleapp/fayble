@@ -71,7 +71,14 @@ export const SeriesModal = ({ series, show, close }: SeriesModalProps) => {
 							<Form>
 								<TextField
 									name="name"
-									label="Name"									
+									label="Name"
+									locked={formik.values.fieldLocks.name}
+									onLock={(lock: boolean) =>
+										formik.setFieldValue(
+											"fieldLocks.name",
+											lock
+										)
+									}
 									error={
 										formik.touched?.name &&
 										formik.errors?.name
@@ -83,7 +90,16 @@ export const SeriesModal = ({ series, show, close }: SeriesModalProps) => {
 									<Col>
 										<NumberField
 											name="year"
-											label="Year"											
+											label="Year"
+											locked={
+												formik.values.fieldLocks.year
+											}
+											onLock={(lock: boolean) =>
+												formik.setFieldValue(
+													"fieldLocks.year",
+													lock
+												)
+											}
 											error={
 												formik.touched.year &&
 												formik.errors.year
@@ -95,7 +111,16 @@ export const SeriesModal = ({ series, show, close }: SeriesModalProps) => {
 									<Col>
 										<TextField
 											name="volume"
-											label="Volume"											
+											label="Volume"
+											locked={
+												formik.values.fieldLocks.volume
+											}
+											onLock={(lock: boolean) =>
+												formik.setFieldValue(
+													"fieldLocks.volume",
+													lock
+												)
+											}
 											error={
 												formik.touched.volume &&
 												formik.errors.volume
@@ -110,10 +135,20 @@ export const SeriesModal = ({ series, show, close }: SeriesModalProps) => {
 										<SelectField
 											name="publisherId"
 											label="Publisher"
-											clearable											
+											clearable
 											searchable
 											value={formik.values.publisherId}
-											onChange={(selectedValue) => {												
+											locked={
+												formik.values.fieldLocks
+													.publisherId
+											}
+											onLock={(lock: boolean) =>
+												formik.setFieldValue(
+													"fieldLocks.publisherId",
+													lock
+												)
+											}
+											onChange={(selectedValue) => {
 												formik.setFieldValue(
 													"publisherId",
 													selectedValue as string
@@ -131,11 +166,21 @@ export const SeriesModal = ({ series, show, close }: SeriesModalProps) => {
 									</Col>
 									<Col>
 										<SelectField
-											name="parentSeries"
+											name="parentSeriesId"
 											label="Parent Series"
 											clearable
 											searchable
 											value={formik.values.parentSeriesId}
+											locked={
+												formik.values.fieldLocks
+													.parentSeriesId
+											}
+											onLock={(lock: boolean) =>
+												formik.setFieldValue(
+													"fieldLocks.parentSeriesId",
+													lock
+												)
+											}
 											onChange={(selectedOption) =>
 												formik.setFieldValue(
 													"parentSeriesId",
@@ -160,6 +205,15 @@ export const SeriesModal = ({ series, show, close }: SeriesModalProps) => {
 										name="summary"
 										label="Summary"
 										rows={3}
+										locked={
+											formik.values.fieldLocks.summary
+										}
+										onLock={(lock: boolean) =>
+											formik.setFieldValue(
+												"fieldLocks.summary",
+												lock
+											)
+										}
 										error={
 											formik.touched.summary &&
 											formik.errors.summary
@@ -171,6 +225,13 @@ export const SeriesModal = ({ series, show, close }: SeriesModalProps) => {
 										name="notes"
 										label="Notes"
 										rows={3}
+										locked={formik.values.fieldLocks.notes}
+										onLock={(lock: boolean) =>
+											formik.setFieldValue(
+												"fieldLocks.notes",
+												lock
+											)
+										}
 										error={
 											formik.touched.notes &&
 											formik.errors.notes
@@ -187,31 +248,29 @@ export const SeriesModal = ({ series, show, close }: SeriesModalProps) => {
 				</ModalTabs>
 			</Modal.Body>
 			<Modal.Footer>
-				
-					<Button variant="secondary" onClick={close}>
-						Close
-					</Button>
-					<Button
-						variant="primary"
-						onClick={formik.submitForm}
-						disabled={updateSeries.isLoading || !formik.dirty}>
-						{updateSeries.isLoading ? (
-							<>
-								<Spinner
-									className={styles.spinner}
-									as="span"
-									animation="border"
-									size="sm"
-									role="status"
-									aria-hidden="true"
-								/>
-								Saving...
-							</>
-						) : (
-							"Save Changes"
-						)}
-					</Button>
-			
+				<Button variant="secondary" onClick={close}>
+					Close
+				</Button>
+				<Button
+					variant="primary"
+					onClick={formik.submitForm}
+					disabled={updateSeries.isLoading || !formik.dirty}>
+					{updateSeries.isLoading ? (
+						<>
+							<Spinner
+								className={styles.spinner}
+								as="span"
+								animation="border"
+								size="sm"
+								role="status"
+								aria-hidden="true"
+							/>
+							Saving...
+						</>
+					) : (
+						"Save Changes"
+					)}
+				</Button>
 			</Modal.Footer>
 		</Modal>
 	);

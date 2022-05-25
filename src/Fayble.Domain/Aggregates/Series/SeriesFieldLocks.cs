@@ -10,7 +10,8 @@ namespace Fayble.Domain.Aggregates.Series
         public bool Notes { get; private set; }
         public bool Year { get; private set; }
         public bool Rating { get; private set; }
-
+        public bool PublisherId { get; private set; }
+        public bool ParentSeriesId { get; private set; }
 
         public SeriesFieldLocks() { }
 
