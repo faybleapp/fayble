@@ -109,6 +109,7 @@ export interface Library {
 export interface LibrarySettings {
     reviewOnImport: boolean;
     useComicInfo: boolean;
+    yearAsVolume: boolean;
 }
 
 export interface SeriesFieldLocks {

@@ -1,4 +1,4 @@
-﻿using System.Globalization;
+using System.Globalization;
 using Fayble.Core.Helpers;
 using Fayble.Domain;
 using Fayble.Domain.Aggregates;
@@ -167,7 +167,7 @@ public class ScannerService : IScannerService
                     _comicBookFileSystemService.GetHash(file.FullName),
                     _comicBookFileSystemService.GetPageCount(file.FullName));
 
-                if (Convert.ToBoolean(series.Library.GetSetting(LibrarySettingKey.UseComicInfo)))
+                if (series.Library.GetSetting<bool>(LibrarySettingKey.UseComicInfo))
                 {
                     await UpdateFromComicInfo(book, file.FullName);
                 }
@@ -217,7 +217,7 @@ public class ScannerService : IScannerService
 
             book.SetMediaRoot(ApplicationHelpers.GetMediaDirectoryRoot(book.Id));
 
-            if (Convert.ToBoolean(series.Library.GetSetting(LibrarySettingKey.UseComicInfo)))
+            if (series.Library.GetSetting<bool>(LibrarySettingKey.UseComicInfo))
             {
                 await UpdateFromComicInfo(book, newFile.FilePath);
             }
@@ -412,11 +412,13 @@ public class ScannerService : IScannerService
         var relativeSeriesPath = PathHelpers.GetRelativePath(seriesPath, library.FolderPath);
         var seriesName = ComicBookHelpers.ParseSeriesDirectory(new DirectoryInfo(seriesPath).Name);
         var seriesYear = ComicBookHelpers.ParseYear(seriesPath!);
+        var volume = library.GetSetting<bool>(LibrarySettingKey.YearAsVolume) ? seriesYear?.ToString() : null;
 
         var series = new Domain.Aggregates.Series.Series(
             Guid.NewGuid(),
             seriesName,
             seriesYear,
+            volume,
             library.Id,
             new DirectoryInfo(seriesPath).Name,
             relativeSeriesPath);

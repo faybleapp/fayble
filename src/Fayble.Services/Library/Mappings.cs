@@ -13,8 +13,9 @@ internal static class Mappings
             entity.Type.ToString(),
             entity.FolderPath,
             new LibrarySettings(
-                bool.Parse(entity.GetSetting(LibrarySettingKey.ReviewOnImport)),
-                bool.Parse(entity.GetSetting(LibrarySettingKey.UseComicInfo))));
+                entity.GetSetting<bool>(LibrarySettingKey.ReviewOnImport),
+                entity.GetSetting<bool>(LibrarySettingKey.UseComicInfo),
+                entity.GetSetting<bool>(LibrarySettingKey.YearAsVolume)));
     }
 
     public static IEnumerable<LibrarySetting> ToEntity(this LibrarySettings settings)
@@ -22,7 +23,8 @@ internal static class Mappings
         var librarySettings = new List<LibrarySetting>
         {
             new(LibrarySettingKey.ReviewOnImport, settings.ReviewOnImport.ToString()),
-            new(LibrarySettingKey.UseComicInfo, settings.UseComicInfo.ToString())
+            new(LibrarySettingKey.UseComicInfo, settings.UseComicInfo.ToString()),
+            new(LibrarySettingKey.YearAsVolume, settings.YearAsVolume.ToString())
         };
 
         return librarySettings;

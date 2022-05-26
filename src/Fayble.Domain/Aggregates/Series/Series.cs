@@ -32,13 +32,14 @@ public class Series : AuditableEntity<Guid>, IAggregateRoot
     {
     }
 
-    public Series(Guid id, string name, int? year, Guid libraryId, string folderName, string folderPath) : base(id)
+    public Series(Guid id, string name, int? year, string volume, Guid libraryId, string folderName, string folderPath) : base(id)
     {
         Guard.AgainstNullOrWhitespace(name, nameof(Name));
 
         Name = name;
         Year = year;
         LibraryId = libraryId;
+        Volume = volume;
         Locked = false;
         FolderPath = folderPath;
         FolderName = folderName;
