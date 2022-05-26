@@ -4,5 +4,6 @@ public enum LibrarySettingKey
 {
     ReviewOnImport,
     HashFiles,
-    UseComicInfo
+    UseComicInfo,
+    YearAsVolume
 }

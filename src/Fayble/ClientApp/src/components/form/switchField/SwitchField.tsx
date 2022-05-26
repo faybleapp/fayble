@@ -18,7 +18,7 @@ export const SwitchField = ({
 }: SwitchFieldProps) => {
 	return (		
 			<Form.Check
-				type="checkbox"
+				type="switch"
                 checked={value}
                 onChange={onChange}
 				name={name}

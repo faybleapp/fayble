@@ -20,7 +20,7 @@ const initialLibraryState: Library = {
 	name: "",
 	libraryType: "ComicBook",
 	folderPath: "",
-	settings: { reviewOnImport: true, useComicInfo: false },
+	settings: { reviewOnImport: false, useComicInfo: false, yearAsVolume: false },
 };
 
 export const LibraryModal = ({ show, library, close }: LibraryModalProps) => {

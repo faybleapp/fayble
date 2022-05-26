@@ -58,7 +58,6 @@ public class LibraryService : ILibraryService
                 libraryEntity.Name,
                 libraryEntity.Type,
                 libraryEntity.FolderPath
-                
             });
 
         _logger.LogInformation("Created library: {LibraryName}", library.Name);

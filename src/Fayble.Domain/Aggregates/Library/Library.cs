@@ -47,8 +47,8 @@ public class Library : AuditableEntity<Guid>, IAggregateRoot
         librarySetting.Update(value);
     }
 
-    public string GetSetting(LibrarySettingKey setting)
+    public T GetSetting<T>(LibrarySettingKey setting)
     {
-        return _settings.First(s => s.Setting == setting).Value;
+        return (T)Convert.ChangeType(_settings.First(s => s.Setting == setting).Value, typeof(T));
     }
 }
