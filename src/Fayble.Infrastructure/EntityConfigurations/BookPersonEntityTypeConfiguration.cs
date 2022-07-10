@@ -1,5 +1,4 @@
-﻿using Fayble.Domain.Aggregates;
-using Fayble.Domain.Aggregates.Book;
+﻿using Fayble.Domain.Aggregates.Book;
 using Fayble.Domain.Aggregates.Person;
 using Fayble.Domain.Enums;
 using Microsoft.EntityFrameworkCore;

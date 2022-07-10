@@ -26,7 +26,8 @@ public class Book : AuditableEntity<Guid>, IAggregateRoot
     public DateTimeOffset? LastMetadataUpdate { get; private set; }
     public DateTimeOffset? DeletedDate { get; private set; }
     public BookFieldLocks FieldLocks { get; private set; }
-    public ICollection<BookTag> Tags { get; set; }
+
+    public ICollection<BookTag> Tags { get; private set; }
 
     private readonly List<ReadHistory> _readHistory = new ();
     public virtual IReadOnlyCollection<ReadHistory> ReadHistory => _readHistory;
@@ -75,7 +76,7 @@ public class Book : AuditableEntity<Guid>, IAggregateRoot
         
         if (people != null)
         {
-            UpdatePeople(people?.ToArray());    
+            UpdatePeople(people.ToArray());    
         }
         
     }

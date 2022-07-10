@@ -1,6 +1,6 @@
 ﻿namespace Fayble.Domain.Entities;
 
-public interface IAuditable
+public interface IAuditableEntity
 {
     DateTimeOffset CreatedDate { get; }
     Guid CreatedBy { get; }
@@ -11,7 +11,7 @@ public interface IAuditable
     void SetCreated(Guid createdBy, DateTimeOffset created);
 }
 
-public abstract class AuditableEntity<T> : IdentifiableEntity<T>, IAuditable
+public abstract class AuditableEntity<T> : IdentifiableEntity<T>, IAuditableEntity
 {
     protected AuditableEntity()
     {

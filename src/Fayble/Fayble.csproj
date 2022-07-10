@@ -50,8 +50,7 @@
     <Content Include="ClientApp\tsconfig.json" />
   </ItemGroup>
 
-  <ItemGroup>    
-    <ProjectReference Include="..\Fayble.BackgroundServices\Fayble.BackgroundServices.csproj" />
+  <ItemGroup>
     <ProjectReference Include="..\Fayble.Core\Fayble.Core.csproj" />
     <ProjectReference Include="..\Fayble.Database\Fayble.Database.csproj" />
     <ProjectReference Include="..\Fayble.Models\Fayble.Models.csproj" />

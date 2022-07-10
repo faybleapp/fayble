@@ -1,13 +1,13 @@
 ﻿using Fayble.Domain.Aggregates.Person;
 
-namespace Fayble.Domain.Aggregates;
+namespace Fayble.Domain.Aggregates.Book;
 
 public class BookPerson
 {
     public Guid BookId { get; set; }
 
     public Guid PersonId { get; set; }
-    public Book.Book Book { get; set; }
+    public Book Book { get; set; }
     public Person.Person Person { get; set; }
     public RoleType Role { get; set; }
 
@@ -17,5 +17,4 @@ public class BookPerson
         PersonId = personId;
         Role = role;
     }
-    
 }

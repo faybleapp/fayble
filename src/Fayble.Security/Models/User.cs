@@ -9,9 +9,9 @@ public class User : IUser
     public string Username { get; set; }
     public string? Role { get; set; }
 
-    public User(IHttpContextAccessor _httpContextAccessor)
+    public User(IHttpContextAccessor httpContextAccessor)
     {
-        var principal = _httpContextAccessor.HttpContext?.User;
+        var principal = httpContextAccessor.HttpContext?.User;
 
         if (principal?.Identity?.Name == null)
         {

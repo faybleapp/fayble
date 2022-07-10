@@ -66,19 +66,19 @@ public class FaybleDbContext : IdentityDbContext<User, UserRole, Guid>, IFaybleD
         var entries = ChangeTracker
             .Entries()
             .Where(
-                e => e.Entity is IAuditable && (
+                e => e.Entity is IAuditableEntity && (
                     e.State == EntityState.Added
                     || e.State == EntityState.Modified));
 
 
         foreach (var entityEntry in entries)
         {
-            if (entityEntry.Entity is IAuditable lastModified)
+            if (entityEntry.Entity is IAuditableEntity lastModified)
                 lastModified.SetLastModified(_userIdentity.Id, DateTime.UtcNow);
 
             if (entityEntry.State != EntityState.Added) continue;
 
-            if (entityEntry.Entity is IAuditable entity) entity.SetCreated(_userIdentity.Id, DateTime.UtcNow);
+            if (entityEntry.Entity is IAuditableEntity entity) entity.SetCreated(_userIdentity.Id, DateTime.UtcNow);
         }
     }
 

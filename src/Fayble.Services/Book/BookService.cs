@@ -7,7 +7,6 @@ using Fayble.Domain.Enums;
 using Fayble.Domain.Repositories;
 using Fayble.Models.Book;
 using Microsoft.Extensions.Logging;
-using BookPerson = Fayble.Domain.Aggregates.BookPerson;
 
 namespace Fayble.Services.Book;
 
@@ -123,9 +122,9 @@ public class BookService : IBookService
         return relatedBooks;
     }
 
-    private async Task<IEnumerable<BookPerson>> UpdatePeople(UpdateBook book)
+    private async Task<IEnumerable<Domain.Aggregates.Book.BookPerson>> UpdatePeople(UpdateBook book)
     {
-        var people = new List<BookPerson>();
+        var people = new List<Domain.Aggregates.Book.BookPerson>();
 
         foreach (var person in book.People)
         {
@@ -136,7 +135,7 @@ public class BookService : IBookService
                 await _unitOfWork.Commit();
             }
 
-            people.Add(new BookPerson(book.Id, personEntity.Id, Enum.Parse<RoleType>(person.Role)));
+            people.Add(new Domain.Aggregates.Book.BookPerson(book.Id, personEntity.Id, Enum.Parse<RoleType>(person.Role)));
         }
 
         return people;

@@ -22,7 +22,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Fayble.Domain\Fayble.Domain.csproj" />
+    <ProjectReference Include="..\..\src\Fayble.Domain\Fayble.Domain.csproj" />
   </ItemGroup>
 
 </Project>

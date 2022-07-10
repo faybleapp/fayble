@@ -1,7 +1,10 @@
-﻿using Fayble.Models.Book;
+﻿using Fayble.Domain.Aggregates.Book;
+using Fayble.Models.Book;
 using Fayble.Services.Library;
 using Fayble.Services.Publisher;
 using Fayble.Services.Series;
+using BookFieldLocks = Fayble.Models.Book.BookFieldLocks;
+using BookPerson = Fayble.Models.Book.BookPerson;
 
 namespace Fayble.Services.Book;
 
@@ -58,7 +61,7 @@ public static class Mappings
             entity.Other);
     }
 
-    private static BookPerson ToModel(this Domain.Aggregates.BookPerson entity)
+    private static BookPerson ToModel(this Domain.Aggregates.Book.BookPerson entity)
     {
         return new BookPerson(entity.PersonId, entity.Person.Name, entity.Role.ToString());
     }
