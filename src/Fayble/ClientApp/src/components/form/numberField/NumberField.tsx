@@ -4,11 +4,12 @@ import { Form, InputGroup } from "react-bootstrap";
 
 interface NumberFieldProps {
 	name: string;
-	label: string;
+	label?: string;
 	className?: string;
 	error?: string | false | undefined;
 	value?: number;
 	locked?: boolean;
+	placeholder?: string;
 	onLock?: (locked: boolean) => void;
 	onChange: (event: React.ChangeEvent<unknown>) => void;
 }
@@ -20,18 +21,20 @@ export const NumberField = ({
 	error,
 	value,
 	locked = false,
+	placeholder,
 	onChange,
 	onLock,
 }: NumberFieldProps) => {
 	return (
 		<Form.Group className={className}>
-			<Form.Label>{label}</Form.Label>
+			{label && <Form.Label>{label}</Form.Label>}
 			<InputGroup>
 				<Form.Control
 					name={name}
 					type="number"
 					isInvalid={!!error}
 					value={value}
+					placeholder={placeholder}
 					onChange={(e: any) => {
 						if (onLock) {
 							onLock(true);

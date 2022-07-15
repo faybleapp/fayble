@@ -178,6 +178,17 @@ export interface RelatedBooks {
     booksReleasedSameYear: Book[] | undefined;
 }
 
+export interface SeriesSearchResult {
+    id: string;
+    name: string | undefined;
+    summary: string | undefined;
+    startYear: number | undefined;
+    publisher: string | undefined;
+    issueCount: number;
+    image: string | undefined;
+    levenshteinDistance: number;
+}
+
 export interface UpdateSeries {
     id: string;
     name: string | undefined;

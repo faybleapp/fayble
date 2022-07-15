@@ -52,6 +52,11 @@ export interface SelectFieldOption {
 	label: string;
 }
 
+export interface MetadataSearchQuery {
+	name: string;
+	year?: number
+}
+
 export interface HorizontalListItem {
 	id: string;
 	title: string;

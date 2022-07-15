@@ -9,8 +9,7 @@ import { Col, Container, Form, Row } from "react-bootstrap";
 import { useBookTags } from "services/tag";
 import { TextAreaField } from "textAreaField";
 
-interface BookDetailsTabProps {
-	book: Book;
+interface BookDetailsTabProps {	
 	formik: FormikProps<Book>;
 }
 

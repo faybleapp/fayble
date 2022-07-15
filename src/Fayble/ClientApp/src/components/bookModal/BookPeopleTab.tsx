@@ -6,11 +6,10 @@ import { Container, Form } from "react-bootstrap";
 import { MultiValue } from "react-select";
 import { usePeople } from "services/person";
 interface BookPeopleTabProps {
-	book: Book;
 	formik: FormikProps<Book>;
 }
 
-export const BookPeopleTab = ({ book, formik }: BookPeopleTabProps) => {
+export const BookPeopleTab = ({ formik }: BookPeopleTabProps) => {
 	var people = usePeople();
 	var peopleOptions =
 		Array.from(

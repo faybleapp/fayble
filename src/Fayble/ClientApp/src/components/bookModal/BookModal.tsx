@@ -19,7 +19,7 @@ export const BookModal = ({ book, show, close }: BookModalProps) => {
 
 	const formik = useFormik<Book>({
 		initialValues: book,
-		enableReinitialize: true,		
+		enableReinitialize: true,
 		onSubmit: (values: Book) => {
 			updateBook.mutate([values.id, values], {
 				onSuccess: () => {
@@ -42,10 +42,10 @@ export const BookModal = ({ book, show, close }: BookModalProps) => {
 			<Modal.Body>
 				<ModalTabs defaultActiveKey="details">
 					<Tab eventKey="details" title="Details">
-						<BookDetailsTab book={book} formik={formik} />
+						<BookDetailsTab formik={formik} />
 					</Tab>
 					<Tab eventKey="people" title="People">
-						<BookPeopleTab book={book} formik={formik} />
+						<BookPeopleTab formik={formik} />
 					</Tab>
 					<Tab eventKey="metadata" title="Metadata"></Tab>
 					<Tab eventKey="fileInfo" title="File Info">
