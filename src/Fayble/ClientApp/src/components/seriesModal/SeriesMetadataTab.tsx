@@ -1,54 +1,60 @@
+import { yupResolver } from "@hookform/resolvers/yup";
+import { Form } from "components/form/Form";
 import { NumberField } from "components/form/numberField";
-import { TextField } from "components/form/textField";
-import { useFormik } from "formik";
-import { Series, SeriesSearchResult } from "models/api-models";
+import { TextField } from "components/form/textField/TextField";
+import { Series } from "models/api-models";
 import { MetadataSearchQuery } from "models/ui-models";
 import { Button, Col, Container, Row } from "react-bootstrap";
+import { SubmitHandler, useForm } from "react-hook-form";
 import { useHttpClient } from "services/httpClient";
+import * as yup from "yup";
 
 interface SeriesMetadataTabProps {
 	series: Series;
 }
 
 export const SeriesMetadataTab = ({ series }: SeriesMetadataTabProps) => {
-
 	const client = useHttpClient();
-	
-	const formik = useFormik<MetadataSearchQuery>({
-		initialValues: { name: series.name || "", year: series.year },
-		enableReinitialize: true,
-		onSubmit: async (values: MetadataSearchQuery) => {
-			const results = await client.get<SeriesSearchResult[]>(`/metadata/searchseries?name=${values.name}&year=${values.year}`)
-			console.log(results.data);
-		},
+
+	const validationSchema = yup
+		.object()
+		.shape({
+			name: yup.string().required("A search query is required"),
+			year: yup.number().min(1000).max(9999),
+		});
+
+	const methods = useForm<MetadataSearchQuery>({
+		resolver: yupResolver(validationSchema),
+		defaultValues: { name: series.name, year: series.year },
 	});
+
+	const onSubmit: SubmitHandler<MetadataSearchQuery> = async (values, t) => {
+		// const results = await client.get<SeriesSearchResult[]>(
+		// 	`/metadata/searchseries?name=${values.name}&year=${values.year}`
+		// );
+		console.log(methods.formState.errors);
+		console.log(values);
+	};
 
 	return (
 		<Container>
-			<Row>
-				<Col xs={9}>
-					<TextField
-						name="name"
-						placeholder="Name"
-						value={formik.values.name}
-						onChange={formik.handleChange}
-					/>
-				</Col>
-				<Col xs={3}>
-					<NumberField
-						name="year"
-						placeholder="Year"
-						value={formik.values.year}
-						onChange={formik.handleChange}
-					/>
-				</Col>
-			</Row>
-			<Button
-				onClick={formik.submitForm}
-				size="sm"
-				style={{ width: "100%" }}>
-				Search
-			</Button>
+			<Form<MetadataSearchQuery> methods={methods} onSubmit={onSubmit}>
+				<Row>
+					<Col xs={9}>
+						<TextField name="name" placeholder="name" />
+					</Col>
+					<Col xs={3}>
+						<NumberField
+							onChange={() => {}}
+							name="year"
+							placeholder="Year"
+						/>
+					</Col>
+				</Row>
+				<Button type="submit" size="sm" style={{ width: "100%" }}>
+					Search
+				</Button>
+			</Form>
 		</Container>
 	);
 };

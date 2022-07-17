@@ -1,9 +1,10 @@
-import { TextField } from "components/form/textField";
+import { Form } from "components/form";
+import { OldTextField, TextField } from "components/form/textField";
 import { ModalTabs } from "components/modalTabs";
-import { useFormik } from "formik";
 import { FirstRun as FirstRunModel } from "models/api-models";
 import React, { useEffect, useState } from "react";
-import { Button, Container, Form, Modal, Spinner, Tab } from "react-bootstrap";
+import { Button, Container, Modal, Spinner, Tab } from "react-bootstrap";
+import { SubmitHandler, useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
 import { useFirstRun, useSystemConfiguration } from "services/system";
 
@@ -18,14 +19,25 @@ export const FirstRun = () => {
 	const firstRun = useFirstRun();
 	const navigate = useNavigate();
 
-	const formik = useFormik<FirstRunModel>({
-		initialValues: { ownerCredentials: { username: "", password: "" } },
-		onSubmit: (values: FirstRunModel) => {
-			firstRun.mutate([null, values], {
-				onSuccess: () => navigate("/login"),
-			});
-		},
+	const form = useForm<FirstRunModel>({
+		defaultValues: { ownerCredentials: { username: "", password: "" } },
 	});
+
+	const formFields = form.watch();
+	// const formik = useFormik<FirstRunModel>({
+	// 	initialValues: { ownerCredentials: { username: "", password: "" } },
+	// 	onSubmit: (values: FirstRunModel) => {
+	// 		firstRun.mutate([null, values], {
+	// 			onSuccess: () => navigate("/login"),
+	// 		});
+	// 	},
+	// });
+
+	const handleSubmit: SubmitHandler<FirstRunModel> = (values) => {
+		firstRun.mutate([null, values], {
+			onSuccess: () => navigate("/login"),
+		});
+	};
 
 	useEffect(() => {
 		if (!systemConfiguration?.firstRun) navigate("/");
@@ -36,105 +48,83 @@ export const FirstRun = () => {
 			setAllowContinue(true);
 		} else if (activeTabKey === "2") {
 			setAllowContinue(
-				!!formik.values.ownerCredentials.username &&
-					!!formik.values.ownerCredentials.password &&
-					formik.values.ownerCredentials.password ===
+				!!formFields.ownerCredentials.username &&
+					!!formFields.ownerCredentials.password &&
+					formFields.ownerCredentials.password ===
 						passwordConfirmation
 			);
 		}
-	}, [formik.values, activeTabKey, passwordValid, passwordConfirmation]);
+	}, [formFields, activeTabKey, passwordValid, passwordConfirmation]);
 
 	useEffect(() => {
 		setPasswordValid(
-			formik.values.ownerCredentials.password === passwordConfirmation
+			formFields.ownerCredentials.password === passwordConfirmation
 		);
-		if (!formik.values.ownerCredentials.password) {
+		if (!formFields.ownerCredentials.password) {
 			setPasswordConfirmation("");
 		}
-	}, [passwordConfirmation, formik.values.ownerCredentials.password]);
+	}, [passwordConfirmation, formFields.ownerCredentials.password]);
 
 	const handleNext = () => {
 		setActiveTabKey((Number(activeTabKey) + 1).toString());
 	};
 
 	return (
-		<>
+		<Form<FirstRunModel> methods={form}>
 			<Modal size="lg" show={true}>
 				<Modal.Header>
 					<Modal.Title>Fayble</Modal.Title>
 				</Modal.Header>
 				<Modal.Body>
-					<Form>
-						<ModalTabs
-							defaultActiveKey="1"
-							activeTab={activeTabKey}>
-							<Tab eventKey="1" title="Welcome" disabled={true}>
-								<Container>
-									<p>Welcome to Fayble!</p>
-									<p>
-										We will now run through some basic setup
-										and configuration to get Fayble up and
-										running on your system. Click Next to
-										get started.
-									</p>
-								</Container>
-							</Tab>
-							<Tab
-								eventKey="2"
-								title="Owner Account"
-								disabled={true}>
-								<Container>
-									<TextField
-										name="ownerCredentials.username"
-										label="Username"
-										value={
-											formik.values.ownerCredentials
-												.username
-										}
-										onChange={formik.handleChange}
-									/>
-									<TextField
+					<ModalTabs defaultActiveKey="1" activeTab={activeTabKey}>
+						<Tab eventKey="1" title="Welcome" disabled={true}>
+							<Container>
+								<p>Welcome to Fayble!</p>
+								<p>
+									We will now run through some basic setup and
+									configuration to get Fayble up and running
+									on your system. Click Next to get started.
+								</p>
+							</Container>
+						</Tab>
+						<Tab eventKey="2" title="Owner Account" disabled={true}>
+							<Container>
+								<TextField
+									name="ownerCredentials.username"
+									label="Username"
+								/>
+								<TextField
+									name="ownerCredentials.password"
+									secure
+									label="Password"
+								/>
+								{!!formFields.ownerCredentials.password && (
+									<OldTextField
 										name="ownerCredentials.password"
 										secure
-										label="Password"
-										value={
-											formik.values.ownerCredentials
-												.password
+										error={
+											!passwordValid &&
+											!!passwordConfirmation
+												? "Passwords do not match"
+												: ""
 										}
-										onChange={formik.handleChange}
+										label="Confirm Password"
+										value={passwordConfirmation}
+										onChange={(
+											event: React.ChangeEvent<HTMLInputElement>
+										) =>
+											setPasswordConfirmation(
+												event.target.value
+											)
+										}
 									/>
-									{!!formik.values.ownerCredentials
-										.password && (
-										<TextField
-											name="ownerCredentials.password"
-											secure
-											error={
-												!passwordValid &&
-												!!passwordConfirmation
-													? "Passwords do not match"
-													: ""
-											}
-											label="Confirm Password"
-											value={passwordConfirmation}
-											onChange={(
-												event: React.ChangeEvent<HTMLInputElement>
-											) =>
-												setPasswordConfirmation(
-													event.target.value
-												)
-											}
-										/>
-									)}
-								</Container>
-							</Tab>
-							<Tab
-								eventKey="3"
-								title="Configuration"
-								disabled={true}>
-								Test
-							</Tab>
-						</ModalTabs>
-					</Form>
+								)}
+							</Container>
+						</Tab>
+						<Tab eventKey="3" title="Configuration" disabled={true}>
+							Test
+						</Tab>
+					</ModalTabs>
 				</Modal.Body>
 				<Modal.Footer>
 					{Number(activeTabKey) > 1 && (
@@ -153,7 +143,7 @@ export const FirstRun = () => {
 						<Button
 							variant="primary"
 							disabled={firstRun.isLoading}
-							onClick={formik.submitForm}>
+							onClick={form.handleSubmit(handleSubmit)}>
 							{firstRun.isLoading ? (
 								<>
 									<Spinner
@@ -179,6 +169,6 @@ export const FirstRun = () => {
 					)}
 				</Modal.Footer>
 			</Modal>
-		</>
+		</Form>
 	);
 };

@@ -2,7 +2,8 @@ import cn from "classnames";
 import { FieldLock } from "components/fieldLock";
 import { LockableField, SelectFieldOption } from "models/ui-models";
 import { Form, InputGroup } from "react-bootstrap";
-import Select, { ActionMeta, StylesConfig } from "react-select";
+import { Controller, useFormContext } from "react-hook-form";
+import Select, { StylesConfig } from "react-select";
 import styles from "./SelectField.module.scss";
 
 interface SelectFieldProps extends LockableField {
@@ -15,10 +16,6 @@ interface SelectFieldProps extends LockableField {
 	value?: string;
 	placeholder?: string;
 	options: SelectFieldOption[] | [];
-	onChange?: (
-		value: string | any[] | null | undefined,
-		action: ActionMeta<OptionTypeBase>
-	) => void;
 }
 
 type OptionTypeBase =
@@ -33,28 +30,22 @@ export const SelectField = ({
 	label,
 	name,
 	disabled,
+	lockable,
 	className,
 	clearable,
 	searchable,
-	value,
 	options,
-	onChange,
-	onLock,
-	locked = false,
 }: SelectFieldProps) => {
-	const handleChange = (
-		option: SelectFieldOption | null,
-		action: ActionMeta<OptionTypeBase>
-	) => {
-		if (onChange) {
-			const value =
-				option instanceof Array
-					? option.map((o) => o.value)
-					: option?.value;
+	const {
+		register,
+		setValue,		
+		control,
+		watch,
+		formState: { errors },
+	} = useFormContext();
 
-			onChange(value, action);
-		}
-	};
+	const locked = watch(`fieldLocks.${name}`);
+	const field = register(name);
 
 	const selectStyle: StylesConfig<OptionTypeBase, boolean> = {
 		control: (provided) => ({
@@ -94,28 +85,40 @@ export const SelectField = ({
 
 	return (
 		<Form.Group className="mb-3">
-			<Form.Label>{label}</Form.Label>
+			{label && <Form.Label>{label}</Form.Label>}
 			<InputGroup>
-				<Select
+				<Controller
 					name={name}
-					isDisabled={disabled === true}
-					className={cn(className, styles.select, {
-						[styles.lockable]: onLock,
-					})}
-					styles={selectStyle}
-					isClearable={clearable === true}
-					isSearchable={searchable === true}
-					defaultValue={null}
-					value={options.find((option) => option.value === value)}
-					options={options}
-					onChange={(e: any, a: any) => {
-						if (onLock){
-							onLock(true);
-						}
-						handleChange(e, a);
-					}}
+					control={control}			
+					render={({ field: { onChange, value, name, ref } }) => (
+						<Select
+							{...field}
+							isDisabled={disabled}
+							className={cn(className, styles.select, {
+								[styles.lockable]: lockable,
+							})}
+							styles={selectStyle}
+							isClearable={clearable === true}
+							isSearchable={searchable === true}
+							value={options.find(
+								(option) => option.value === value
+							)}
+							options={options}
+							onChange={(option) => {
+								if (lockable) {
+									setValue(`fieldLocks.${name}`, true);
+								}								
+								onChange(option.value);
+							}}
+						/>
+					)}
 				/>
-				{onLock && <FieldLock locked={locked} onClick={onLock} />}
+				{lockable && (
+					<FieldLock
+						locked={locked}
+						onClick={() => setValue(`fieldLocks.${name}`, !locked)}
+					/>
+				)}
 			</InputGroup>
 		</Form.Group>
 	);

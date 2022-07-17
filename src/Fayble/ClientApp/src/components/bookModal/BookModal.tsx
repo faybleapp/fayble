@@ -1,7 +1,9 @@
+import { Form } from "components/form";
 import { ModalTabs } from "components/modalTabs";
 import { useFormik } from "formik";
 import { Book } from "models/api-models";
 import { Button, Modal, Spinner, Tab } from "react-bootstrap";
+import { SubmitHandler, useForm } from "react-hook-form";
 import { useUpdateBook } from "services/book";
 import { BookDetailsTab } from "./BookDetailsTab";
 import { BookFileInfoTab } from "./BookFileInfoTab";
@@ -17,6 +19,10 @@ interface BookModalProps {
 export const BookModal = ({ book, show, close }: BookModalProps) => {
 	const updateBook = useUpdateBook();
 
+	const methods = useForm<Book>({
+		defaultValues: book,
+	});
+
 	const formik = useFormik<Book>({
 		initialValues: book,
 		enableReinitialize: true,
@@ -30,6 +36,13 @@ export const BookModal = ({ book, show, close }: BookModalProps) => {
 		validateOnMount: true,
 	});
 
+	const onSubmit: SubmitHandler<Book> = (values) =>
+		updateBook.mutate([values.id, values], {
+			onSuccess: () => {
+				close();
+			},
+		});
+
 	const onExited = () => formik.resetForm();
 
 	return (
@@ -40,18 +53,20 @@ export const BookModal = ({ book, show, close }: BookModalProps) => {
 				</Modal.Title>
 			</Modal.Header>
 			<Modal.Body>
-				<ModalTabs defaultActiveKey="details">
-					<Tab eventKey="details" title="Details">
-						<BookDetailsTab formik={formik} />
-					</Tab>
-					<Tab eventKey="people" title="People">
-						<BookPeopleTab formik={formik} />
-					</Tab>
-					<Tab eventKey="metadata" title="Metadata"></Tab>
-					<Tab eventKey="fileInfo" title="File Info">
-						<BookFileInfoTab book={book} />
-					</Tab>
-				</ModalTabs>
+				<Form<Book> methods={methods} onSubmit={onSubmit}>
+					<ModalTabs defaultActiveKey="details">
+						<Tab eventKey="details" title="Details">
+							<BookDetailsTab formik={formik} />
+						</Tab>
+						<Tab eventKey="people" title="People">
+							<BookPeopleTab formik={formik} />
+						</Tab>
+						<Tab eventKey="metadata" title="Metadata"></Tab>
+						<Tab eventKey="fileInfo" title="File Info">
+							<BookFileInfoTab book={book} />
+						</Tab>
+					</ModalTabs>
+				</Form>
 			</Modal.Body>
 			<Modal.Footer>
 				<Button variant="secondary" onClick={close}>

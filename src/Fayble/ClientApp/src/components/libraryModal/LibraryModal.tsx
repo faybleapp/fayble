@@ -1,7 +1,9 @@
+import { Form } from "components/form";
 import { ModalTabs } from "components/modalTabs";
 import { Library } from "models/api-models";
 import { useState } from "react";
 import { Container, Modal, Tab } from "react-bootstrap";
+import { SubmitHandler, useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
 import { useCreateLibrary, useDeleteLibrary, useUpdateLibrary } from "services";
 import { LibraryDetailsTab } from "./LibraryDetailsTab";
@@ -20,31 +22,37 @@ const initialLibraryState: Library = {
 	name: "",
 	libraryType: "ComicBook",
 	folderPath: "",
-	settings: { reviewOnImport: false, useComicInfo: false, yearAsVolume: false },
+	settings: {
+		reviewOnImport: false,
+		useComicInfo: false,
+		yearAsVolume: false,
+	},
 };
 
 export const LibraryModal = ({ show, library, close }: LibraryModalProps) => {
 	const [activeTabKey, setActiveTabKey] = useState<string>("1");
-	const [isNew, setIsNew] = useState<boolean>(false);
-	const [updatedLibrary, setUpdatedLibrary] =
-		useState<Library>(initialLibraryState);
+	
 	const navigate = useNavigate();
 	const deleteLibrary = useDeleteLibrary();
 	const createLibrary = useCreateLibrary();
-	const updateLibrary = useUpdateLibrary();
+	const updateLibrary = useUpdateLibrary();	
+	const methods = useForm<Library>({
+		defaultValues: !library ? initialLibraryState : library,
+	});
 
-	const continueDisabled =
-		activeTabKey === "1"
-			? !updatedLibrary?.name?.trim()
-			: !updatedLibrary?.folderPath;
+	const name = methods.watch("name");
+	const folderPath = methods.watch("folderPath");
 
-	const opened = () => {
-		setIsNew(!library);
-		setUpdatedLibrary(!library ? initialLibraryState : library);
+	const continueDisabled = activeTabKey === "1" ? !name?.trim() : !folderPath;
+	const isNew = !library;
+	const tabsDisabled = continueDisabled || isNew;
+
+	const opened = () => {		
+		methods.reset(!library ? initialLibraryState : library);
 	};
 
-	const remove = () => {
-		deleteLibrary.mutate([updatedLibrary.id!, null], {
+	const remove: SubmitHandler<Library> = (library) => {
+		deleteLibrary.mutate([library.id!, null], {
 			onSuccess: () => {
 				close();
 				navigate("/");
@@ -52,24 +60,23 @@ export const LibraryModal = ({ show, library, close }: LibraryModalProps) => {
 		});
 	};
 
-	const create = () => {
-		createLibrary.mutate([null, updatedLibrary], {
-			onSuccess: () => {
-				close();
-			}
-		});
-	};
-
-	const update = () => {
-		updateLibrary.mutate([updatedLibrary.id!, updatedLibrary], {
+	const create: SubmitHandler<Library> = (library) => {
+		createLibrary.mutate([null, library], {
 			onSuccess: () => {
 				close();
 			},
 		});
 	};
 
-	const tabsDisabled = continueDisabled || isNew;
+	const update: SubmitHandler<Library> = (library) => {
+		updateLibrary.mutate([library.id!, library], {
+			onSuccess: () => {
+				close();
+			},
+		});
+	};
 
+	
 	return (
 		<Modal
 			size="lg"
@@ -81,47 +88,44 @@ export const LibraryModal = ({ show, library, close }: LibraryModalProps) => {
 				<Modal.Title>{isNew ? "New" : "Edit"} Library</Modal.Title>
 			</Modal.Header>
 			<Modal.Body>
-				<ModalTabs
-					onChange={(selectedTabKey) =>
-						setActiveTabKey(selectedTabKey!)
-					}
-					defaultActiveKey="1"
-					activeTab={isNew ? activeTabKey : undefined}>
-					<Tab eventKey="1" title="Details" disabled={tabsDisabled}>
-						<Container>
-							<LibraryDetailsTab
-								library={updatedLibrary}
-								updateLibrary={setUpdatedLibrary}
-								isNew={isNew}
-							/>
-						</Container>
-					</Tab>
-					<Tab eventKey="2" disabled={tabsDisabled} title="Folder Path">
-						<Container>
-							<LibraryPathTab
-								library={updatedLibrary}
-								updateLibrary={setUpdatedLibrary}
-							/>
-						</Container>
-					</Tab>
-					<Tab
-						eventKey="3"
-						disabled={tabsDisabled}
-						title="Configuration">
-						<LibrarySettingsTab
-							library={updatedLibrary}
-							updateLibrary={setUpdatedLibrary}
-							isNew={isNew}
-						/>
-					</Tab>
-				</ModalTabs>
+				<Form<Library> methods={methods}>
+					<ModalTabs
+						onChange={(selectedTabKey) =>
+							setActiveTabKey(selectedTabKey!)
+						}
+						defaultActiveKey="1"
+						activeTab={isNew ? activeTabKey : undefined}>
+						<Tab
+							eventKey="1"
+							title="Details"
+							disabled={tabsDisabled}>
+							<Container>
+								<LibraryDetailsTab isNew={isNew} />
+							</Container>
+						</Tab>
+						<Tab
+							eventKey="2"
+							disabled={tabsDisabled}
+							title="Folder Path">
+							<Container>
+								<LibraryPathTab />
+							</Container>
+						</Tab>
+						<Tab
+							eventKey="3"
+							disabled={tabsDisabled}
+							title="Configuration">
+							<LibrarySettingsTab />
+						</Tab>
+					</ModalTabs>
+				</Form>
 				<Modal.Footer>
 					<LibraryModalFooter
 						isNew={isNew}
 						close={close}
-						deleteLibrary={remove}
-						createLibrary={create}
-						updateLibrary={update}
+						deleteLibrary={methods.handleSubmit(remove)}
+						createLibrary={methods.handleSubmit(create)}
+						updateLibrary={methods.handleSubmit(update)}
 						activeTabKey={activeTabKey}
 						setActiveTabKey={setActiveTabKey}
 						isDeleting={deleteLibrary.isLoading}

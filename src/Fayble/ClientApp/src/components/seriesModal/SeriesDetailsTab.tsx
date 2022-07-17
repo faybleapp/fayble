@@ -1,6 +1,6 @@
 import { NumberField } from "components/form/numberField";
 import { SelectField } from "components/form/selectField";
-import { TextField } from "components/form/textField";
+import { OldTextField } from "components/form/textField";
 import { FormikProps } from "formik";
 import { Series } from "models/api-models";
 import { Col, Container, Form, Row } from "react-bootstrap";
@@ -22,7 +22,7 @@ export const SeriesDetailsTab = ({
 	return (
 		<Container>
 			<Form>
-				<TextField
+				<OldTextField
 					name="name"
 					label="Name"
 					locked={formik.values.fieldLocks.name}
@@ -48,7 +48,7 @@ export const SeriesDetailsTab = ({
 						/>
 					</Col>
 					<Col>
-						<TextField
+						<OldTextField
 							name="volume"
 							label="Volume"
 							locked={formik.values.fieldLocks.volume}
@@ -69,21 +69,7 @@ export const SeriesDetailsTab = ({
 							name="publisherId"
 							label="Publisher"
 							clearable
-							searchable
-							value={formik.values.publisherId}
-							locked={formik.values.fieldLocks.publisherId}
-							onLock={(lock: boolean) =>
-								formik.setFieldValue(
-									"fieldLocks.publisherId",
-									lock
-								)
-							}
-							onChange={(selectedValue) => {
-								formik.setFieldValue(
-									"publisherId",
-									selectedValue as string
-								);
-							}}
+							searchable				
 							options={
 								publishers?.data?.map((publisher) => ({
 									value: publisher.id!,
@@ -97,21 +83,8 @@ export const SeriesDetailsTab = ({
 							name="parentSeriesId"
 							label="Parent Series"
 							clearable
-							searchable
-							value={formik.values.parentSeriesId}
-							locked={formik.values.fieldLocks.parentSeriesId}
-							onLock={(lock: boolean) =>
-								formik.setFieldValue(
-									"fieldLocks.parentSeriesId",
-									lock
-								)
-							}
-							onChange={(selectedOption) =>
-								formik.setFieldValue(
-									"parentSeriesId",
-									selectedOption as string
-								)
-							}
+							searchable							
+							
 							options={
 								allSeries
 									?.filter(

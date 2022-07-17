@@ -29,47 +29,25 @@ export const BookDetailsTab = ({ formik }: BookDetailsTabProps) => {
 				<TextField
 					name="title"
 					label="Title"
-					locked={formik.values.fieldLocks.title}
-					onLock={(lock: boolean) =>
-						formik.setFieldValue("fieldLocks.title", lock)
-					}
-					value={formik.values.title}
-					onChange={formik.handleChange}
+					lockable
 				/>
 				<Row>
 					<Col>
 						<TextField
 							name="number"
 							label="Number"
-							locked={formik.values.fieldLocks.number}
-							onLock={(lock: boolean) =>
-								formik.setFieldValue("fieldLocks.number", lock)
-							}
-							value={formik.values.number}
-							onChange={formik.handleChange}
+							lockable
 						/>
 					</Col>
 					<Col>
 						<SelectField
 							name="language"
 							label="Language"
-							clearable
-							searchable
-							value={formik.values.language}
+							clearable							
+							lockable
+							searchable						
 							options={languageSelectOptions}
-							locked={formik.values.fieldLocks.language}
-							onLock={(lock: boolean) =>
-								formik.setFieldValue(
-									"fieldLocks.language",
-									lock
-								)
-							}
-							onChange={(selectedValue) => {
-								formik.setFieldValue(
-									"language",
-									selectedValue as string
-								);
-							}}
+							
 						/>
 					</Col>
 				</Row>

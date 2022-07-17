@@ -1,29 +1,28 @@
 import { SanitisePaths } from "helpers/pathHelpers";
-import { Library } from "models/api-models";
 import React, { useState } from "react";
 import { Button, Form, InputGroup } from "react-bootstrap";
+import { useFormContext } from "react-hook-form";
 import { toast } from "react-toastify";
 import { useHttpClient } from "services/httpClient";
 import styles from "./LibraryPathsTab.module.scss";
 
-interface LibraryPathTabProps {
-	library: Library;
-	updateLibrary: (library: Library) => void;
-}
-
-export const LibraryPathTab = ({
-	library,
-	updateLibrary,
-}: LibraryPathTabProps) => {
+export const LibraryPathTab = () => {
 	const [isValidatingPath, setValidatingPath] = useState(false);
 	const [newPath, setNewPath] = useState("");
 	const client = useHttpClient();
 
+	const {
+		register,
+		setValue,
+		watch,
+		formState: { errors },
+	} = useFormContext();
+
+	const field = register("folderPath");
+	const folderPath = watch("folderPath");
+
 	const removePath = () => {
-		updateLibrary({
-			...library,
-			folderPath: "",
-		});
+		setValue("folderPath", "");
 	};
 
 	const pathExists = async (path: string) => {
@@ -41,7 +40,7 @@ export const LibraryPathTab = ({
 		try {
 			valid = await pathExists(sanitisedPath);
 		} catch (error) {
-			toast.error("An error occured while validating path");			
+			toast.error("An error occured while validating path");
 			setValidatingPath(false);
 			return;
 		}
@@ -51,10 +50,7 @@ export const LibraryPathTab = ({
 			setValidatingPath(false);
 			return;
 		}
-		updateLibrary({
-			...library,
-			folderPath: newPath,
-		});
+		setValue("folderPath", newPath);
 
 		setNewPath("");
 		setValidatingPath(false);
@@ -62,11 +58,11 @@ export const LibraryPathTab = ({
 
 	return (
 		<div className={styles.path}>
-			{!library.folderPath ? (
+			{!folderPath ? (
 				<>
 					<Form.Group className={"mb-3"}>
 						<InputGroup>
-							<Form.Control
+							<Form.Control								
 								disabled={isValidatingPath}
 								onChange={(
 									e: React.ChangeEvent<HTMLInputElement>
@@ -92,7 +88,7 @@ export const LibraryPathTab = ({
 					<Form.Control
 						disabled
 						placeholder="Path"
-						value={library.folderPath}
+						value={folderPath}
 					/>
 					<Button onClick={() => removePath()} variant="danger">
 						X

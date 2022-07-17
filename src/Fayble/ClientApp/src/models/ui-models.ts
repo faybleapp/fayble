@@ -48,7 +48,7 @@ export enum ImageType {
 }
 
 export interface SelectFieldOption {
-	value: string ;
+	value: string;
 	label: string;
 }
 
@@ -67,5 +67,6 @@ export interface HorizontalListItem {
 
 export interface LockableField {	
 	locked?: boolean;	
+	lockable?: boolean;
 	onLock?: (locked: boolean) => void;
 }

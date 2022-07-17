@@ -1,27 +1,23 @@
-import React from "react";
 import { Form } from "react-bootstrap";
+import { useFormContext } from "react-hook-form";
 
 interface SwitchFieldProps {
 	name: string;
 	label: string;
 	className?: string;
-	value?: boolean;
-	onChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
 }
 
 export const SwitchField = ({
 	name,
 	label,
 	className,
-	value,
-	onChange,
 }: SwitchFieldProps) => {
+
+	const {register} = useFormContext();
 	return (		
 			<Form.Check
-				type="switch"
-                checked={value}
-                onChange={onChange}
-				name={name}
+				{...register(name)}
+				type="switch"               
                 className={className}
 				label={label}
 			/>                             
