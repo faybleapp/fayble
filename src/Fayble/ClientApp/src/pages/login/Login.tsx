@@ -1,9 +1,10 @@
+import { Form } from "components/form";
 import { TextField } from "components/form/textField";
-import { useFormik } from "formik";
 import { isAuthenticated } from "helpers/authenticationHelpers";
 import { LoginCredentials } from "models/api-models";
 import { useEffect } from "react";
-import { Button, Form, Modal, Spinner } from "react-bootstrap";
+import { Button, Modal, Spinner } from "react-bootstrap";
+import { SubmitHandler, useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import { useLogin } from "services/authentication";
@@ -20,30 +21,29 @@ export const Login = () => {
 		}
 	}, [loggedIn, navigate]);
 
-	const formik = useFormik<LoginCredentials>({
-		initialValues: { username: "", password: "" },
-		enableReinitialize: true,
-		onSubmit: (values: LoginCredentials) => {
-			login.mutate([null, values], {
-				onSuccess: () => {
-					navigate("/");
-				},
-				onError: (error) => {
-					switch (error.response?.status) {
-						case 401:
-							toast.error("Incorrect username or password");
-							break;
-						case 429:
-							toast.error("Too many login attempts");
-							break;
-						default:
-							toast.error("An error occurred while logging in");
-					}
-				},
-			});
-		},
-		validateOnMount: true,
-	});
+	const methods = useForm<LoginCredentials>();
+	const watch = methods.watch();
+
+	const submit: SubmitHandler<LoginCredentials> = (values) => {
+		login.mutate([null, values], {
+			onSuccess: () => {
+				toast.success("Login successful");
+				navigate("/");
+			},
+			onError: (error) => {
+				switch (error.response?.status) {
+					case 401:
+						toast.error("Incorrect username or password");
+						break;
+					case 429:
+						toast.error("Too many login attempts");
+						break;
+					default:
+						toast.error("An error occurred while logging in");
+				}
+			},
+		});
+	};
 
 	return (
 		<>
@@ -53,44 +53,44 @@ export const Login = () => {
 						<Modal.Title>LOG IN</Modal.Title>
 					</Modal.Header>
 					<Modal.Body>
-						<Form className={styles.loginForm}>
+						<Form<LoginCredentials>
+							onSubmit={submit}
+							form={methods}
+							className={styles.loginForm}>
 							<TextField
 								className={styles.loginField}
 								name="username"
-								placeholder="Username"											
-								value={formik.values.username}
-								onChange={formik.handleChange}
+								placeholder="Username"
 							/>
 							<TextField
 								className={styles.loginField}
-								name="password"								
+								name="password"
 								placeholder="Password"
-								value={formik.values.password}
 								secure
-								onChange={formik.handleChange}
 							/>
+
+							<Button
+								className={styles.loginButton}
+								type="submit"								
+								disabled={
+									!watch.username ||
+									!watch.password ||
+									login.isLoading
+								}
+								variant="primary">
+								{login.isLoading ? (
+									<Spinner
+										as="span"
+										animation="border"
+										size="sm"
+										role="status"
+										aria-hidden="true"
+									/>
+								) : (
+									"Login"
+								)}
+							</Button>
 						</Form>
-						<Button
-							className={styles.loginButton}
-							onClick={formik.submitForm}
-							disabled={
-								!formik.values.username ||
-								!formik.values.password ||
-								login.isLoading
-							}
-							variant="primary">
-							{login.isLoading ? (
-								<Spinner
-									as="span"
-									animation="border"
-									size="sm"
-									role="status"
-									aria-hidden="true"
-								/>
-							) : (
-								"Login"
-							)}
-						</Button>
 					</Modal.Body>
 					<Modal.Footer></Modal.Footer>
 				</Modal>
