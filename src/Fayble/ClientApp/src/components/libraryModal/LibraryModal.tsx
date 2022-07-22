@@ -36,19 +36,19 @@ export const LibraryModal = ({ show, library, close }: LibraryModalProps) => {
 	const deleteLibrary = useDeleteLibrary();
 	const createLibrary = useCreateLibrary();
 	const updateLibrary = useUpdateLibrary();	
-	const methods = useForm<Library>({
+	const form = useForm<Library>({
 		defaultValues: !library ? initialLibraryState : library,
 	});
 
-	const name = methods.watch("name");
-	const folderPath = methods.watch("folderPath");
+	const name = form.watch("name");
+	const folderPath = form.watch("folderPath");
 
 	const continueDisabled = activeTabKey === "1" ? !name?.trim() : !folderPath;
 	const isNew = !library;
 	const tabsDisabled = continueDisabled || isNew;
 
 	const opened = () => {		
-		methods.reset(!library ? initialLibraryState : library);
+		form.reset(!library ? initialLibraryState : library);
 	};
 
 	const remove: SubmitHandler<Library> = (library) => {
@@ -88,7 +88,7 @@ export const LibraryModal = ({ show, library, close }: LibraryModalProps) => {
 				<Modal.Title>{isNew ? "New" : "Edit"} Library</Modal.Title>
 			</Modal.Header>
 			<Modal.Body>
-				<Form<Library> methods={methods}>
+				<Form<Library> form={form}>
 					<ModalTabs
 						onChange={(selectedTabKey) =>
 							setActiveTabKey(selectedTabKey!)
@@ -123,9 +123,9 @@ export const LibraryModal = ({ show, library, close }: LibraryModalProps) => {
 					<LibraryModalFooter
 						isNew={isNew}
 						close={close}
-						deleteLibrary={methods.handleSubmit(remove)}
-						createLibrary={methods.handleSubmit(create)}
-						updateLibrary={methods.handleSubmit(update)}
+						deleteLibrary={form.handleSubmit(remove)}
+						createLibrary={form.handleSubmit(create)}
+						updateLibrary={form.handleSubmit(update)}
 						activeTabKey={activeTabKey}
 						setActiveTabKey={setActiveTabKey}
 						isDeleting={deleteLibrary.isLoading}

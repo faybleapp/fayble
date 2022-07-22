@@ -24,14 +24,6 @@ export const FirstRun = () => {
 	});
 
 	const formFields = form.watch();
-	// const formik = useFormik<FirstRunModel>({
-	// 	initialValues: { ownerCredentials: { username: "", password: "" } },
-	// 	onSubmit: (values: FirstRunModel) => {
-	// 		firstRun.mutate([null, values], {
-	// 			onSuccess: () => navigate("/login"),
-	// 		});
-	// 	},
-	// });
 
 	const handleSubmit: SubmitHandler<FirstRunModel> = (values) => {
 		firstRun.mutate([null, values], {
@@ -70,7 +62,7 @@ export const FirstRun = () => {
 	};
 
 	return (
-		<Form<FirstRunModel> methods={form}>
+		<Form<FirstRunModel> form={form}>
 			<Modal size="lg" show={true}>
 				<Modal.Header>
 					<Modal.Title>Fayble</Modal.Title>

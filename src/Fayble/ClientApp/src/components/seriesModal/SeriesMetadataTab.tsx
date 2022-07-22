@@ -10,51 +10,45 @@ import { useHttpClient } from "services/httpClient";
 import * as yup from "yup";
 
 interface SeriesMetadataTabProps {
-	series: Series;
+  series: Series;
 }
 
 export const SeriesMetadataTab = ({ series }: SeriesMetadataTabProps) => {
-	const client = useHttpClient();
+  const client = useHttpClient();
 
-	const validationSchema = yup
-		.object()
-		.shape({
-			name: yup.string().required("A search query is required"),
-			year: yup.number().min(1000).max(9999),
-		});
+  const validationSchema = yup.object().shape({
+    name: yup.string().required("A search query is required"),
+    year: yup.number().min(1000).max(9999),
+  });
 
-	const methods = useForm<MetadataSearchQuery>({
-		resolver: yupResolver(validationSchema),
-		defaultValues: { name: series.name, year: series.year },
-	});
+  const form = useForm<MetadataSearchQuery>({
+    resolver: yupResolver(validationSchema),
+    defaultValues: { name: series.name, year: series.year },
+  });
 
-	const onSubmit: SubmitHandler<MetadataSearchQuery> = async (values, t) => {
-		// const results = await client.get<SeriesSearchResult[]>(
-		// 	`/metadata/searchseries?name=${values.name}&year=${values.year}`
-		// );
-		console.log(methods.formState.errors);
-		console.log(values);
-	};
+  const onSubmit: SubmitHandler<MetadataSearchQuery> = async (values, t) => {
+    // const results = await client.get<SeriesSearchResult[]>(
+    // 	`/metadata/searchseries?name=${values.name}&year=${values.year}`
+    // );
+    console.log(form.formState.errors);
+    console.log(values);
+  };
 
-	return (
-		<Container>
-			<Form<MetadataSearchQuery> methods={methods} onSubmit={onSubmit}>
-				<Row>
-					<Col xs={9}>
-						<TextField name="name" placeholder="name" />
-					</Col>
-					<Col xs={3}>
-						<NumberField
-							onChange={() => {}}
-							name="year"
-							placeholder="Year"
-						/>
-					</Col>
-				</Row>
-				<Button type="submit" size="sm" style={{ width: "100%" }}>
-					Search
-				</Button>
-			</Form>
-		</Container>
-	);
+  return (
+    <Container>
+      <Form<MetadataSearchQuery> form={form} onSubmit={onSubmit}>
+        <Row>
+          <Col xs={9}>
+            <TextField name="name" placeholder="name" />
+          </Col>
+          <Col xs={3}>
+            <NumberField name="year" placeholder="Year" />
+          </Col>
+        </Row>
+        <Button type="submit" size="sm" style={{ width: "100%" }}>
+          Search
+        </Button>
+      </Form>
+    </Container>
+  );
 };

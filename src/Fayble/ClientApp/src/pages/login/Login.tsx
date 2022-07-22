@@ -55,7 +55,7 @@ export const Login = () => {
 					<Modal.Body>
 						<Form<LoginCredentials>
 							onSubmit={submit}
-							methods={methods}
+							form={methods}
 							className={styles.loginForm}>
 							<TextField
 								className={styles.loginField}
