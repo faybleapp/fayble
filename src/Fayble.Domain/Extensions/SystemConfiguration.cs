@@ -5,8 +5,8 @@ namespace Fayble.Domain.Extensions;
 public static class SystemConfiguration
 {
     public static string GetSetting(
-        this IEnumerable<Aggregates.SystemConfiguration.SystemConfiguration> entity,
-        SystemConfigurationKey configuration)
+        this IEnumerable<Aggregates.SystemConfiguration.SystemSetting> entity,
+        SystemSettingKey configuration)
     {
         return entity.First(s => s.Id == configuration).Value;
     }

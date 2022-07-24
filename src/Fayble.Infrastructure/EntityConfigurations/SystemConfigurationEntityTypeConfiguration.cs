@@ -5,15 +5,15 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace Fayble.Infrastructure.EntityConfigurations;
 
-public class SystemConfigurationEntityTypeConfiguration : IEntityTypeConfiguration<SystemConfiguration>
+public class SystemConfigurationEntityTypeConfiguration : IEntityTypeConfiguration<SystemSetting>
 {
-    public void Configure(EntityTypeBuilder<SystemConfiguration> builder)
+    public void Configure(EntityTypeBuilder<SystemSetting> builder)
     {
         builder.ToTable("SystemConfiguration");
         builder.HasKey(e => e.Id);
         builder.Property(x => x.Id)
             .HasConversion(
                 setting => setting.ToString(),
-                setting => (SystemConfigurationKey) Enum.Parse(typeof(SystemConfigurationKey), setting));
+                setting => (SystemSettingKey) Enum.Parse(typeof(SystemSettingKey), setting));
     }
 }

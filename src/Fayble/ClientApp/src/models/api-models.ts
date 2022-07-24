@@ -182,6 +182,7 @@ export interface SeriesSearchResult {
     id: string;
     name: string | undefined;
     summary: string | undefined;
+    description: string | undefined;
     startYear: number | undefined;
     publisher: string | undefined;
     issueCount: number;
@@ -206,7 +207,7 @@ export interface FirstRun {
     ownerCredentials: LoginCredentials;
 }
 
-export interface SystemConfiguration {
+export interface SystemSettings {
     firstRun: boolean;
 }
 

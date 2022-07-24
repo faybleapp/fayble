@@ -8,6 +8,7 @@ using Fayble.Domain.Aggregates.User;
 using Fayble.Domain.Repositories;
 using Fayble.Infrastructure;
 using Fayble.Infrastructure.Repositories;
+using Fayble.Integration.FaybleApi;
 using Fayble.Models.Configuration;
 using Fayble.Security.Authorisation;
 using Fayble.Security.Models;
@@ -16,6 +17,7 @@ using Fayble.Services.BackgroundServices.Services;
 using Fayble.Services.Book;
 using Fayble.Services.FileSystem;
 using Fayble.Services.Library;
+using Fayble.Services.MetadataService;
 using Fayble.Services.Person;
 using Fayble.Services.Publisher;
 using Fayble.Services.Series;
@@ -25,6 +27,7 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
@@ -35,14 +38,13 @@ using Serilog.Events;
 using Database = Fayble.Database.Database;
 
 
-IConfiguration config = new ConfigurationBuilder()
+IConfiguration configuration = new ConfigurationBuilder()
     .AddJsonFile("appsettings.json")
-    .AddEnvironmentVariables()
     .Build();
 
-if (!string.IsNullOrEmpty(config["AppDirectoryOverride"]))
+if (!string.IsNullOrEmpty(configuration["AppDirectoryOverride"]))
 {
-    ApplicationHelpers.AppDirectoryOverride = config["AppDirectoryOverride"];
+    ApplicationHelpers.AppDirectoryOverride = configuration["AppDirectoryOverride"];
 }
 
 Log.Logger = new LoggerConfiguration()
@@ -65,6 +67,12 @@ Log.Information("Application directory: {Directory}", ApplicationHelpers.GetAppD
 
 var builder = WebApplication.CreateBuilder(args);
 
+builder.Host.ConfigureAppConfiguration(
+    (context, config) =>
+    {
+        config.AddConfiguration(configuration);
+        config.AddEnvironmentVariables();
+    });
 builder.Host.UseSerilog();
 
 builder.Services.AddControllersWithViews().AddNewtonsoftJson(o =>
@@ -96,8 +104,6 @@ builder.Services.Configure<IdentityOptions>(options =>
     options.Password.RequiredUniqueChars = 0;
 });
 
-builder.Services.Configure<AuthenticationConfiguration>(config.GetSection("Authentication"));
-
 builder.Services.AddAuthentication(options =>
     {
         options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
@@ -113,8 +119,8 @@ builder.Services.AddAuthentication(options =>
             ValidateIssuer = true,
             ValidateLifetime = true,
             ValidateAudience = true,
-            ValidAudience = config["Authentication:TokenAudience"],
-            ValidIssuer = config["Authentication:TokenIssuer"],
+            ValidAudience = builder.Configuration["Authentication:TokenAudience"],
+            ValidIssuer = builder.Configuration["Authentication:TokenIssuer"],
             IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(ApplicationHelpers.GetTokenSigningKey()))
         };
     });
@@ -133,15 +139,15 @@ builder.Services.AddSignalR(
     {
         options.EnableDetailedErrors = true;
     });
+
 builder.Services.AddOpenApiDocument();
-
 builder.Services.AddHttpContextAccessor();
-
 builder.Services.AddHostedService<QueuedHostedService>();
 builder.Services.AddSingleton<IBackgroundTaskQueue, BackgroundTaskQueue>();
 builder.Services.AddScoped<IBackgroundTaskService, BackgroundTaskService>();
 builder.Services.AddScoped<IProblemDetailsFactory, ProblemDetailsFactory>();
 builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
+builder.Services.AddHttpClient();
 
 // Register Repositories
 builder.Services.AddScoped<ILibraryRepository, LibraryRepository>();
@@ -166,15 +172,22 @@ builder.Services.AddScoped<IBookService, BookService>();
 builder.Services.AddScoped<ITagService, TagService>();
 builder.Services.AddScoped<ISystemService, SystemService>();
 builder.Services.AddScoped<IPersonService, PersonService>();
+builder.Services.AddScoped<IMetadataService, MetadataService>();
 
+// Integration
+builder.Services.AddScoped<IFaybleApiClient, FaybleApiClient>();
+
+// Configuration
+builder.Services.Configure<AuthenticationConfiguration>(builder.Configuration.GetSection("Authentication"));
+builder.Services.Configure<FaybleApiConfiguration>(builder.Configuration.GetSection("FaybleApi"));
 
 // Register Background Services
 builder.Services.AddSingleton<IBackgroundTaskQueue, BackgroundTaskQueue>();
 
 // Register Rate Limiting
 builder.Services.AddMemoryCache();
-builder.Services.Configure<IpRateLimitOptions>(config.GetSection("IpRateLimiting"));
-builder.Services.Configure<IpRateLimitPolicies>(config.GetSection("IpRateLimitPolicies"));
+builder.Services.Configure<IpRateLimitOptions>(builder.Configuration.GetSection("IpRateLimiting"));
+builder.Services.Configure<IpRateLimitPolicies>(builder.Configuration.GetSection("IpRateLimitPolicies"));
 builder.Services.AddInMemoryRateLimiting();
 builder.Services.AddSingleton<IRateLimitConfiguration, RateLimitConfiguration>();
 

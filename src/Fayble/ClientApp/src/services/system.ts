@@ -1,4 +1,4 @@
-import { FirstRun, SystemConfiguration } from "models/api-models";
+import { FirstRun, SystemSettings } from "models/api-models";
 import { useQueryClient } from "react-query";
 import { toast } from "react-toastify";
 import { useApiMutation } from "./useApiMutation";
@@ -11,21 +11,21 @@ export const useFirstRun = () => {
 		() => `/system/first-run`,
 		{
 			onSuccess: () => {
-				queryClient.removeQueries("systemConfiguration");
-				queryClient.invalidateQueries("systemConfiguration");
+				queryClient.removeQueries("SystemSettings");
+				queryClient.invalidateQueries("SystemSettings");
 			},
 		}
 	);
 };
 
 export const useSystemConfiguration = () =>
-	useApiQuery<SystemConfiguration>(
-		["systemConfiguration"],
-		"/system/configuration",
+	useApiQuery<SystemSettings>(
+		["SystemSettings"],
+		"/system/settings",
 		{
 			onError: () =>
 				toast.error(
-					"An error occurred while retrieving system configuration"
+					"An error occurred while retrieving system settings"
 				),
 		}
 	);

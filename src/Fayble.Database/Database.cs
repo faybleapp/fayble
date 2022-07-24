@@ -1,5 +1,7 @@
 ﻿using System.Reflection;
 using DbUp;
+using DbUp.Engine;
+using DbUp.Support;
 using Fayble.Core.Helpers;
 using Serilog;
 
@@ -14,7 +16,8 @@ public static class Database
         var upgrader =
             DeployChanges.To
                 .SQLiteDatabase(connectionString)
-                .WithScriptsEmbeddedInAssembly(Assembly.GetExecutingAssembly())
+                .WithScriptsEmbeddedInAssembly(Assembly.GetExecutingAssembly(), x => x.StartsWith("Fayble.Database.DeploymentScripts."), new SqlScriptOptions { ScriptType = ScriptType.RunOnce, RunGroupOrder = 1 })
+                .WithScriptsEmbeddedInAssembly(Assembly.GetExecutingAssembly(), x => x.StartsWith("Fayble.Database.PostDeploymentScripts."), new SqlScriptOptions { ScriptType = ScriptType.RunAlways, RunGroupOrder = 2 })
                 .LogScriptOutput()
                 .LogToAutodetectedLog()
                 .LogToConsole()

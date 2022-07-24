@@ -57,9 +57,9 @@ public static class MigrateAndSeed
         if (!context.SystemConfiguration.Any())
         {
             context.SystemConfiguration.AddRange(
-                new List<SystemConfiguration>
+                new List<SystemSetting>
                 {
-                    new(SystemConfigurationKey.FirstRun, true.ToString())
+                    new(SystemSettingKey.FirstRun, true.ToString())
                 });
         }
 

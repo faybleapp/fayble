@@ -22,6 +22,7 @@
     <ProjectReference Include="..\Fayble.Core\Fayble.Core.csproj" />
     <ProjectReference Include="..\Fayble.Domain\Fayble.Domain.csproj" />
     <ProjectReference Include="..\Fayble.Infrastructure\Fayble.Infrastructure.csproj" />
+    <ProjectReference Include="..\Fayble.Integration\Fayble.Integration.csproj" />
     <ProjectReference Include="..\Fayble.Models\Fayble.Models.csproj" />
     <ProjectReference Include="..\Fayble.Security\Fayble.Security.csproj" />
   </ItemGroup>

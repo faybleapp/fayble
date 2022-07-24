@@ -7,9 +7,9 @@ import { useState } from "react";
 import { Image } from "react-bootstrap";
 import { useParams } from "react-router-dom";
 import { useLibrary, useLibrarySeries } from "services/library";
+import { SeriesCoverGrid } from "./components/SeriesCoverGrid";
 import styles from "./Library.module.scss";
-import { SeriesList } from "./series/SeriesList";
-import { SeriesCoverGrid } from "./SeriesCoverGrid";
+import { SeriesList } from "./series/components/SeriesList";
 
 export const Library = () => {
 	const { libraryId } = useParams<{ libraryId: string }>();

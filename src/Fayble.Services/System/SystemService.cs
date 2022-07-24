@@ -5,7 +5,7 @@ using Fayble.Domain.Repositories;
 using Fayble.Models;
 using Fayble.Security.Models;
 using Fayble.Security.Services.Authentication;
-using SystemConfiguration = Fayble.Models.SystemConfiguration;
+using SystemSettings = Fayble.Models.SystemSettings;
 
 namespace Fayble.Services.System;
 
@@ -38,19 +38,19 @@ public class SystemService : ISystemService
                 firstRunConfiguration.OwnerCredentials.Password,
                 UserRoles.Owner));
 
-        await UpdateConfiguration(SystemConfigurationKey.FirstRun, false.ToString());
+        await UpdateConfiguration(SystemSettingKey.FirstRun, false.ToString());
     }
 
-    public async Task UpdateConfiguration(SystemConfiguration updatedConfiguration)
+    public async Task UpdateConfiguration(SystemSettings updatedConfiguration)
     {
         var systemConfiguration = await GetConfiguration();
         if (systemConfiguration.FirstRun != updatedConfiguration.FirstRun)
         {
-            await UpdateConfiguration(SystemConfigurationKey.FirstRun, updatedConfiguration.FirstRun.ToString());
+            await UpdateConfiguration(SystemSettingKey.FirstRun, updatedConfiguration.FirstRun.ToString());
         }
     }
 
-    private async Task UpdateConfiguration(SystemConfigurationKey configurationKey, string value)
+    private async Task UpdateConfiguration(SystemSettingKey configurationKey, string value)
     {
         var configuration = await _systemConfigurationRepository.Get(configurationKey);
         configuration.Update(value);
@@ -58,7 +58,7 @@ public class SystemService : ISystemService
     }
 
 
-    public async Task<SystemConfiguration> GetConfiguration()
+    public async Task<SystemSettings> GetConfiguration()
     {
         return (await _systemConfigurationRepository.Get()).ToModel();
     }

@@ -1,23 +1,23 @@
 ﻿using Fayble.Domain.Aggregates.SystemConfiguration;
 using Fayble.Domain.Extensions;
-using SystemConfiguration = Fayble.Models.SystemConfiguration;
+using SystemSettings = Fayble.Models.SystemSettings;
 
 namespace Fayble.Services.System;
 
 internal static class Mappings
 {
-    public static SystemConfiguration ToModel(
-        this IEnumerable<Domain.Aggregates.SystemConfiguration.SystemConfiguration> entity)
+    public static SystemSettings ToModel(
+        this IEnumerable<SystemSetting> entity)
     {
-        return new SystemConfiguration(bool.Parse(entity.GetSetting(SystemConfigurationKey.FirstRun)));
+        return new SystemSettings(bool.Parse(entity.GetSetting(SystemSettingKey.FirstRun)));
     }
 
-    public static IEnumerable<Domain.Aggregates.SystemConfiguration.SystemConfiguration> ToEntity(
-        this SystemConfiguration configuration)
+    public static IEnumerable<SystemSetting> ToEntity(
+        this SystemSettings configuration)
     {
-        return new List<Domain.Aggregates.SystemConfiguration.SystemConfiguration>
+        return new List<SystemSetting>
         {
-            new(SystemConfigurationKey.FirstRun, configuration.FirstRun.ToString())
+            new(SystemSettingKey.FirstRun, configuration.FirstRun.ToString())
         };
     }
 

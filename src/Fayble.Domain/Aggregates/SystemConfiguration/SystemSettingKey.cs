@@ -3,7 +3,8 @@ using Newtonsoft.Json.Converters;
 
 namespace Fayble.Domain.Aggregates.SystemConfiguration;
 
-public enum SystemConfigurationKey
+public enum SystemSettingKey
 {
-    FirstRun
+    FirstRun,
+    FaybleApiBaseUrl
 }
