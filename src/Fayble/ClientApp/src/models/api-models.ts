@@ -190,6 +190,20 @@ export interface SeriesSearchResult {
     levenshteinDistance: number;
 }
 
+export interface SeriesResult {
+    id: string;
+    name: string;
+    summary: string;
+    startYear: number;
+    books: BookResult[];
+}
+
+export interface BookResult {
+    id: string;
+    title: string;
+    number: string;
+}
+
 export interface UpdateSeries {
     id: string;
     name: string | undefined;

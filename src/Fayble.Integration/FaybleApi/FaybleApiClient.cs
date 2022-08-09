@@ -26,7 +26,7 @@ public class FaybleApiClient : IFaybleApiClient
     {
         var client = _httpClientFactory.CreateClient();
         var response = await client.GetAsync(
-            $"{_faybleApiConfiguration.BaseUrl}/api/metadata/searchseries?name={name}{(year != null ? $"&year={year}" : string.Empty)}");
+            $"{_faybleApiConfiguration.BaseUrl}/api/series/search?name={name}{(year != null ? $"&year={year}" : string.Empty)}");
 
         try
         {
@@ -51,5 +51,35 @@ public class FaybleApiClient : IFaybleApiClient
         var responseString = await response.Content.ReadAsStringAsync();
         var searchResults = JsonConvert.DeserializeObject<IEnumerable<SeriesSearchResult>>(responseString);
         return searchResults;
+    }
+
+    public async Task<SeriesResult> GetSeries(Guid id)
+    {
+        var client = _httpClientFactory.CreateClient();
+        var response = await client.GetAsync(
+            $"{_faybleApiConfiguration.BaseUrl}/api/series/{id}");
+
+        try
+        {
+            response.EnsureSuccessStatusCode();
+        }
+        catch (HttpRequestException ex)
+        {
+            _logger.LogError(
+                ex,
+                "An error occurred while retrieving series from Fayble API: '{ReasonPhrase}' | {@Details}",
+                response.ReasonPhrase,
+                new
+                {
+                    Id = id,
+                    StatusCode = (int)response.StatusCode,
+                    Repsonse = response.ReasonPhrase
+                });
+            throw;
+        }
+
+        var responseString = await response.Content.ReadAsStringAsync();
+        var seriesResult = JsonConvert.DeserializeObject<SeriesResult>(responseString);
+        return seriesResult;
     }
 }

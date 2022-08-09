@@ -1,11 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Fayble.Core.Extensions;
+﻿using Fayble.Core.Extensions;
 
 namespace Fayble.Models.Metadata;
+
 public class SeriesSearchResult
 {
     public Guid Id { get; }

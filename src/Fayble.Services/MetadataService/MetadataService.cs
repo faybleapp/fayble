@@ -16,4 +16,9 @@ public class MetadataService : IMetadataService
     {
         return await _faybleClient.SearchSeries(name, year);
     }
+
+    public async Task<SeriesResult> GetSeries(Guid id)
+    {
+        return await _faybleClient.GetSeries(id);
+    }
 }

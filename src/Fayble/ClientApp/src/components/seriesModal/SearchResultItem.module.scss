@@ -1,36 +1,43 @@
 @import "../../scss/variables";
 
 .detailsContainer {
-    flex-grow: 1;    
-    display:flex;
-    flex-direction: column;
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
 }
 
 .description {
-    color: $secondary-font-color;
-    white-space: pre-wrap;
-    height: 100px;
-    overflow-y: auto;    
-    flex-grow: 1;
-    
-    
+  color: $secondary-font-color;
+  white-space: pre-wrap;
+  height: 100px;
+  overflow-y: auto;
+  flex-grow: 1;
 }
 
 .searchResult {
-    display: flex;
-    flex-direction: row;
-    height: 150px;
-    width: 100%;
-    margin-bottom: 20px;
+  display: flex;
+  flex-direction: row;
+  height: 150px;
+  width: 100%;
+  margin-bottom: 20px;
+  background-color: $secondary-color;
+  padding: 17px;
+  border-radius: 4px;
+  height: 100%;
+  cursor: pointer;  
 }
+
+.searchResult:hover {
+    box-shadow: 0 4px 4px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19) !important;
+}
+
 .coverContainer {
-    width: 120px;
-    height: 100%;
-    padding-right: 20px;
+  width: 120px;
+  height: 100%;
+  padding-right: 20px;
 }
 .cover {
-    width: 100px;
-    height: 150px;		    
-    box-shadow: 0 4px 4px 0 rgba(0, 0, 0, 0.2),
-			0 6px 20px 0 rgba(0, 0, 0, 0.19) !important;
+  width: 100px;
+  height: 150px;
+  box-shadow: 0 4px 4px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19) !important;
 }

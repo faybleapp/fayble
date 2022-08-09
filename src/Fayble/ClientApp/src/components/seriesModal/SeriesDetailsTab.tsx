@@ -33,6 +33,7 @@ export const SeriesDetailsTab = () => {
             <SelectField
               name="publisherId"
               label="Publisher"
+              lockable
               clearable
               searchable
               options={

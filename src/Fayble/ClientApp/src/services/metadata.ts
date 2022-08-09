@@ -1,9 +1,6 @@
-import { SeriesSearchResult } from "models/api-models";
-import { MetadataSearchQuery } from "models/ui-models";
+import { SeriesResult } from "models/api-models";
 import { useApiQuery } from "./useApiQuery";
 
-export const useSearchSeries = ({ year, name }: MetadataSearchQuery) =>
-	useApiQuery<SeriesSearchResult[]>(
-		["metadata", name, year],
-		`/metadata/searchseries?name=${name}&year=${year}`
-	);
+
+export const useSeriesMetadata = (id: string) =>
+  useApiQuery<SeriesResult>(["seriesMetadata", id], `/metadata/series/${id}`);

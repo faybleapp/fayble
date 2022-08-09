@@ -4,11 +4,17 @@ import styles from "./SearchResultItem.module.scss";
 
 interface SearchResultItemProps {
   searchResult: SeriesSearchResult;
+  onSelect: (searchResultId: string) => void;
 }
 
-export const SearchResultItem = ({ searchResult }: SearchResultItemProps) => {
+export const SearchResultItem = ({
+  searchResult,
+  onSelect,
+}: SearchResultItemProps) => {
   return (
-    <div className={styles.searchResult}>
+    <div
+      className={styles.searchResult}
+      onClick={() => onSelect(searchResult.id)}>
       <div className={styles.coverContainer}>
         <Image className={styles.cover} src={searchResult.image || ""} />
       </div>

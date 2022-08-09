@@ -1,4 +1,4 @@
-import Notfound from "assets/notfound2.svg";
+import Notfound from "assets/NotFound.svg";
 import { LibraryHeader } from "components/libraryHeader";
 import { LibraryModal } from "components/libraryModal";
 import { PageContainer } from "components/pageContainer";

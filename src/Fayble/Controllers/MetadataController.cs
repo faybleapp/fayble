@@ -23,4 +23,10 @@ public class MetadataController : ControllerBase
     {
         return await _metadataService.SearchSeries(name, year);
     }
+
+    [HttpGet("series/{id}")]
+    public async Task<SeriesResult> Series(Guid id)
+    {
+        return await _metadataService.GetSeries(id);
+    }
 }
