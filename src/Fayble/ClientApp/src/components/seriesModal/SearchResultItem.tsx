@@ -20,7 +20,26 @@ export const SearchResultItem = ({
       </div>
       <div className={styles.detailsContainer}>
         <h6>{searchResult.name}</h6>
-        <div className={styles.description}>{searchResult.description}</div>
+        <div className={styles.details}>
+          {searchResult?.publisher && (
+            <div className={styles.detailProperty}>
+              <div className={styles.detailsHeading}>Publisher</div>
+              <div>{searchResult?.publisher}</div>
+            </div>
+          )}
+          {searchResult?.startYear && (
+            <div className={styles.detailProperty}>
+              <div className={styles.detailsHeading}>Year</div>
+              <div>{searchResult?.startYear}</div>
+            </div>
+          )}
+          {!!searchResult.issueCount ? (
+            <div className={styles.detailProperty}>
+              <div className={styles.detailsHeading}>Issues</div>
+              <div>{searchResult?.issueCount}</div>
+            </div>
+          ) : null}
+        </div>
       </div>
     </div>
   );

@@ -11,6 +11,7 @@ public class UpdateSeries
     public decimal Rating { get; }
     public Guid? PublisherId { get; }
     public Guid? ParentSeriesId { get; }
+    public Guid? MatchId { get; }
     public SeriesFieldLocks FieldLocks { get; }
     public UpdateSeries(
         Guid id,
@@ -22,6 +23,7 @@ public class UpdateSeries
         decimal rating,
         Guid? publisherId,
         Guid? parentSeriesId,
+        Guid? matchId,
         SeriesFieldLocks fieldLocks)
     {
         Id = id;
@@ -33,6 +35,7 @@ public class UpdateSeries
         Rating = rating;
         PublisherId = publisherId;
         ParentSeriesId = parentSeriesId;
+        MatchId = matchId;
         FieldLocks = fieldLocks;
     }
 

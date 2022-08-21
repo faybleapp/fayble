@@ -98,6 +98,7 @@ CREATE TABLE "Series" (
     "ParentSeriesId" TEXT NULL,
     "PublisherId" TEXT NULL,
     "FormatId" TEXT NULL,
+    "MatchId" TEXT NULL,
     "LibraryId" TEXT NULL,
     "MediaRoot" TEXT NULL,
     "FolderPath" TEXT NULL,

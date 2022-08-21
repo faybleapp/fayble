@@ -22,11 +22,11 @@ public class FaybleApiClient : IFaybleApiClient
         _faybleApiConfiguration = faybleApiConfiguration.Value;
     }
 
-    public async Task<IEnumerable<SeriesSearchResult>> SearchSeries(string name, int? year)
+    public async Task<IEnumerable<SeriesSearchResult>> SearchSeries(string? name, int? year, string? providerId)
     {
         var client = _httpClientFactory.CreateClient();
         var response = await client.GetAsync(
-            $"{_faybleApiConfiguration.BaseUrl}/api/series/search?name={name}{(year != null ? $"&year={year}" : string.Empty)}");
+            $"{_faybleApiConfiguration.BaseUrl}/api/series/search?{(name != null ? $"&name={name}" : string.Empty)}{(year != null ? $"&year={year}" : string.Empty)}{(providerId != null ? $"&providerId={providerId}" : string.Empty)}");
 
         try
         {
@@ -50,7 +50,7 @@ public class FaybleApiClient : IFaybleApiClient
 
         var responseString = await response.Content.ReadAsStringAsync();
         var searchResults = JsonConvert.DeserializeObject<IEnumerable<SeriesSearchResult>>(responseString);
-        return searchResults;
+         return searchResults;
     }
 
     public async Task<SeriesResult> GetSeries(Guid id)

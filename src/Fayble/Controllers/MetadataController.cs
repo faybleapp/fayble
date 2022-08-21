@@ -19,9 +19,9 @@ public class MetadataController : ControllerBase
     }
 
     [HttpGet("searchseries")]
-    public async Task<IEnumerable<SeriesSearchResult>> SearchSeries([FromQuery] string name, [FromQuery] int? year)
+    public async Task<IEnumerable<SeriesSearchResult>> SearchSeries([FromQuery] string searchQuery)
     {
-        return await _metadataService.SearchSeries(name, year);
+        return await _metadataService.SearchSeries(searchQuery);
     }
 
     [HttpGet("series/{id}")]

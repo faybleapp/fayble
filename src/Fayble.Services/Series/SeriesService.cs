@@ -56,7 +56,8 @@ public class SeriesService : ISeriesService
             series.Volume,
             series.Rating,
             series.PublisherId,
-            series.ParentSeriesId);
+            series.ParentSeriesId, 
+            series.MatchId);
 
         foreach (var fieldLockProperty in series.FieldLocks.GetType().GetProperties())
         {

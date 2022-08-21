@@ -1,29 +1,33 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿namespace Fayble.Models.Metadata;
 
-namespace Fayble.Models.Metadata
+public class SeriesResult
 {
+    public string Id { get; }
+    public string Name { get; }
+    public string Image { get; }
+    public string Description { get; }
+    public string Summary { get; }
+    public int StartYear { get; }
+    public List<ProviderResult> Providers { get; }
+    public List<BookResult> Books { get; }
 
-    public class SeriesResult
+    public SeriesResult(
+        string id,
+        string name,
+        int startYear,
+        string image,
+        string description,
+        string summary,
+        List<ProviderResult> providers,
+        List<BookResult> books)
     {
-        public string Id { get;  }
-        public string Name { get;  }
-        public string Summary { get;  }
-        public int StartYear { get; }
-        public List<BookResult> books { get; }
-
-        public SeriesResult(string id, string name, int startYear, string summary, List<BookResult> books)
-        {
-            this.books = books;
-            Id = id;
-            Name = name;
-            StartYear = startYear;
-            Summary = summary;
-        }
+        Books = books;
+        Providers = providers;
+        Id = id;
+        Name = name;
+        Description = description;
+        Image = image;
+        StartYear = startYear;
+        Summary = summary;
     }
-
-
 }

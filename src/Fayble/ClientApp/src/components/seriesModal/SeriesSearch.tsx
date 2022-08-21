@@ -1,5 +1,5 @@
 import { Series, SeriesSearchResult } from "models/api-models";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Button, Form, InputGroup, Spinner } from "react-bootstrap";
 import { toast } from "react-toastify";
 import { useHttpClient } from "services/httpClient";
@@ -17,25 +17,32 @@ export const SeriesSearch = ({
 }: SeriesSearchProps) => {
   const client = useHttpClient();
 
-  const [name, setName] = useState<string>(series.name || "");
-  const [year, setYear] = useState<string>(series.year?.toString() || "");
+  const [searchQuery, setSearchQuery] = useState<string>("");
   const [searchResults, setSearchResults] = useState<SeriesSearchResult[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(false);
+
+  useEffect(() => {
+    if (!series.name) return;
+    const yearQuery = series.year ? ` YEAR:${series.year}` : "";
+    setSearchQuery(series.name + yearQuery);
+  }, [series]);
 
   const handleSearch = async () => {
     setIsLoading(true);
     setSearchResults([]);
     await client
       .get<SeriesSearchResult[]>(
-        `/metadata/searchseries?name=${name}&year=${year}`
+        `/metadata/searchseries?searchQuery=${searchQuery}`
       )
       .then((response) => {
         setSearchResults(response.data);
-        setIsLoading(false);
       })
       .catch(() => {
         setSearchResults([]);
         toast.error("An error occured while searching series");
+      })
+      .finally(() => {
+        setIsLoading(false);
       });
   };
 
@@ -50,14 +57,21 @@ export const SeriesSearch = ({
     <div>
       <InputGroup className={styles.container}>
         <Form.Control
-          name="name"
-          value={name}
+          name="searchQuery"
+          onKeyPress={(event: React.KeyboardEvent) => {
+            if (event.key === 'Enter') {
+              event.preventDefault();
+              handleSearch();
+
+            }
+          }}
+          value={searchQuery}
           disabled={isLoading}
           placeholder="name"
-          onChange={(e) => setName(e.target.value)}
+          onChange={(e) => setSearchQuery(e.target.value)}
         />
         <Button
-          disabled={!name.trim() || isLoading}
+          disabled={!searchQuery.trim() || isLoading}
           style={{ width: "75px" }}
           onClick={handleSearch}>
           {isLoading ? (

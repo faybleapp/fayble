@@ -4,6 +4,11 @@
   flex-grow: 1;
   display: flex;
   flex-direction: column;
+  
+}
+
+.details {
+  margin-top: 10px;  
 }
 
 .description {
@@ -11,7 +16,8 @@
   white-space: pre-wrap;
   height: 100px;
   overflow-y: auto;
-  flex-grow: 1;
+  font-size: 14px;
+
 }
 
 .searchResult {
@@ -36,8 +42,27 @@
   height: 100%;
   padding-right: 20px;
 }
+
 .cover {
-  width: 100px;
-  height: 150px;
+  width: 90px;
+  height: 140px;
   box-shadow: 0 4px 4px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19) !important;
+}
+
+.detailProperty {
+  display: flex;
+  line-height: 25px;
+
+  .detailsHeading {
+    flex: 0 0 100px;
+
+    font-weight: 400;
+    font-size: 12px;
+    color: $secondary-font-color;
+    text-transform: uppercase;
+  }
+
+  .detailsValue {
+    max-width: 750px;
+  }
 }

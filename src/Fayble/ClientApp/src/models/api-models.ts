@@ -193,9 +193,18 @@ export interface SeriesSearchResult {
 export interface SeriesResult {
     id: string;
     name: string;
+    image: string;
+    description: string;
     summary: string;
     startYear: number;
+    providers: ProviderResult[];
     books: BookResult[];
+}
+
+export interface ProviderResult {
+    id: string;
+    providerItemId: string;
+    name: string;
 }
 
 export interface BookResult {
@@ -214,6 +223,7 @@ export interface UpdateSeries {
     rating: number;
     publisherId: string | undefined;
     parentSeriesId: string | undefined;
+    matchId: string | undefined;
     fieldLocks: SeriesFieldLocks;
 }
 
