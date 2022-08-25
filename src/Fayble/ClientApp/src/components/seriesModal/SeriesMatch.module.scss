@@ -1,0 +1,33 @@
+@import "../../scss/variables";
+
+.container {
+  display: flex;
+  flex-direction: row;
+  margin-top: 40px;
+  margin-bottom: 20px;
+}
+
+.cover {
+  width: 150px;
+  height: 100%;
+  margin-right: 10px;
+}
+
+.label {
+  background: $secondary-color !important;
+  border: none !important;
+  color: white !important;
+  width: 90px;
+}
+
+.loadingIndicator {
+  position: relative;
+  padding: 30px;
+}
+
+.detailsContainer {
+  flex-grow: 1;
+}
+.unmatchButton {
+  width: 100%;
+}

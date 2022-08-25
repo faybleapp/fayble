@@ -1,0 +1,67 @@
+@import "../../../../scss/variables";
+
+.container {
+  display: flex;
+  flex-direction: row;
+  margin-bottom: 50px;
+
+  .cover {
+    width: 200px;
+    height: 300px;
+  }
+
+  .detailsPanel {
+    padding-left: 30px;
+    padding-top: 5px;
+    flex-grow: 1;
+    color: rgb(255, 255, 255);
+
+    .detailsTitle {
+      display: flex;
+      margin-bottom: -5px;
+      align-content: center;
+
+      h4 {
+        margin: 0px;
+      }
+
+      .rating {
+        margin-left: auto;
+        display: flex;
+        flex-direction: column;
+        justify-content: flex-end;
+      }
+    }
+
+    .detailProperty {
+      display: flex;
+      line-height: 25px;
+
+      .detailsHeading {
+        flex: 0 0 150px;
+
+        font-weight: 600;
+        font-size: 13px;
+        color: $secondary-font-color;
+        text-transform: uppercase;
+      }
+
+      .detailsValue {
+        max-width: 750px;
+      }
+    }
+
+    .summary {
+      max-width: 750px;
+      margin-top: 30px;
+    }
+  }
+}
+
+.detailSection {
+  margin-top: 25px;
+}
+
+.placeholder {
+  background-color: $transparent-background;
+}

@@ -16,6 +16,7 @@ public class Series : AuditableEntity<Guid>, IAggregateRoot
     public string FolderPath { get; private set; }
     public string FolderName { get; private set; }
     public bool Locked { get; private set; }
+    public Guid? MatchId { get; private set; }
     public DateTimeOffset? LastMetadataUpdate { get; private set; }
     public virtual ICollection<Book.Book> Books { get; private set; }
     public SeriesFieldLocks FieldLocks { get; private set; }
@@ -26,7 +27,9 @@ public class Series : AuditableEntity<Guid>, IAggregateRoot
     public virtual Publisher.Publisher Publisher { get; private set; }
     public Guid? FormatId { get; private set; }
     public virtual Format.Format Format { get; private set; }
-    public Guid? LibraryId { get; private set; } public virtual Library.Library Library { get; private set; }
+    public Guid? LibraryId { get; private set; }
+    public virtual Library.Library Library { get; private set; }
+
 
     private Series()
     {
@@ -54,7 +57,8 @@ public class Series : AuditableEntity<Guid>, IAggregateRoot
         string volume,
         decimal rating,
         Guid? publisherId,
-        Guid? parentSeriesId)
+        Guid? parentSeriesId,
+        Guid? matchId)
     {
         Guard.AgainstNullOrWhitespace(name, nameof(Name));
 
@@ -66,6 +70,7 @@ public class Series : AuditableEntity<Guid>, IAggregateRoot
         Rating = rating;
         PublisherId = publisherId;
         ParentSeriesId = parentSeriesId;
+        MatchId = matchId;
     }
 
     public void SetMediaRoot(string mediaRoot)

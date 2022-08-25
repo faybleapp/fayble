@@ -88,6 +88,7 @@ export interface Series {
     parentSeriesId: string | undefined;
     parentSeries: Series | undefined;
     publisherId: string | undefined;
+    matchId: string | undefined;
     publisher: Publisher | undefined;
     rating: number;
     library: Library | undefined;
@@ -182,11 +183,35 @@ export interface SeriesSearchResult {
     id: string;
     name: string | undefined;
     summary: string | undefined;
+    description: string | undefined;
     startYear: number | undefined;
     publisher: string | undefined;
     issueCount: number;
     image: string | undefined;
     levenshteinDistance: number;
+}
+
+export interface SeriesResult {
+    id: string;
+    name: string;
+    image: string;
+    description: string;
+    summary: string;
+    startYear: number;
+    providers: ProviderResult[];
+    books: BookResult[];
+}
+
+export interface ProviderResult {
+    id: string;
+    providerItemId: string;
+    name: string;
+}
+
+export interface BookResult {
+    id: string;
+    title: string;
+    number: string;
 }
 
 export interface UpdateSeries {
@@ -199,6 +224,7 @@ export interface UpdateSeries {
     rating: number;
     publisherId: string | undefined;
     parentSeriesId: string | undefined;
+    matchId: string | undefined;
     fieldLocks: SeriesFieldLocks;
 }
 
@@ -206,7 +232,7 @@ export interface FirstRun {
     ownerCredentials: LoginCredentials;
 }
 
-export interface SystemConfiguration {
+export interface SystemSettings {
     firstRun: boolean;
 }
 

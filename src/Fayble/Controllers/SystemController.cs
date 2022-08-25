@@ -23,8 +23,8 @@ namespace Fayble.Controllers
             await _systemService.FirstRun(firstRun);
         }
 
-        [HttpGet("configuration")]
-        public async Task<SystemConfiguration> GetConfiguration()
+        [HttpGet("settings")]
+        public async Task<SystemSettings> GetConfiguration()
         {
             return await _systemService.GetConfiguration();
         }

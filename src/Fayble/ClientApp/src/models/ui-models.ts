@@ -76,3 +76,9 @@ export type OptionTypeBase =
           // eslint-disable-next-line @typescript-eslint/no-explicit-any
       }
     | any;
+
+export interface FirstRun {
+    username: string;
+    password: string;
+    passwordConfirmation: string;
+}

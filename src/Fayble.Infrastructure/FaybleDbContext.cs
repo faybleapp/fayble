@@ -34,7 +34,7 @@ public class FaybleDbContext : IdentityDbContext<User, UserRole, Guid>, IFaybleD
     public DbSet<Series> Series { get; set; }
     public DbSet<FileType> FileTypes { get; set; }
     public DbSet<Publisher> Publishers { get; set; }
-    public DbSet<SystemConfiguration> SystemConfiguration { get; set; }
+    public DbSet<SystemSetting> SystemConfiguration { get; set; }
     public DbSet<BackgroundTask> BackgroundTasks { get; set; }
     public DbSet<BookTag> BookTags { get; set; }
 

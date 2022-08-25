@@ -5,9 +5,9 @@ import { BreadcrumbItem, ViewType } from "models/ui-models";
 import { useState } from "react";
 import { useParams } from "react-router-dom";
 import { useSeries, useSeriesBooks } from "services/series";
-import { BookCoverGrid } from "./BookCoverGrid";
+import { BookCoverGrid } from "./components/BookCoverGrid";
+import { SeriesDetail } from "./components/SeriesDetail";
 import styles from "./Series.module.scss";
-import { SeriesDetail } from "./SeriesDetail";
 
 export const Series = () => {
 	const { seriesId } = useParams<{

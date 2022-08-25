@@ -1,54 +1,33 @@
-import { yupResolver } from "@hookform/resolvers/yup";
-import { Form } from "components/form/Form";
-import { NumberField } from "components/form/numberField";
-import { TextField } from "components/form/textField/TextField";
 import { Series } from "models/api-models";
-import { MetadataSearchQuery } from "models/ui-models";
-import { Button, Col, Container, Row } from "react-bootstrap";
-import { SubmitHandler, useForm } from "react-hook-form";
-import { useHttpClient } from "services/httpClient";
-import * as yup from "yup";
-
+import { Container } from "react-bootstrap";
+import { useFormContext, useWatch } from "react-hook-form";
+import { SeriesMatch } from "./SeriesMatch";
+import { SeriesSearch } from "./SeriesSearch";
 interface SeriesMetadataTabProps {
   series: Series;
 }
 
 export const SeriesMetadataTab = ({ series }: SeriesMetadataTabProps) => {
-  const client = useHttpClient();
-
-  const validationSchema = yup.object().shape({
-    name: yup.string().required("A search query is required"),
-    year: yup.number().min(1000).max(9999),
-  });
-
-  const form = useForm<MetadataSearchQuery>({
-    resolver: yupResolver(validationSchema),
-    defaultValues: { name: series.name, year: series.year },
-  });
-
-  const onSubmit: SubmitHandler<MetadataSearchQuery> = async (values, t) => {
-    // const results = await client.get<SeriesSearchResult[]>(
-    // 	`/metadata/searchseries?name=${values.name}&year=${values.year}`
-    // );
-    console.log(form.formState.errors);
-    console.log(values);
-  };
+  const { control, setValue } = useFormContext();
+  const matchedSeriesId = useWatch({ control, name: "matchId" });
 
   return (
     <Container>
-      <Form<MetadataSearchQuery> form={form} onSubmit={onSubmit}>
-        <Row>
-          <Col xs={9}>
-            <TextField name="name" placeholder="name" />
-          </Col>
-          <Col xs={3}>
-            <NumberField name="year" placeholder="Year" />
-          </Col>
-        </Row>
-        <Button type="submit" size="sm" style={{ width: "100%" }}>
-          Search
-        </Button>
-      </Form>
+      {matchedSeriesId ? (
+        <SeriesMatch
+          seriesId={matchedSeriesId}
+          unMatchSeries={() =>
+            setValue("matchId", undefined, { shouldDirty: true })
+          }
+        />
+      ) : (
+        <SeriesSearch
+          series={series}
+          onMatchedSeries={(seriesId) => {
+            setValue("matchId", seriesId, { shouldDirty: true });
+          }}
+        />
+      )}
     </Container>
   );
 };

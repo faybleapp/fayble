@@ -3,7 +3,7 @@ using Fayble.Domain.Aggregates.SystemConfiguration;
 
 namespace Fayble.Domain.Repositories;
 
-public interface ISystemConfigurationRepository : IRepositoryBase<SystemConfiguration, SystemConfigurationKey>
+public interface ISystemConfigurationRepository : IRepositoryBase<SystemSetting, SystemSettingKey>
 {
 
 }

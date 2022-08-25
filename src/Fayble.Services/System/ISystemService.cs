@@ -4,7 +4,7 @@ namespace Fayble.Services.System;
 
 public interface ISystemService
 {
-    Task<Models.SystemConfiguration> GetConfiguration();
+    Task<Models.SystemSettings> GetConfiguration();
     Task FirstRun(FirstRun firstRunConfiguration);
-    Task UpdateConfiguration(SystemConfiguration updatedConfiguration);
+    Task UpdateConfiguration(SystemSettings updatedConfiguration);
 }

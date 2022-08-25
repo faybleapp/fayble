@@ -5,15 +5,15 @@ using Fayble.Domain.Entities;
 
 namespace Fayble.Domain.Aggregates.SystemConfiguration;
 
-public class SystemConfiguration : IdentifiableEntity<SystemConfigurationKey>, IAggregateRoot
+public class SystemSetting : IdentifiableEntity<SystemSettingKey>, IAggregateRoot
 {
     public string Value { get; private set; }
 
-    public SystemConfiguration()
+    public SystemSetting()
     {
     }
 
-    public SystemConfiguration(SystemConfigurationKey configuration, string value) : base(configuration)
+    public SystemSetting(SystemSettingKey configuration, string value) : base(configuration)
     {
         Value = value;
     }

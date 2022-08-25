@@ -1,5 +1,6 @@
 ﻿using Fayble.Models.Metadata;
 using Fayble.Security.Authorisation;
+using Fayble.Services.MetadataService;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -10,9 +11,22 @@ namespace Fayble.Controllers;
 [Authorize(Policy = Policies.User)]
 public class MetadataController : ControllerBase
 {
-    [HttpGet("searchseries")]
-    public async Task<IEnumerable<SeriesSearchResult>> SearchSeries([FromQuery] string name, [FromQuery] int? year)
+    private readonly IMetadataService _metadataService;
+
+    public MetadataController(IMetadataService metadataService)
     {
-        return await Task.FromResult(new List<SeriesSearchResult>());
+        _metadataService = metadataService;
+    }
+
+    [HttpGet("searchseries")]
+    public async Task<IEnumerable<SeriesSearchResult>> SearchSeries([FromQuery] string searchQuery)
+    {
+        return await _metadataService.SearchSeries(searchQuery);
+    }
+
+    [HttpGet("series/{id}")]
+    public async Task<SeriesResult> Series(Guid id)
+    {
+        return await _metadataService.GetSeries(id);
     }
 }

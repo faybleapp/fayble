@@ -1,15 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using Fayble.Core.Extensions;
 
 namespace Fayble.Models.Metadata;
+
 public class SeriesSearchResult
 {
     public Guid Id { get; }
     public string? Name { get; }
     public string? Summary { get; }
+    public string? Description { get; }
     public int? StartYear { get; }
     public string? Publisher { get; }
     public int IssueCount { get; }
@@ -22,6 +20,7 @@ public class SeriesSearchResult
         string? name,
         int? startYear,
         string? summary,
+        string? description,
         string? publisher,
         int issueCount,
         string? image,
@@ -35,6 +34,6 @@ public class SeriesSearchResult
         IssueCount = issueCount;
         Image = image;
         LevenshteinDistance = levenshteinDistance;
-
+        Description = description?.RemoveHtmlTags();
     }
 }

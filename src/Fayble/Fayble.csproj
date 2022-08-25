@@ -53,6 +53,7 @@
   <ItemGroup>
     <ProjectReference Include="..\Fayble.Core\Fayble.Core.csproj" />
     <ProjectReference Include="..\Fayble.Database\Fayble.Database.csproj" />
+    <ProjectReference Include="..\Fayble.Integration\Fayble.Integration.csproj" />
     <ProjectReference Include="..\Fayble.Models\Fayble.Models.csproj" />
     <ProjectReference Include="..\Fayble.Services\Fayble.Services.csproj" />
   </ItemGroup>
