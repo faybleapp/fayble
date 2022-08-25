@@ -19,6 +19,7 @@ public static class Mappings
             entity.ParentSeriesId,
             entity.ParentSeries?.ToModel(userId),
             entity.PublisherId,
+            entity.MatchId,
             entity.Publisher?.ToModel(),
             entity.Rating,
             entity.MediaRoot,

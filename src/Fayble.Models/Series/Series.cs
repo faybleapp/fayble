@@ -14,6 +14,7 @@ public class Series
     public Guid? ParentSeriesId { get; }
     public Series? ParentSeries { get; }
     public Guid? PublisherId { get; }
+    public Guid? MatchId { get; }
     public Publisher? Publisher { get; }
     public decimal Rating { get; }
     public Library.Library? Library { get; }
@@ -34,6 +35,7 @@ public class Series
         Guid? parentSeriesId,
         Series? parentSeries,
         Guid? publisherId,
+        Guid? matchId,
         Publisher? publisher,
         decimal rating,
         string mediaRoot,
@@ -53,6 +55,7 @@ public class Series
         ParentSeries = parentSeries;
         Publisher = publisher;
         PublisherId = publisherId;
+        MatchId = matchId;
         Rating = rating;
         Library = library;
         Read = read;

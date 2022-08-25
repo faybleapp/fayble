@@ -88,6 +88,7 @@ export interface Series {
     parentSeriesId: string | undefined;
     parentSeries: Series | undefined;
     publisherId: string | undefined;
+    matchId: string | undefined;
     publisher: Publisher | undefined;
     rating: number;
     library: Library | undefined;
