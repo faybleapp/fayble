@@ -1,4 +1,4 @@
-import { SanitisePaths } from "helpers/pathHelpers";
+import { SanitisePath } from "helpers/pathHelpers";
 import React, { useState } from "react";
 import { Button, Form, InputGroup } from "react-bootstrap";
 import { useFormContext } from "react-hook-form";
@@ -33,7 +33,7 @@ export const LibraryPathTab = () => {
   const addPath = async () => {
     setValidatingPath(true);
 
-    const sanitisedPath = SanitisePaths(newPath);
+    const sanitisedPath = SanitisePath(newPath);
 
     let valid = false;
     try {

@@ -1,4 +1,5 @@
-﻿using Fayble.Security.Authorisation;
+﻿using Fayble.Models;
+using Fayble.Security.Authorisation;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -8,9 +9,9 @@ namespace Fayble.Controllers;
 [Authorize(Policy = Policies.Administrator)]
 public class FileSystemController : ControllerBase
 {
-    [HttpGet("pathexists")]
-    public bool PathExists(string path)
+    [HttpPost("pathexists")]
+    public bool PathExists(PathValidation pathValidation)
     {
-        return Directory.Exists(path);
+        return Directory.Exists(pathValidation.Path);
     }
 }

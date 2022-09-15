@@ -179,6 +179,64 @@ export interface RelatedBooks {
     booksReleasedSameYear: Book[] | undefined;
 }
 
+export interface PathValidation {
+    path: string;
+}
+
+export interface ComicFile {
+    number: string | undefined;
+    year: number | undefined;
+    fileType: string | undefined;
+    filePath: string;
+    coverImage: string | undefined;
+    fileName: string;
+    pageCount: number;
+    fileSize: number;
+    fileLastModifiedDate: Date;
+    comicInfoXml: ComicInfoXml | undefined;
+}
+
+export interface ComicInfoXml {
+    title: string | undefined;
+    series: string | undefined;
+    number: string | undefined;
+    volume: string | undefined;
+    summary: string | undefined;
+    notes: string | undefined;
+    year: string | undefined;
+    month: string | undefined;
+    day: string | undefined;
+    writer: string | undefined;
+    penciller: string | undefined;
+    inker: string | undefined;
+    colorist: string | undefined;
+    letterer: string | undefined;
+    coverArtist: string | undefined;
+    editor: string | undefined;
+    translator: string | undefined;
+    publisher: string | undefined;
+    imprint: string | undefined;
+    genre: string | undefined;
+    tags: string | undefined;
+    web: string | undefined;
+    pageCount: string | undefined;
+    format: string | undefined;
+    characters: string | undefined;
+    teams: string | undefined;
+    languageIso: string | undefined;
+    ageRating: string | undefined;
+}
+
+export interface ImportScan {
+    path: string;
+}
+
+export interface ImportFile {
+    seriesId: string | undefined;
+    destinationFileName: string;
+    filePath: string;
+}
+
 export interface SeriesSearchResult {
     id: string;
     name: string | undefined;

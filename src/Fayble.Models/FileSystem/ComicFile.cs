@@ -1,10 +1,11 @@
-﻿namespace Fayble.Models.FileSystem;
+﻿using Fayble.Models.Import;
+
+namespace Fayble.Models.FileSystem;
 
 public class ComicFile
 {
     public string? Number { get; }
     public int? Year { get; }
-    
     public string? FileType { get;  }
     public string FilePath { get; }
     public string? CoverImage { get; }

@@ -36,7 +36,12 @@ public class ProblemDetailsFactory : IProblemDetailsFactory
                     result.Title = "Invalid";
                     result.Type = ex?.GetType().Name;
                 break;
-                default:
+                case DomainException _:
+                    result.Status = context.Response.StatusCode = (int)HttpStatusCode.BadRequest;
+                    result.Title = ex.Message;
+                    result.Type = ex?.GetType().Name;
+                    break;
+            default:
                     result.Status = context.Response.StatusCode = (int)HttpStatusCode.InternalServerError;
                     result.Title = "Unexpected error occurred";
                     result.Type = ex?.GetType().Name;

@@ -1,4 +1,4 @@
-﻿namespace Fayble.Models.FileSystem;
+﻿namespace Fayble.Models.Import;
 
 public class ComicInfoXml
 {

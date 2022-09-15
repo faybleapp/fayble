@@ -1,7 +1,7 @@
 import { Form as RBForm } from "react-bootstrap";
-import { FormProvider, SubmitHandler, UseFormReturn } from "react-hook-form";
+import { FieldValues, FormProvider, SubmitHandler, UseFormReturn } from "react-hook-form";
 
-interface FormProps<T> {
+interface FormProps<T extends FieldValues> {
 	form: UseFormReturn<T, object>;
 	onSubmit?: SubmitHandler<T>;
 	className?: string;

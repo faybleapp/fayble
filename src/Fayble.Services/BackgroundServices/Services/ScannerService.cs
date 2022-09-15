@@ -1,7 +1,5 @@
-using System.Globalization;
 using Fayble.Core.Helpers;
 using Fayble.Domain;
-using Fayble.Domain.Aggregates;
 using Fayble.Domain.Aggregates.BackgroundTask;
 using Fayble.Domain.Aggregates.Book;
 using Fayble.Domain.Aggregates.Library;
@@ -12,6 +10,7 @@ using Fayble.Models.FileSystem;
 using Fayble.Services.FileSystem;
 using Microsoft.AspNetCore.SignalR;
 using Microsoft.Extensions.Logging;
+using System.Globalization;
 
 namespace Fayble.Services.BackgroundServices.Services;
 
@@ -162,10 +161,12 @@ public class ScannerService : IScannerService
 
                 _logger.LogInformation("File modified date changed, updating: {File}", file.FullName);
 
+                var comicFile = _comicBookFileSystemService.GetFile(file.FullName);
+
                 book.File.Update(
                     file.Length,
                     _comicBookFileSystemService.GetHash(file.FullName),
-                    _comicBookFileSystemService.GetPageCount(file.FullName));
+                    comicFile.PageCount);
 
                 if (series.Library.GetSetting<bool>(LibrarySettingKey.UseComicInfo))
                 {
@@ -255,11 +256,10 @@ public class ScannerService : IScannerService
     {
         var newFiles = new List<ComicFile>();
         var path = Path.Combine(series.Library.FolderPath, series.FolderPath);
-        var filePaths = await _comicBookFileSystemService.GetFiles(path, MediaType.ComicBook);
+        var filePaths = await _comicBookFileSystemService.GetFilePaths(path, MediaType.ComicBook);
 
         foreach (var filePath in filePaths)
-        {
-            
+        {            
             var exists = series.Books?.Any(
                 b => b.File.FilePath.ToLower() ==
                      PathHelpers.GetRelativePath(filePath, series.Library.FolderPath).ToLower()) ?? false;
@@ -267,28 +267,8 @@ public class ScannerService : IScannerService
             if (exists)
                 continue;
 
-            var file = new FileInfo(filePath);
-
-            var pageCount = _comicBookFileSystemService.GetPageCount(filePath);
-            var fileName = Path.GetFileName(filePath);
-            var fileSize = file.Length;
-            var lastModified = file.LastWriteTimeUtc;
-            var number = ComicBookHelpers.ParseIssueNumber(fileName);
-            var year = ComicBookHelpers.ParseYear(fileName);
-            var fileFormat = Path.GetExtension(fileName);
-            var comicInfoXml = _comicBookFileSystemService.ReadComicInfoXml(filePath);
-
-            newFiles.Add(new ComicFile(
-                number,
-                year,
-                fileFormat,
-                filePath,
-                null,
-                fileName,
-                pageCount,
-                fileSize,
-                lastModified,
-                comicInfoXml));
+            var comicFile = _comicBookFileSystemService.GetFile(filePath);
+            newFiles.Add(comicFile);
         }
 
         return newFiles;

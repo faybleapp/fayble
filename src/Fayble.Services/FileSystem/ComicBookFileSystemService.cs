@@ -4,6 +4,7 @@ using Fayble.Core.Helpers;
 using Fayble.Domain.Enums;
 using Fayble.Domain.Repositories;
 using Fayble.Models.FileSystem;
+using Fayble.Models.Import;
 using Microsoft.Extensions.Logging;
 using SharpCompress.Archives;
 using SixLabors.ImageSharp;
@@ -31,20 +32,6 @@ public class ComicBookFileSystemService : FileSystemService, IComicBookFileSyste
         return Directory.EnumerateFiles(libraryPath, "*.*", SearchOption.AllDirectories).Where(
                 f => extensions.Contains(Path.GetExtension(f).Replace(".", "").ToLowerInvariant()))
             .Select(f => new FileInfo(f).DirectoryName).Distinct()!;
-    }
-
-    public int GetPageCount(string filePath)
-    {
-        using var archive = ArchiveFactory.Open(filePath);
-        var images =
-            archive.Entries.Where(
-                x =>
-                    x.Key.ToLower().EndsWith(".jpg") || 
-                    x.Key.ToLower().EndsWith(".jpeg") ||
-                    x.Key.ToLower().EndsWith(".png") ||
-                    x.Key.ToLower().EndsWith(".bmp"));
-
-        return images.Count();
     }
 
     public void ExtractComicCoverImage(string filePath, string mediaRoot, Guid id)
@@ -92,5 +79,45 @@ public class ComicBookFileSystemService : FileSystemService, IComicBookFileSyste
         xDoc.LoadXml(xml);
         return deserializer.Deserialize(new StringReader(xDoc.InnerXml)) as ComicInfoXml;
     }
-  
+
+    public ComicFile GetFile(string filePath)
+    {
+        var file = new FileInfo(filePath);
+
+        var pageCount = GetPageCount(filePath);
+        var fileName = Path.GetFileName(filePath);
+        var fileSize = file.Length;
+        var lastModified = file.LastWriteTimeUtc;
+        var number = ComicBookHelpers.ParseIssueNumber(fileName);
+        var year = ComicBookHelpers.ParseYear(fileName);
+        var fileFormat = Path.GetExtension(fileName);
+        var comicInfoXml = ReadComicInfoXml(filePath);
+
+        return new ComicFile(
+                number,
+                year,
+                fileFormat,
+                filePath,
+                null,
+                fileName,
+                pageCount,
+                fileSize,
+                lastModified,
+                comicInfoXml);
+    }
+
+    private int GetPageCount(string filePath)
+    {
+        using var archive = ArchiveFactory.Open(filePath);
+        var images =
+            archive.Entries.Where(
+                x =>
+                    x.Key.ToLower().EndsWith(".jpg") ||
+                    x.Key.ToLower().EndsWith(".jpeg") ||
+                    x.Key.ToLower().EndsWith(".png") ||
+                    x.Key.ToLower().EndsWith(".bmp"));
+
+        return images.Count();
+    }
+
 }

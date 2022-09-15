@@ -30,7 +30,9 @@ public class SystemService : ISystemService
         var systemConfiguration = await GetConfiguration();
 
         if (!systemConfiguration.FirstRun)
+        {
             throw new DomainException("First run configuration already completed.");
+        }
 
         await _authenticationService.CreateUser(
             new NewUser(

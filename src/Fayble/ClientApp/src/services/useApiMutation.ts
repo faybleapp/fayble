@@ -19,7 +19,7 @@ export const useApiMutation = <Response, Variables, Data = null>(
 				case "PATCH":
 					return await (await httpClient.patch(path(variables), data)).data;
 				case "DELETE":
-					return (await httpClient.delete(path(variables), data)).data;
+					return (await httpClient.delete(path(variables))).data;
 				default:
 					return (await httpClient.post(path(variables), data)).data;
 			}

@@ -1,2 +1,4 @@
-export const SanitisePaths = (string: string) =>
-	string.trim().replace(/\/+$/, "").replace(/\\+$/, "").trim();
+
+export const SanitisePath = (string: string) =>
+  string.trim().replace(/\/+$/, "").replace(/\\+$/, "").trim();
+

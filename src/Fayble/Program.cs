@@ -16,6 +16,7 @@ using Fayble.Services.BackgroundServices;
 using Fayble.Services.BackgroundServices.Services;
 using Fayble.Services.Book;
 using Fayble.Services.FileSystem;
+using Fayble.Services.Import;
 using Fayble.Services.Library;
 using Fayble.Services.MetadataService;
 using Fayble.Services.Person;
@@ -173,6 +174,7 @@ builder.Services.AddScoped<ITagService, TagService>();
 builder.Services.AddScoped<ISystemService, SystemService>();
 builder.Services.AddScoped<IPersonService, PersonService>();
 builder.Services.AddScoped<IMetadataService, MetadataService>();
+builder.Services.AddScoped<IImportService, ImportService>();
 
 // Integration
 builder.Services.AddScoped<IFaybleApiClient, FaybleApiClient>();
