@@ -186,7 +186,7 @@ export interface PathValidation {
 export interface ComicFile {
     number: string | undefined;
     year: number | undefined;
-    fileType: string | undefined;
+    fileExtension: string | undefined;
     filePath: string;
     coverImage: string | undefined;
     fileName: string;
@@ -235,6 +235,7 @@ export interface ImportFile {
     seriesId: string | undefined;
     destinationFileName: string;
     filePath: string;
+    number: string;
 }
 
 export interface SeriesSearchResult {

@@ -48,7 +48,7 @@ export const SeriesModal = ({ series, show, close }: SeriesModalProps) => {
     <Modal size="lg" show={show} onShow={() => form.reset(series)} onHide={close}>
       <Modal.Header closeButton>
         <Container>
-          <Modal.Title>Edit Series</Modal.Title>
+          <Modal.Title>Edit Series</Modal.Title>          
         </Container>
       </Modal.Header>
       <Modal.Body>

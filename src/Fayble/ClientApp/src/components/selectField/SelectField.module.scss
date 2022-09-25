@@ -1,0 +1,19 @@
+@import "../../scss/variables";
+
+:export {
+	color: $primary-font-color;
+	background: $secondary-color;
+	secondaryBackground: $secondary-color;
+	accentColor: $accent-color;
+	border: 0px;
+	none: "none";
+	box-shadow: 0 0 0 0.1rem $accent-color;
+}
+
+.select {
+	width: 100%;
+	div {
+		border-top-right-radius: 0;
+		border-bottom-right-radius: 0;
+	}
+}

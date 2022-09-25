@@ -1,0 +1,25 @@
+@import "../../scss/variables";
+
+.selectableCell {
+  &:hover {
+    color: $accent-color;
+    cursor: pointer;
+  }
+}
+
+.placeholder {
+  color: $secondary-font-color;
+}
+
+.editableCell {
+  outline: 0;
+  // border-width: 0 0 1px;
+  border: none;
+
+  flex-grow: 1;
+  background-color: transparent;
+}
+
+.errorIcon {
+  color: red;
+}

@@ -1,9 +1,9 @@
 import cn from "classnames";
 import { FieldLock } from "components/fieldLock";
 import {
-    LockableField,
-    OptionTypeBase,
-    SelectFieldOption
+  LockableField,
+  OptionTypeBase,
+  SelectFieldOption
 } from "models/ui-models";
 import { Form, InputGroup } from "react-bootstrap";
 import { Controller, useFormContext } from "react-hook-form";

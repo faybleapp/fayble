@@ -18,7 +18,7 @@ public static class Mappings
             entity.Summary,
             entity.File.PageCount,
             entity.File.FileName,
-            entity.File.FileType,
+            entity.File.FileExtension,
             Math.Round(Convert.ToDouble(entity.File.FileSize / 1024) / 1024, 2),
             Path.Combine(entity.Library.FolderPath, entity.File.FilePath),
             entity.Rating,

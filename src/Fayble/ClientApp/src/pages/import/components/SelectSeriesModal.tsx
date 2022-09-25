@@ -1,26 +1,44 @@
-import { Button, Modal } from "react-bootstrap";
+import { SelectField } from "components/selectField";
+import { Container, Modal } from "react-bootstrap";
 
+import { useAllSeries } from "services";
 interface SelectSeriesModalProps {
   show: boolean;
   onClose: () => void;
   onSelectSeries: (id: string) => void;
 }
 
-export const SelectSeriesModal = ({ show, onClose, onSelectSeries }: SelectSeriesModalProps) => {
+export const SelectSeriesModal = ({
+  show,
+  onClose,
+  onSelectSeries,
+}: SelectSeriesModalProps) => {
+  const { data: series } = useAllSeries();
+
   return (
     <Modal show={show} onHide={onClose}>
       <Modal.Header closeButton>
-        <Modal.Title>Modal heading</Modal.Title>
+        <Container>
+          <Modal.Title>Select Series</Modal.Title>
+        </Container>
       </Modal.Header>
-      <Modal.Body>Woohoo, you're reading this text in a modal!</Modal.Body>
-      <Modal.Footer>
-        <Button variant="secondary" onClick={onClose}>
-          Close
-        </Button>
-        <Button variant="primary" onClick={() => onSelectSeries("BLASRG")}>
-          Save Changes
-        </Button>
-      </Modal.Footer>
+      <Modal.Body>
+        <Container>
+          {series && (
+            <SelectField
+              onChange={(seriesId) => onSelectSeries(seriesId)}
+              name="series"
+              options={
+                series.map((seriesItem) => ({
+                  value: seriesItem.id!,
+                  label: seriesItem.name!,
+                })) || []
+              }
+            />
+          )}
+        </Container>
+      </Modal.Body>
+      <Modal.Footer></Modal.Footer>
     </Modal>
   );
-};
+}; 

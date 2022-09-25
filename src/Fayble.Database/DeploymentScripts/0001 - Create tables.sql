@@ -213,7 +213,7 @@ CREATE TABLE "BookFile" (
     "FileName" TEXT NULL,
     "FilePath" TEXT NULL,
     "FileSize" INTEGER NOT NULL,
-    "FileType" TEXT NULL,
+    "FileExtension" TEXT NULL,
     "FileHash" TEXT NULL,
     "PageCount" INTEGER NOT NULL,
     "FileLastModifiedDate" TEXT NOT NULL,

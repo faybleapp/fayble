@@ -6,7 +6,7 @@ public class ComicFile
 {
     public string? Number { get; }
     public int? Year { get; }
-    public string? FileType { get;  }
+    public string? FileExtension { get;  }
     public string FilePath { get; }
     public string? CoverImage { get; }
     public string FileName { get; }
@@ -18,7 +18,7 @@ public class ComicFile
     public ComicFile(
         string? number,
         int? year,
-        string? fileType,
+        string? fileExtension,
         string filePath,
         string? coverImage,
         string fileName,
@@ -29,7 +29,7 @@ public class ComicFile
     {
         Number = number;
         Year = year;
-        FileType = fileType?.ToLower().Replace(".", string.Empty);
+        FileExtension = fileExtension?.ToLower().TrimStart('.');
         FilePath = filePath;
         CoverImage = coverImage;
         FileName = fileName;

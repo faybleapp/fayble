@@ -5,6 +5,7 @@
 @import "modals";
 @import "themes";
 @import "forms";
+@import "tables";
 
 body {
   font-size: 14px !important;
@@ -49,3 +50,5 @@ body,
 ::-webkit-scrollbar-button {
   display: none;
 }
+
+

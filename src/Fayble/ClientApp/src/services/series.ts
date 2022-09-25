@@ -4,7 +4,7 @@ import { useApiQuery } from "services/useApiQuery";
 import { useApiMutation } from "./useApiMutation";
 
 export const useAllSeries = () =>
-  useApiQuery<Series>(["series"], `/series`);
+  useApiQuery<Series[]>(["series"], `/series`);
 
 export const useSeries = (id: string) =>
   useApiQuery<Series>(["series", id], `/series/${id}`);

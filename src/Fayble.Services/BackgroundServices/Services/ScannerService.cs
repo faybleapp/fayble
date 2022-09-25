@@ -203,7 +203,7 @@ public class ScannerService : IScannerService
                 newFile.FileName,
                 PathHelpers.GetRelativePath(newFile.FilePath, series.Library.FolderPath),
                 newFile.FileSize,
-                newFile.FileType,
+                newFile.FileExtension,
                 newFile.FileLastModifiedDate,
                 newFile.PageCount,
                 _comicBookFileSystemService.GetHash(newFile.FilePath));
@@ -242,7 +242,7 @@ public class ScannerService : IScannerService
                 new
                 {
                     book.Id,
-                    book.File.FileType,
+                    book.File.FileName,
                     book.File.FilePath,
                     book.LibraryId
                 });
