@@ -8,8 +8,12 @@ import {
   useReactTable
 } from "@tanstack/react-table";
 import cn from "classnames";
+import {
+  IndeterminateCheckbox,
+  IndeterminateCheckboxValue
+} from "components/indeterminateCheckbox";
 import { ComicFile, ImportFile } from "models/api-models";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { OverlayTrigger, Table, Tooltip } from "react-bootstrap";
 import { useAllSeries } from "services";
 import { SelectSeriesModal } from "./components/SelectSeriesModal";
@@ -26,7 +30,10 @@ export const ImportTable = ({ files }: ImportTableProps) => {
   const [showNumberModal, setShowNumberModal] = useState<boolean>(false);
   const [showImportFilenameModal, setShowImportFilenameModal] =
     useState<boolean>(false);
-  const [selectedFiles, setSelectedFiles] = useState<Array<string>>([]);
+  const [checkedFiles, setCheckedFiles] = useState<Array<string>>([]);
+  const [selectedFile, setSelectedFile] = useState<string | undefined>();
+  const [selectAllStatus, setSelectAllStatus] =
+    useState<IndeterminateCheckboxValue>(IndeterminateCheckboxValue.Unchecked);
   const [importFiles, setImportFiles] = useState<Array<ImportFile>>(
     files.map((file) => {
       return {
@@ -37,10 +44,18 @@ export const ImportTable = ({ files }: ImportTableProps) => {
       };
     })
   );
-  const [singleSelectedSeries, setSingleSelectedSeries] = useState<
-    string | undefined
-  >();
+
   const { data: series } = useAllSeries();
+
+  useEffect(() => {
+    if (checkedFiles.length === 0) {
+      setSelectAllStatus(IndeterminateCheckboxValue.Unchecked);
+    } else if (checkedFiles.length === importFiles.length) {
+      setSelectAllStatus(IndeterminateCheckboxValue.Checked);
+    } else {
+      setSelectAllStatus(IndeterminateCheckboxValue.Indeterminate);
+    }
+  }, [checkedFiles, importFiles]);
 
   const columnHelper = createColumnHelper<ComicFile>();
 
@@ -53,7 +68,7 @@ export const ImportTable = ({ files }: ImportTableProps) => {
           [styles.placeholder]: !seriesName,
         })}
         onClick={() => {
-          setSingleSelectedSeries(id);
+          setSelectedFile(id);
           setShowSeriesModal(true);
         }}>
         {seriesName ?? "select"}
@@ -65,12 +80,28 @@ export const ImportTable = ({ files }: ImportTableProps) => {
     return (
       <input
         type="checkbox"
-        checked={selectedFiles.includes(id)}
+        checked={checkedFiles.includes(id)}
         onChange={(e) => {
           e.target.checked
-            ? setSelectedFiles([...selectedFiles, id])
-            : setSelectedFiles(selectedFiles.filter((item) => item !== id));
+            ? setCheckedFiles([...checkedFiles, id])
+            : setCheckedFiles(checkedFiles.filter((item) => item !== id));
         }}
+      />
+    );
+  };
+
+  const renderHeaderCheckbox = () => {
+    return (
+      <IndeterminateCheckbox
+        onChange={() => {
+          setCheckedFiles(
+            selectAllStatus === IndeterminateCheckboxValue.Checked ||
+              selectAllStatus === IndeterminateCheckboxValue.Indeterminate
+              ? []
+              : importFiles.map((i) => i.filePath)
+          );
+        }}
+        value={selectAllStatus}
       />
     );
   };
@@ -83,7 +114,7 @@ export const ImportTable = ({ files }: ImportTableProps) => {
           [styles.placeholder]: !importFile?.destinationFileName,
         })}
         onClick={() => {
-          setSingleSelectedSeries(id);
+          setSelectedFile(id);
           setShowImportFilenameModal(true);
         }}>
         {!!importFile?.destinationFileName
@@ -101,7 +132,7 @@ export const ImportTable = ({ files }: ImportTableProps) => {
           [styles.placeholder]: !importFile?.number,
         })}
         onClick={() => {
-          setSingleSelectedSeries(id);
+          setSelectedFile(id);
           setShowNumberModal(true);
         }}>
         {!!importFile?.number ? importFile?.number : "set"}
@@ -137,7 +168,7 @@ export const ImportTable = ({ files }: ImportTableProps) => {
   const columns: ColumnDef<ComicFile, any>[] = [
     columnHelper.accessor((row) => row, {
       id: "check",
-      header: "",
+      header: () => renderHeaderCheckbox(),
       cell: (info) => renderCheckbox(info.row.original.filePath),
     }),
     columnHelper.accessor((row) => row.fileName, {
@@ -207,12 +238,20 @@ export const ImportTable = ({ files }: ImportTableProps) => {
         show={showSeriesModal}
         onClose={() => {
           setShowSeriesModal(false);
-          setSingleSelectedSeries(undefined);
+          setSelectedFile(undefined);
         }}
         onSelectSeries={(seriesId) => {
           setImportFiles(
             importFiles.map((file) => {
-              if (file.filePath === singleSelectedSeries) {
+              // Process single file
+              if (selectedFile) {
+                if (file.filePath === selectedFile) {
+                  return { ...file, seriesId: seriesId };
+                }
+                return file;
+              }
+              // Process checked files
+              if (checkedFiles.some((f) => f === file.filePath)) {
                 return { ...file, seriesId: seriesId };
               }
               return file;
@@ -223,18 +262,17 @@ export const ImportTable = ({ files }: ImportTableProps) => {
       />
       <SetNumberModal
         number={
-          importFiles.find((f) => f.filePath === singleSelectedSeries)
-            ?.number || ""
+          importFiles.find((f) => f.filePath === selectedFile)?.number || ""
         }
         show={showNumberModal}
         onClose={() => {
           setShowNumberModal(false);
-          setSingleSelectedSeries(undefined);
+          setSelectedFile(undefined);
         }}
         onChange={(number) => {
           setImportFiles(
             importFiles.map((file) => {
-              if (file.filePath === singleSelectedSeries) {
+              if (file.filePath === selectedFile) {
                 return { ...file, number: number };
               }
               return file;
@@ -247,17 +285,17 @@ export const ImportTable = ({ files }: ImportTableProps) => {
       <SetImportFilenameModal
         onClose={() => {
           setShowImportFilenameModal(false);
-          setSingleSelectedSeries(undefined);
+          setSelectedFile(undefined);
         }}
         show={showImportFilenameModal}
         filename={
-          importFiles.find((f) => f.filePath === singleSelectedSeries)
+          importFiles.find((f) => f.filePath === selectedFile)
             ?.destinationFileName || ""
         }
         onChange={(fileName) => {
           setImportFiles(
             importFiles.map((file) => {
-              if (file.filePath === singleSelectedSeries) {
+              if (file.filePath === selectedFile) {
                 return { ...file, destinationFileName: fileName };
               }
               return file;
