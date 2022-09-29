@@ -29,6 +29,6 @@ public class ImportService : IImportService
         }
 
         var filePaths = await _comicBookFileSystemService.GetFilePaths(path, MediaType.ComicBook);
-        return filePaths.Select(filePath => _comicBookFileSystemService.GetFile(filePath)).ToList();
+        return filePaths.Select(filePath => _comicBookFileSystemService.GetFile(filePath)).OrderBy(f => f.FileName).ToList();
     }
 }

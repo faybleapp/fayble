@@ -9,11 +9,13 @@ export enum IndeterminateCheckboxValue {
 interface IndeterminateCheckboxProps {
   value: IndeterminateCheckboxValue;
   onChange: () => void;
+  className?: string;
 }
 
 export const IndeterminateCheckbox = ({
   value,
   onChange,
+  className
 }: IndeterminateCheckboxProps) => {
   const checkboxRef = useRef<HTMLInputElement>(null)
 
@@ -31,6 +33,6 @@ export const IndeterminateCheckbox = ({
   }, [value]);
 
   return (
-    <input type="checkbox" onChange={onChange} ref={checkboxRef} />
+    <input className={className} type="checkbox" onChange={onChange} ref={checkboxRef} />
   );
 };

@@ -1,4 +1,7 @@
-import { faCircleExclamation } from "@fortawesome/free-solid-svg-icons";
+import {
+  faCheckCircle,
+  faCircleExclamation
+} from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   ColumnDef,
@@ -14,7 +17,7 @@ import {
 } from "components/indeterminateCheckbox";
 import { ComicFile, ImportFile } from "models/api-models";
 import { useEffect, useState } from "react";
-import { OverlayTrigger, Table, Tooltip } from "react-bootstrap";
+import { Button, OverlayTrigger, Table, Tooltip } from "react-bootstrap";
 import { useAllSeries } from "services";
 import { SelectSeriesModal } from "./components/SelectSeriesModal";
 import { SetImportFilenameModal } from "./components/SetImportFilenameModal";
@@ -28,12 +31,13 @@ interface ImportTableProps {
 export const ImportTable = ({ files }: ImportTableProps) => {
   const [showSeriesModal, setShowSeriesModal] = useState<boolean>(false);
   const [showNumberModal, setShowNumberModal] = useState<boolean>(false);
-  const [showImportFilenameModal, setShowImportFilenameModal] =
-    useState<boolean>(false);
+  const [queuedForImport, setQueuedForImport] = useState<Array<string>>([]);
   const [checkedFiles, setCheckedFiles] = useState<Array<string>>([]);
   const [selectedFile, setSelectedFile] = useState<string | undefined>();
   const [selectAllStatus, setSelectAllStatus] =
     useState<IndeterminateCheckboxValue>(IndeterminateCheckboxValue.Unchecked);
+  const [showImportFilenameModal, setShowImportFilenameModal] =
+    useState<boolean>(false);
   const [importFiles, setImportFiles] = useState<Array<ImportFile>>(
     files.map((file) => {
       return {
@@ -46,6 +50,12 @@ export const ImportTable = ({ files }: ImportTableProps) => {
   );
 
   const { data: series } = useAllSeries();
+  const checkedAndValid = importFiles.filter(
+    (f) =>
+      checkedFiles.some((cf) => cf === f.filePath) &&
+      f.destinationFileName &&
+      f.seriesId
+  );
 
   useEffect(() => {
     if (checkedFiles.length === 0) {
@@ -77,9 +87,10 @@ export const ImportTable = ({ files }: ImportTableProps) => {
   };
 
   const renderCheckbox = (id: string) => {
-    return (
+    return !queuedForImport.some((q) => q === id) ? (
       <input
         type="checkbox"
+        className={styles.checkbox}
         checked={checkedFiles.includes(id)}
         onChange={(e) => {
           e.target.checked
@@ -87,12 +98,13 @@ export const ImportTable = ({ files }: ImportTableProps) => {
             : setCheckedFiles(checkedFiles.filter((item) => item !== id));
         }}
       />
-    );
+    ) : null;
   };
 
   const renderHeaderCheckbox = () => {
     return (
       <IndeterminateCheckbox
+        className={styles.checkbox}
         onChange={() => {
           setCheckedFiles(
             selectAllStatus === IndeterminateCheckboxValue.Checked ||
@@ -140,29 +152,52 @@ export const ImportTable = ({ files }: ImportTableProps) => {
     );
   };
 
-  const renderValid = (id: string) => {
+  const renderStatus = (id: string) => {
     const importFile = importFiles.find((f) => f.filePath === id);
-    let valid = false;
-    let error = "";
-    if (!importFile?.seriesId) {
-      error = "You must select a series";
+    let error;
+    let message = "";
+
+    if (queuedForImport.some((q) => q === importFile?.filePath)) {
+      error = false;
+      message = "Queued for import";
+    } else if (!importFile?.seriesId) {
+      error = true;
+      message = "You must select a series";
     } else if (!importFile?.destinationFileName) {
-      error = "You must set a destination filename";
+      error = true;
+      message = "You must set a destination filename";
     } else {
-      valid = true;
+      return null;
     }
+
     return (
-      !valid && (
-        <OverlayTrigger placement="left" overlay={<Tooltip>{error}</Tooltip>}>
-          <div>
+      <OverlayTrigger placement="left" overlay={<Tooltip>{message}</Tooltip>}>
+        <div>
+          {error ? (
             <FontAwesomeIcon
               className={styles.errorIcon}
               icon={faCircleExclamation}
             />
-          </div>
-        </OverlayTrigger>
-      )
+          ) : (
+            <FontAwesomeIcon
+              className={styles.importIcon}
+              icon={faCheckCircle}
+            />
+          )}
+        </div>
+      </OverlayTrigger>
     );
+  };
+
+  const handleImport = () => {
+    const files = importFiles.filter(
+      (f) =>
+        checkedFiles.some((cf) => cf === f.filePath) &&
+        f.destinationFileName &&
+        f.seriesId
+    );
+    setQueuedForImport(files.map((f) => f.filePath));
+    setCheckedFiles([]);
   };
 
   const columns: ColumnDef<ComicFile, any>[] = [
@@ -189,9 +224,9 @@ export const ImportTable = ({ files }: ImportTableProps) => {
       cell: (info) => renderImportFilename(info.row.original.filePath),
     }),
     columnHelper.accessor((row) => row, {
-      id: "valid",
+      id: "status",
       header: "",
-      cell: (info) => renderValid(info.row.original.filePath),
+      cell: (info) => renderStatus(info.row.original.filePath),
     }),
   ];
 
@@ -201,9 +236,13 @@ export const ImportTable = ({ files }: ImportTableProps) => {
     getCoreRowModel: getCoreRowModel(),
   });
 
+useEffect(() => {
+  console.log(selectedFile);
+}, [selectedFile])
+
   return (
     <>
-      <div>
+      <div className={styles.importTable}>
         <Table striped hover>
           <thead>
             {table.getHeaderGroups()?.map((headerGroup) => (
@@ -234,6 +273,20 @@ export const ImportTable = ({ files }: ImportTableProps) => {
           </tbody>
         </Table>
       </div>
+      <div className={styles.tableButtons}>
+        <Button
+          disabled={checkedFiles.length === 0}
+          variant="secondary"
+          onClick={() => setShowSeriesModal(true)}>
+          Select Series
+        </Button>
+        <Button
+          disabled={checkedAndValid.length === 0}
+          className={styles.importButton}
+          onClick={handleImport}>
+          Import Selected
+        </Button>
+      </div>
       <SelectSeriesModal
         show={showSeriesModal}
         onClose={() => {
@@ -258,6 +311,7 @@ export const ImportTable = ({ files }: ImportTableProps) => {
             })
           );
           setShowSeriesModal(false);
+          setSelectedFile(undefined);
         }}
       />
       <SetNumberModal

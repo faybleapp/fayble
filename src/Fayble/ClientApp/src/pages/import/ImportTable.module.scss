@@ -1,5 +1,9 @@
 @import "../../scss/variables";
 
+.importTable {
+  margin-top: 30px;
+}
+
 .selectableCell {
   &:hover {
     color: $accent-color;
@@ -22,4 +26,22 @@
 
 .errorIcon {
   color: red;
+}
+
+.importIcon {
+  color: green;
+}
+
+.checkbox {
+  cursor: pointer;
+}
+
+.tableButtons {
+  display: flex;
+  margin-bottom: 40px;
+ 
+  .importButton {
+    margin-left: auto;
+  }
+ 
 }
