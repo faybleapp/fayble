@@ -20,31 +20,37 @@ export const Import = ({}: ImportProps) => {
     const sanitisedPath = SanitisePath(path);
     setIsSearching(true);
     setFiles(undefined);
-    validatePath([null, { path: sanitisedPath }], {
-      onSuccess: (exists) => {
-        if (!exists) {
-          toast.error("Path does not exist or is not accessible");
+    validatePath(
+      { path: sanitisedPath },
+      {
+        onSuccess: (exists) => {
+          if (!exists) {
+            toast.error("Path does not exist or is not accessible");
+            setIsSearching(false);
+            return;
+          }
+          scanImportFiles(
+            { path: sanitisedPath },
+            {
+              onError: () => {
+                toast.error("Path does not exist or is not accessible");
+              },
+              onSuccess: (results) => {
+                setFiles(results);
+              },
+              onSettled: () => {
+                setIsSearching(false);
+              },
+            }
+          );
+        },
+        onError: () => {
+          toast.error("An error occured while validating path");
           setIsSearching(false);
           return;
-        }
-        scanImportFiles([null, { path: sanitisedPath }], {
-          onError: () => {
-            toast.error("Path does not exist or is not accessible");
-          },
-          onSuccess: (results) => {
-            setFiles(results);
-          },
-          onSettled: () => {
-            setIsSearching(false);
-          },
-        });
-      },
-      onError: () => {
-        toast.error("An error occured while validating path");
-        setIsSearching(false);
-        return;
-      },
-    });
+        },
+      }
+    );
   };
 
   return (

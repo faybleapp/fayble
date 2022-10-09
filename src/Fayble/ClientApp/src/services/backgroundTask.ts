@@ -4,7 +4,7 @@ import { useApiMutation } from "./useApiMutation";
 
 export const useRunBackgroundTask = () => {
 	const queryClient = useQueryClient();
-	return useApiMutation<null, null, BackgroundTaskRequest>(
+	return useApiMutation<null, BackgroundTaskRequest>(
 		"POST",
 		() => `/backgroundtasks`,
 		{

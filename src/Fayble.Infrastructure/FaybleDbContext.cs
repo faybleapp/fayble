@@ -8,9 +8,11 @@ using Fayble.Domain.Aggregates.BackgroundTask;
 using Fayble.Domain.Aggregates.Book;
 using Fayble.Domain.Aggregates.FileType;
 using Fayble.Domain.Aggregates.Library;
+using Fayble.Domain.Aggregates.MediaSetting;
 using Fayble.Domain.Aggregates.Publisher;
 using Fayble.Domain.Aggregates.Series;
 using Fayble.Domain.Aggregates.SystemConfiguration;
+using Fayble.Domain.Aggregates.SystemSetting;
 using Fayble.Domain.Aggregates.Tag;
 using Fayble.Domain.Aggregates.User;
 using Fayble.Domain.Entities;
@@ -37,6 +39,7 @@ public class FaybleDbContext : IdentityDbContext<User, UserRole, Guid>, IFaybleD
     public DbSet<SystemSetting> SystemConfiguration { get; set; }
     public DbSet<BackgroundTask> BackgroundTasks { get; set; }
     public DbSet<BookTag> BookTags { get; set; }
+    public DbSet<MediaSetting> MediaSettings { get; set; }
 
     private readonly IUser _userIdentity;
 

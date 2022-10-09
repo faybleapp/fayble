@@ -6,6 +6,7 @@ import { Library } from "pages/library";
 import { Book } from "pages/library/book";
 import { Series } from "pages/library/series";
 import { Login } from "pages/login";
+import { Media } from "pages/settings";
 import { useRoutes } from "react-router-dom";
 import { useSystemConfiguration } from "services/system";
 
@@ -29,6 +30,7 @@ export const Routes = () => {
           element: <Book />,
         },
         { path: "/import", element: <Import /> },
+        { path: "/settings/media", element: <Media /> },
       ],
     },
     { path: "/login", element: <Login /> },

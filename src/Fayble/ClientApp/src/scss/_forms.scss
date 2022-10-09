@@ -11,7 +11,8 @@
 
 .form-control {
 	color: $primary-font-color !important;
-	border: 0px !important;
+	//border: 0px !important;
+	border-color: $field-border-color !important;
 	font-size: 14px;
 	min-height: 38px;
 	background-color: $secondary-color !important;

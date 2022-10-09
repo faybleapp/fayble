@@ -22,6 +22,7 @@ using Fayble.Services.MetadataService;
 using Fayble.Services.Person;
 using Fayble.Services.Publisher;
 using Fayble.Services.Series;
+using Fayble.Services.Settings;
 using Fayble.Services.System;
 using Fayble.Services.Tag;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -161,6 +162,7 @@ builder.Services.AddScoped<IRefreshTokenRepository, RefreshTokenRepository>();
 builder.Services.AddScoped<IPublisherRepository, PublisherRepository>();
 builder.Services.AddScoped<IBookTagRepository, BookTagRepository>();
 builder.Services.AddScoped<IPersonRepository, PersonRepository>();
+builder.Services.AddScoped<IMediaSettingRepository, MediaSettingRepository>();
 
 // Register Services
 builder.Services.AddScoped<ILibraryService, LibraryService>();
@@ -175,6 +177,7 @@ builder.Services.AddScoped<ISystemService, SystemService>();
 builder.Services.AddScoped<IPersonService, PersonService>();
 builder.Services.AddScoped<IMetadataService, MetadataService>();
 builder.Services.AddScoped<IImportService, ImportService>();
+builder.Services.AddScoped<ISettingsService, SettingsService>();
 
 // Integration
 builder.Services.AddScoped<IFaybleApiClient, FaybleApiClient>();

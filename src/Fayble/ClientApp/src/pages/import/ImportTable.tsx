@@ -15,7 +15,8 @@ import {
   IndeterminateCheckbox,
   IndeterminateCheckboxValue
 } from "components/indeterminateCheckbox";
-import { ComicFile, ImportFile } from "models/api-models";
+import { BookImport } from "models";
+import { ComicFile } from "models/api-models";
 import { useEffect, useState } from "react";
 import { Button, OverlayTrigger, Table, Tooltip } from "react-bootstrap";
 import { useAllSeries } from "services";
@@ -32,24 +33,28 @@ export const ImportTable = ({ files }: ImportTableProps) => {
   const [showSeriesModal, setShowSeriesModal] = useState<boolean>(false);
   const [showNumberModal, setShowNumberModal] = useState<boolean>(false);
   const [queuedForImport, setQueuedForImport] = useState<Array<string>>([]);
-  const [checkedFiles, setCheckedFiles] = useState<Array<string>>([]);
   const [selectedFile, setSelectedFile] = useState<string | undefined>();
   const [selectAllStatus, setSelectAllStatus] =
     useState<IndeterminateCheckboxValue>(IndeterminateCheckboxValue.Unchecked);
   const [showImportFilenameModal, setShowImportFilenameModal] =
     useState<boolean>(false);
-  const [importFiles, setImportFiles] = useState<Array<ImportFile>>(
+  const [importFiles, setImportFiles] = useState<Array<BookImport>>(
     files.map((file) => {
       return {
         seriesId: "",
         destinationFileName: file.fileName,
         filePath: file.filePath,
         number: file.number || "",
+        checked: false,
       };
     })
   );
-
   const { data: series } = useAllSeries();
+
+  const checkedFiles = importFiles
+    .filter((f) => f.checked)
+    .map((f) => f.filePath);
+
   const checkedAndValid = importFiles.filter(
     (f) =>
       checkedFiles.some((cf) => cf === f.filePath) &&
@@ -86,16 +91,21 @@ export const ImportTable = ({ files }: ImportTableProps) => {
     );
   };
 
-  const renderCheckbox = (id: string) => {
-    return !queuedForImport.some((q) => q === id) ? (
+  const renderCheckbox = (filePath: string) => {
+    return !queuedForImport.some((q) => q === filePath) ? (
       <input
         type="checkbox"
         className={styles.checkbox}
-        checked={checkedFiles.includes(id)}
+        checked={checkedFiles.includes(filePath)}
         onChange={(e) => {
-          e.target.checked
-            ? setCheckedFiles([...checkedFiles, id])
-            : setCheckedFiles(checkedFiles.filter((item) => item !== id));
+          setImportFiles((importFiles) =>
+            importFiles.map((file) => {
+              if (file.filePath === filePath) {
+                return { ...file, checked: e.target.checked };
+              }
+              return file;
+            })
+          );
         }}
       />
     ) : null;
@@ -105,12 +115,15 @@ export const ImportTable = ({ files }: ImportTableProps) => {
     return (
       <IndeterminateCheckbox
         className={styles.checkbox}
-        onChange={() => {
-          setCheckedFiles(
-            selectAllStatus === IndeterminateCheckboxValue.Checked ||
-              selectAllStatus === IndeterminateCheckboxValue.Indeterminate
-              ? []
-              : importFiles.map((i) => i.filePath)
+        onChange={() => {          
+          setImportFiles((prevState) =>
+            prevState.map((file) => {
+              return {
+                ...file,
+                checked:
+                  selectAllStatus === IndeterminateCheckboxValue.Unchecked
+              };
+            })
           );
         }}
         value={selectAllStatus}
@@ -197,7 +210,9 @@ export const ImportTable = ({ files }: ImportTableProps) => {
         f.seriesId
     );
     setQueuedForImport(files.map((f) => f.filePath));
-    setCheckedFiles([]);
+    setImportFiles((importFiles) =>
+      importFiles.map((file) => ({ ...file, checked: false }))
+    );
   };
 
   const columns: ColumnDef<ComicFile, any>[] = [
@@ -236,9 +251,9 @@ export const ImportTable = ({ files }: ImportTableProps) => {
     getCoreRowModel: getCoreRowModel(),
   });
 
-useEffect(() => {
-  console.log(selectedFile);
-}, [selectedFile])
+  useEffect(() => {
+    console.log(selectedFile);
+  }, [selectedFile]);
 
   return (
     <>

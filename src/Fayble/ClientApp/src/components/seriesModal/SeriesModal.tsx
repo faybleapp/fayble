@@ -17,7 +17,7 @@ interface SeriesModalProps {
 }
 
 export const SeriesModal = ({ series, show, close }: SeriesModalProps) => {
-  const updateSeries = useUpdateSeries();
+  const updateSeries = useUpdateSeries(series.id);
 
   const validationSchema = yup.object().shape({
     name: yup.string().trim().required("Required"),
@@ -36,19 +36,22 @@ export const SeriesModal = ({ series, show, close }: SeriesModalProps) => {
   });
 
   const handleSubmit: SubmitHandler<Series> = (values) => {
-    updateSeries.mutate([values.id, values], {
+    updateSeries.mutate(values, {
       onSuccess: () => {
         close();
       },
     });
   };
 
-
   return (
-    <Modal size="lg" show={show} onShow={() => form.reset(series)} onHide={close}>
+    <Modal
+      size="lg"
+      show={show}
+      onShow={() => form.reset(series)}
+      onHide={close}>
       <Modal.Header closeButton>
         <Container>
-          <Modal.Title>Edit Series</Modal.Title>          
+          <Modal.Title>Edit Series</Modal.Title>
         </Container>
       </Modal.Header>
       <Modal.Body>

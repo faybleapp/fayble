@@ -30,24 +30,27 @@ export const LibraryPathTab = () => {
 
     const sanitisedPath = SanitisePath(newPath);
 
-    validatePath([null, { path: sanitisedPath }], {
-      onSuccess: (exists) => {
-        if (!exists) {
+    validatePath(
+      { path: sanitisedPath },
+      {
+        onSuccess: (exists) => {
+          if (!exists) {
+            toast.error("Path does not exist or is not accessible");
+            setValidatingPath(false);
+            return;
+          } else {
+            setValue("folderPath", newPath, { shouldDirty: true });
+
+            setNewPath("");
+            setValidatingPath(false);
+          }
+        },
+        onError: () => {
           toast.error("Path does not exist or is not accessible");
           setValidatingPath(false);
-          return;
-        } else {
-          setValue("folderPath", newPath, { shouldDirty: true });
-
-          setNewPath("");
-          setValidatingPath(false);
-        }
-      },
-      onError: () => {
-        toast.error("Path does not exist or is not accessible");
-        setValidatingPath(false);
-      },
-    });
+        },
+      }
+    );
   };
 
   return (

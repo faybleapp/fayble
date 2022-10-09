@@ -9,9 +9,9 @@ export const useBook = (id: string) =>
 export const useRelatedBooks = (id: string) =>
 	useApiQuery<RelatedBooks>(["book", id, "related"], `/books/${id}/related`);
 
-export const useUpdateBook = () => {
+export const useUpdateBook = (bookId: string) => {
 	const queryClient = useQueryClient();
-	return useApiMutation<Book, string, Book>("PATCH", (id) => `/books/${id}`, {
+	return useApiMutation<Book, Book>("PATCH", () => `/books/${bookId}`, {
 		onSuccess: () => {
 			queryClient.invalidateQueries("book");
 			queryClient.invalidateQueries("books");

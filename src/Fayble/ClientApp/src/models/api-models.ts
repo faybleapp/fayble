@@ -287,6 +287,15 @@ export interface UpdateSeries {
     fieldLocks: SeriesFieldLocks;
 }
 
+export interface MediaSettings {
+    bookNamingConvention: string;
+    comicBookStandardNamingConvention: string;
+    comicBookOneShotNamingConvention: string;
+    seriesFolderFormat: string;
+    replaceIllegalCharacters: boolean;
+    renameFiles: boolean;
+}
+
 export interface FirstRun {
     ownerCredentials: LoginCredentials;
 }

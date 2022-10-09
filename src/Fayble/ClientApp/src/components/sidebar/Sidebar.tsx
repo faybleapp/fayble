@@ -1,10 +1,11 @@
 import {
-	faBook,
-	faBookOpen,
-	faChartPie,
-	faDesktop,
-	faFileImport,
-	faHouseChimney
+  faBook,
+  faBookOpen,
+  faChartPie,
+  faDesktop,
+  faFileImport,
+  faGear,
+  faHouseChimney
 } from "@fortawesome/free-solid-svg-icons";
 import { LibraryModal } from "components/libraryModal";
 import { useAppState } from "context/AppStateContext";
@@ -83,7 +84,7 @@ export const Sidebar = () => {
                 activeItem={activeMenuItem}
               />
             </Link>
-          </li>{" "}
+          </li>
           <li key="import">
             <Link to={"/import"} style={{ textDecoration: "none" }}>
               <SidebarMenuItem
@@ -114,6 +115,25 @@ export const Sidebar = () => {
                 activeItem={activeMenuItem}
                 setActive={setActiveMenuItem}
               />
+            </SidebarMenuItemDropdown>
+          </li>
+          <li>
+            <SidebarMenuItemDropdown
+              id="settings"
+              name="Settings"
+              collapsed={!sidebarOpen}
+              activeItem={activeMenuItem}
+              icon={faGear}>
+              <Link
+                to={`/settings/media`}
+                style={{ textDecoration: "none" }}>
+                <SidebarSubmenuItem
+                  id="media"
+                  name="Media"
+                  activeItem={activeMenuItem}
+                  setActive={setActiveMenuItem}
+                />
+              </Link>
             </SidebarMenuItemDropdown>
           </li>
         </ul>

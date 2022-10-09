@@ -56,8 +56,8 @@ CREATE TABLE "Role" (
     "ConcurrencyStamp" TEXT NULL
 );
 
-CREATE TABLE "SystemConfiguration" (
-    "Id" TEXT NOT NULL CONSTRAINT "PK_SystemConfiguration" PRIMARY KEY,
+CREATE TABLE "SystemSetting" (
+    "Id" TEXT NOT NULL CONSTRAINT "PK_SystemSetting" PRIMARY KEY,
     "Value" TEXT NULL
 );
 
@@ -80,11 +80,16 @@ CREATE TABLE "User" (
 );
 
 CREATE TABLE "LibrarySetting" (
-    "Setting" TEXT NOT NULL,
+    "Id" TEXT NOT NULL,
     "LibraryId" TEXT NOT NULL,
     "Value" TEXT NULL,
-    CONSTRAINT "PK_LibrarySetting" PRIMARY KEY ("Setting", "LibraryId"),
+    CONSTRAINT "PK_LibrarySetting" PRIMARY KEY ("Id", "LibraryId"),
     CONSTRAINT "FK_LibrarySetting_Library_LibraryId" FOREIGN KEY ("LibraryId") REFERENCES "Library" ("Id") ON DELETE CASCADE
+);
+
+CREATE TABLE "MediaSetting" (
+    "Id" TEXT NOT NULL CONSTRAINT "PK_MediaSetting" PRIMARY KEY,
+    "Value" TEXT NULL
 );
 
 CREATE TABLE "Series" (

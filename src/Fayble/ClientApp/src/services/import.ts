@@ -4,7 +4,7 @@ import { useApiMutation } from "./useApiMutation";
 
 export const useScanImportFiles = () => {
 	const queryClient = useQueryClient();
-	return useApiMutation<ComicFile[], null, {path: string}>(
+	return useApiMutation<ComicFile[], {path: string}>(
 		"POST",
 		() => `/import/scan`,
 		{

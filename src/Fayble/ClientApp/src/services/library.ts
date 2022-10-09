@@ -19,7 +19,7 @@ export const useLibrarySeries = (id: string) =>
 
 export const useCreateLibrary = () => {
 	const queryClient = useQueryClient();
-	return useApiMutation<Library, null, Library>("POST", () => `/libraries`, {
+	return useApiMutation<Library, Library>("POST", () => `/libraries`, {
 		onSuccess: () => {
 			queryClient.invalidateQueries("libraries");
 		},
@@ -29,11 +29,11 @@ export const useCreateLibrary = () => {
 	});
 };
 
-export const useUpdateLibrary = () => {
+export const useUpdateLibrary = (id: string) => {
 	const queryClient = useQueryClient();
-	return useApiMutation<Library, string, Library>(
+	return useApiMutation<Library, Library>(
 		"PATCH",
-		(id: string) => `/libraries/${id}`,
+		() => `/libraries/${id}`,
 		{
 			onSuccess: () => {
 				queryClient.invalidateQueries("library");
@@ -46,11 +46,11 @@ export const useUpdateLibrary = () => {
 	);
 };
 
-export const useDeleteLibrary = () => {
+export const useDeleteLibrary = (id: string) => {
 	const queryClient = useQueryClient();
-	return useApiMutation<null, string, null>(
+	return useApiMutation<null, null>(
 		"DELETE",
-		(id) => `/libraries/${id}`,
+		() => `/libraries/${id}`,
 		{
 			onSuccess: () => {
 				queryClient.invalidateQueries("libraries");

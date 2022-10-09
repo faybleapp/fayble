@@ -9,8 +9,8 @@ public class LibrarySettingEntityTypeConfiguration : IEntityTypeConfiguration<Li
     public void Configure(EntityTypeBuilder<LibrarySetting> builder)
     {
         builder.ToTable("LibrarySetting");
-        builder.HasKey(e => new {Setting = e.Setting, e.LibraryId});
-        builder.Property(x => x.Setting)
+        builder.HasKey(e => new {e.Id, e.LibraryId});
+        builder.Property(x => x.Id)
             .HasConversion(
                 setting => setting.ToString(),
                 setting => (LibrarySettingKey) Enum.Parse(typeof(LibrarySettingKey), setting));

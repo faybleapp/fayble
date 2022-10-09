@@ -5,7 +5,7 @@
 	background: $secondary-color;
 	secondaryBackground: $secondary-color;
 	accentColor: $accent-color;
-	border: 0px;
+	border: 1px solid $field-border-color;
 	none: "none";
 	box-shadow: 0 0 0 0.1rem $accent-color;
 }

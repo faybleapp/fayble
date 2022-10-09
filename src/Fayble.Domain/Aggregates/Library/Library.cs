@@ -43,12 +43,12 @@ public class Library : AuditableEntity<Guid>, IAggregateRoot
 
     public void UpdateSetting(LibrarySettingKey setting, string value)
     {
-        var librarySetting = _settings.First(s => s.Setting == setting);
+        var librarySetting = _settings.First(s => s.Id == setting);
         librarySetting.Update(value);
     }
 
     public T GetSetting<T>(LibrarySettingKey setting)
     {
-        return (T)Convert.ChangeType(_settings.First(s => s.Setting == setting).Value, typeof(T));
+        return (T)Convert.ChangeType(_settings.First(s => s.Id == setting).Value, typeof(T));
     }
 }

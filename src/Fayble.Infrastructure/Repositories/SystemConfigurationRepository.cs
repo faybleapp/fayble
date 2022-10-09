@@ -1,4 +1,5 @@
 ﻿using Fayble.Domain.Aggregates.SystemConfiguration;
+using Fayble.Domain.Aggregates.SystemSetting;
 using Fayble.Domain.Repositories;
 
 namespace Fayble.Infrastructure.Repositories;

@@ -30,8 +30,8 @@ export const SelectSeriesModal = ({
               name="series"
               options={
                 series.map((seriesItem) => ({
-                  value: seriesItem.id!,
-                  label: seriesItem.name!,
+                  value: seriesItem.id,
+                  label: `${seriesItem.name!} (${seriesItem.year})`,
                 })) || []
               }
             />

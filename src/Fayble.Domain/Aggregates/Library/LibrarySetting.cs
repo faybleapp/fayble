@@ -1,8 +1,9 @@
-﻿namespace Fayble.Domain.Aggregates.Library;
+﻿using Fayble.Domain.Entities;
 
-public class LibrarySetting
+namespace Fayble.Domain.Aggregates.Library;
+
+public class LibrarySetting: IdentifiableEntity<LibrarySettingKey>
 {
-    public LibrarySettingKey Setting { get; private set; }
     public string Value { get; private set; }
     public Guid LibraryId { get; private set; }
     public virtual Library Library { get; private set; }
@@ -11,10 +12,9 @@ public class LibrarySetting
     {
     }
 
-    public LibrarySetting(LibrarySettingKey setting, string value)
+    public LibrarySetting(LibrarySettingKey setting, string value) : base(setting)
     {
         Value = value;
-        Setting = setting;
     }
 
     public void Update(string value)

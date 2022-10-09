@@ -6,6 +6,7 @@ interface FormProps<T extends FieldValues> {
 	onSubmit?: SubmitHandler<T>;
 	className?: string;
 	children?: React.ReactNode;
+	labelPosition?: "top" || "left";
 }
 
 export const Form = <T extends object>({
@@ -13,10 +14,12 @@ export const Form = <T extends object>({
 	onSubmit,
 	className,
 	children,
+	labelPosition
 }: FormProps<T>) => {
 	return (
 		<FormProvider {...form}>
 			<RBForm
+			labelPosition=
 				className={className}
 				onSubmit={onSubmit && form.handleSubmit(onSubmit)}>
 				{children}
