@@ -14,7 +14,8 @@ export const useMediaSettings = () =>
       () => `/settings/media`,
       {
         onSuccess: () => {
-          queryClient.invalidateQueries(["settings", "media"]);          
+          queryClient.invalidateQueries(["settings", "media"]);
+          toast.success("Settings saved");
         },
         onError: () => {
           toast.error("An error occurred while updating settings");

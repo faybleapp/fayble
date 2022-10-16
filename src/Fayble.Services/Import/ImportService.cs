@@ -2,6 +2,7 @@
 using Fayble.Domain.Enums;
 using Fayble.Domain.Repositories;
 using Fayble.Models.FileSystem;
+using Fayble.Models.Import;
 using Fayble.Services.FileSystem;
 
 namespace Fayble.Services.Import;
@@ -25,10 +26,15 @@ public class ImportService : IImportService
                 x.FolderPath.ToLower().TrimEnd(Path.DirectorySeparatorChar) + Path.DirectorySeparatorChar));
         if (existingPath.Any())
         {
-            throw new DomainException("Cannot search scan directory that is part of an existing library");
+            throw new DomainException("Cannot scan directory that is part of an existing library");
         }
 
         var filePaths = await _comicBookFileSystemService.GetFilePaths(path, MediaType.ComicBook);
         return filePaths.Select(filePath => _comicBookFileSystemService.GetFile(filePath)).OrderBy(f => f.FileName).ToList();
+    }
+
+    public async Task Import (List<ImportFile> files)
+    {
+
     }
 }

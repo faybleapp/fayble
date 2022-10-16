@@ -291,8 +291,7 @@ export interface MediaSettings {
     bookNamingConvention: string;
     comicBookStandardNamingConvention: string;
     comicBookOneShotNamingConvention: string;
-    seriesFolderFormat: string;
-    replaceIllegalCharacters: boolean;
+    colonReplacement: string;
     renameFiles: boolean;
 }
 

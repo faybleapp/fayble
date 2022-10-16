@@ -11,9 +11,7 @@ public enum MediaSettingKey
     BookNamingConvention,
     ComicBookStandardNamingConvention,
     ComicBookOneShotNamingConvention,
-    ReplaceIllegalCharacters,
-    RenameFiles,
-    SeriesFolderFormat,
-
+    ColonReplacement,
+    RenameFiles
 }
 

@@ -42,6 +42,7 @@ export const ImportTable = ({ files }: ImportTableProps) => {
     files.map((file) => {
       return {
         seriesId: "",
+        bookId: "",
         destinationFileName: file.fileName,
         filePath: file.filePath,
         number: file.number || "",
@@ -115,13 +116,13 @@ export const ImportTable = ({ files }: ImportTableProps) => {
     return (
       <IndeterminateCheckbox
         className={styles.checkbox}
-        onChange={() => {          
+        onChange={() => {
           setImportFiles((prevState) =>
             prevState.map((file) => {
               return {
                 ...file,
                 checked:
-                  selectAllStatus === IndeterminateCheckboxValue.Unchecked
+                  selectAllStatus === IndeterminateCheckboxValue.Unchecked,
               };
             })
           );
@@ -163,6 +164,10 @@ export const ImportTable = ({ files }: ImportTableProps) => {
         {!!importFile?.number ? importFile?.number : "set"}
       </div>
     );
+  };
+
+  const renderMatch = (id: string) => {
+    const importFile = importFiles.find((f) => f.filePath === id);
   };
 
   const renderStatus = (id: string) => {

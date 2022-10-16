@@ -22,9 +22,9 @@ public class SettingsController : ControllerBase
     }
 
     [HttpPost("media")]
-    public async Task<ActionResult<MediaSettings>> UpdateMediaSettings()
+    public async Task<ActionResult<MediaSettings>> UpdateMediaSettings([FromBody] MediaSettings settings)
     {
-        return await _settingsService.GetMediaSettings();
+        return await _settingsService.UpdateMediaSettings(settings);
     }
 }
 

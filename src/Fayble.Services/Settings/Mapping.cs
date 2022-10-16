@@ -11,8 +11,7 @@ public static class Mapping
                 mediaSettings.First(s => s.Id == MediaSettingKey.BookNamingConvention).Value,
                 mediaSettings.First(s => s.Id == MediaSettingKey.ComicBookStandardNamingConvention).Value,
                 mediaSettings.First(s => s.Id == MediaSettingKey.ComicBookOneShotNamingConvention).Value,
-                mediaSettings.First(s => s.Id == MediaSettingKey.SeriesFolderFormat).Value,
-                bool.Parse(mediaSettings.First(s => s.Id == MediaSettingKey.ReplaceIllegalCharacters).Value),
+                mediaSettings.First(s => s.Id == MediaSettingKey.ColonReplacement).Value,
                 bool.Parse(mediaSettings.First(s => s.Id == MediaSettingKey.RenameFiles).Value));
     }
 }
