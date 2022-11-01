@@ -1,10 +1,12 @@
 ﻿namespace Fayble.Models.Settings;
 
-public static class FileNameTokens
+public static class FilenameTokens
 {
     public const string SeriesName = "{Series Name}";
     public const string SeriesYear = "{Series Year}";
-    public const string BookCoverDate = "{Book CoverDate}";
-    public const string BookVolume = "{Book Volume}";
-    public const string BookNumberPadding1 = "{Book Number}";
+    public const string BookCoverDateShort = "{Book CoverDate:YYYY-MM}";
+    public const string BookCoverDateLong = "{Book CoverDate:MMM YYYY}";
+    public const string BookCoverDateLongComma = "{Book CoverDate:MMM, YYYY}";
+    public const string SeriesVolume = "{Series Volume}";
+    public const string BookNumberPadding = "{Book Number(.*?)}";
 }

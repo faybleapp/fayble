@@ -1,0 +1,12 @@
+@import "../../../scss/variables";
+
+.loadingIndicator {
+  position: relative;
+  padding: 30px;
+}
+
+.filename {
+  margin-left: 3px;
+  margin-top: 8px;
+  color: $secondary-font-color;
+}

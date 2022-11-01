@@ -72,7 +72,7 @@ export const SelectField = ({
       value={options.find((option) => option.value === value)}
       options={options}
       onChange={(option) => {
-        onChange(option.value);
+        onChange(option?.value);
       }}
     />
   );

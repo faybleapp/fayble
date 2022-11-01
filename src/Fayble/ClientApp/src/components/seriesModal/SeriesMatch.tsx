@@ -28,30 +28,21 @@ export const SeriesMatch = ({ seriesId, unMatchSeries }: SeriesMatchProps) => {
           </div>
           <div className={styles.detailsContainer}>
             <InputGroup className="mb-4">
-              <InputGroup.Text className={styles.label}>
-                Series
-              </InputGroup.Text>
-              <Form.Control
-                disabled
-                value={matchedSeries?.name}
-              />
+              <InputGroup.Text className={styles.label}>Series</InputGroup.Text>
+              <Form.Control disabled value={matchedSeries?.name} />
             </InputGroup>
             <InputGroup className="mb-4">
               <InputGroup.Text className={styles.label}>
                 Fayble ID
               </InputGroup.Text>
-              <Form.Control
-                disabled               
-                value={matchedSeries?.id}
-              />
+              <Form.Control disabled value={matchedSeries?.id} />
             </InputGroup>
             <InputGroup className="mb-4">
-              <InputGroup.Text               
-                className={styles.label}>
+              <InputGroup.Text className={styles.label}>
                 <img src={ComicVine} style={{ width: "43px" }} />
               </InputGroup.Text>
               <Form.Control
-                disabled             
+                disabled
                 value={
                   matchedSeries?.providers?.find(
                     (provider) => provider.name === "ComicVine"

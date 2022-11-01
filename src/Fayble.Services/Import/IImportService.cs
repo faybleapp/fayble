@@ -1,4 +1,5 @@
 ﻿using Fayble.Models.FileSystem;
+using Fayble.Models.Import;
 
 namespace Fayble.Services.Import
 {

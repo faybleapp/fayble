@@ -1,10 +1,17 @@
-﻿using System.Xml;
+﻿using System.Text.RegularExpressions;
+using System.Xml;
 using System.Xml.Serialization;
+using Fayble.Core.Extensions;
 using Fayble.Core.Helpers;
 using Fayble.Domain.Enums;
 using Fayble.Domain.Repositories;
+using Fayble.Infrastructure.Repositories;
 using Fayble.Models.FileSystem;
 using Fayble.Models.Import;
+using Fayble.Models.Metadata;
+using Fayble.Models.Settings;
+using Fayble.Services.MetadataService;
+using Fayble.Services.Settings;
 using Microsoft.Extensions.Logging;
 using SharpCompress.Archives;
 using SixLabors.ImageSharp;
@@ -15,13 +22,22 @@ public class ComicBookFileSystemService : FileSystemService, IComicBookFileSyste
 {
     private readonly IFileTypeRepository _fileTypeRepository;
     private readonly ILogger _logger;
+    private readonly ISeriesRepository _seriesRepository;
+    private readonly ISettingsService _settingsService;
+    private readonly IMetadataService _metadataService;
 
     public ComicBookFileSystemService(
         IFileTypeRepository fileTypeRepository,
-        ILogger<ComicBookFileSystemService> logger) : base(fileTypeRepository)
+        ILogger<ComicBookFileSystemService> logger,
+        ISeriesRepository seriesRepository,
+        ISettingsService settingsService,
+        IMetadataService metadataService) : base(fileTypeRepository)
     {
         _fileTypeRepository = fileTypeRepository;
         _logger = logger;
+        _seriesRepository = seriesRepository;
+        _settingsService = settingsService;
+        _metadataService = metadataService;
     }
 
     public async Task<IEnumerable<string>> GetSeriesDirectories(string libraryPath)
@@ -116,8 +132,54 @@ public class ComicBookFileSystemService : FileSystemService, IComicBookFileSyste
                     x.Key.ToLower().EndsWith(".jpeg") ||
                     x.Key.ToLower().EndsWith(".png") ||
                     x.Key.ToLower().EndsWith(".bmp"));
-
         return images.Count();
+    }
+
+    public async Task<string> GenerateFilename(GenerateFilenameRequest request)
+    {
+        var series = await _seriesRepository.Get(request.SeriesId);
+        var mediaSettings = await _settingsService.GetMediaSettings();
+        var colonReplacement = ColonReplacement.GetColonReplacementValue(mediaSettings.ColonReplacement);
+        var missingTokenReplacement = MissingTokenReplacement.GetMissingTokenReplacementValue(mediaSettings.MissingTokenReplacement);
+        var filename = mediaSettings.ComicBookStandardNamingFormat;
+
+        BookResult? metadata = null;
+        if (request.BookMatchId != null)
+        {
+            metadata = await _metadataService.GetBook((Guid)request.BookMatchId);
+        }
+
+        filename = filename.Replace(
+            FilenameTokens.SeriesName,
+            series.Name.RemoveIllegalCharacters(colonReplacement),
+            StringComparison.InvariantCultureIgnoreCase);
+
+        filename = filename.Replace(FilenameTokens.SeriesYear, series.Year.ToString() ?? missingTokenReplacement);
+        filename = filename.Replace(FilenameTokens.SeriesVolume, series.Volume ?? missingTokenReplacement);
+        filename = filename.Replace(
+            FilenameTokens.BookCoverDateShort,
+            metadata?.CoverDate?.ToString("yyyy-MM") ?? missingTokenReplacement);
+        filename = filename.Replace(
+            FilenameTokens.BookCoverDateLong,
+            metadata?.CoverDate?.ToString("MMM yyyy") ?? missingTokenReplacement);
+        filename = filename.Replace(
+            FilenameTokens.BookCoverDateLongComma,
+            metadata?.CoverDate?.ToString("MMM, yyyy") ?? missingTokenReplacement);
+
+        var regex = new Regex(FilenameTokens.BookNumberPadding);
+        var bookNumberTokens = regex.Matches(filename);
+        foreach (Match bookNumberToken in bookNumberTokens)
+        {
+            filename = filename.Replace(
+                bookNumberToken.Groups[0].Value,
+                request.Number?.PadLeft(bookNumberToken.Groups[1].Value.TrimStart(':').Length, '0'));
+        }
+
+        filename = filename.Replace("()", string.Empty);
+        filename = filename.Replace("[]", string.Empty);
+        filename = filename.Trim();
+
+        return filename;
     }
 
 }

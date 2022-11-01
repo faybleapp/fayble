@@ -1,4 +1,6 @@
-﻿namespace Fayble.Models.Metadata;
+﻿using Fayble.Core.Extensions;
+
+namespace Fayble.Models.Metadata;
 
 public class SeriesResult
 {
@@ -9,7 +11,7 @@ public class SeriesResult
     public string Summary { get; }
     public int StartYear { get; }
     public List<ProviderResult> Providers { get; }
-    public List<BookResult> Books { get; }
+    public List<BookSummaryResult>? Books { get; }
 
     public SeriesResult(
         string id,
@@ -19,9 +21,9 @@ public class SeriesResult
         string description,
         string summary,
         List<ProviderResult> providers,
-        List<BookResult> books)
+        IEnumerable<BookSummaryResult>? books)
     {
-        Books = books;
+        Books = books?.OrderByAlphaNumeric(b => b.Number).ToList();
         Providers = providers;
         Id = id;
         Name = name;

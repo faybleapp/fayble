@@ -26,6 +26,11 @@ public class MetadataService : IMetadataService
         return await _faybleClient.GetSeries(id);
     }
 
+    public async Task<BookResult> GetBook(Guid id)
+    {
+        return await _faybleClient.GetBook(id);
+    }
+
     private int? ParseYear(string searchQuery)
     {
         var regex = new Regex(@"\w*year:\w*");

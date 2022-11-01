@@ -183,6 +183,12 @@ export interface PathValidation {
     path: string;
 }
 
+export interface GenerateFilenameRequest {
+    seriesId: string;
+    number: string;
+    bookMatchId: string | undefined;
+}
+
 export interface ComicFile {
     number: string | undefined;
     year: number | undefined;
@@ -247,6 +253,7 @@ export interface SeriesSearchResult {
     publisher: string | undefined;
     issueCount: number;
     image: string | undefined;
+    thumbnail: string | undefined;
     levenshteinDistance: number;
 }
 
@@ -258,7 +265,7 @@ export interface SeriesResult {
     summary: string;
     startYear: number;
     providers: ProviderResult[];
-    books: BookResult[];
+    books: BookSummaryResult[] | undefined;
 }
 
 export interface ProviderResult {
@@ -267,10 +274,22 @@ export interface ProviderResult {
     name: string;
 }
 
-export interface BookResult {
+export interface BookSummaryResult {
     id: string;
     title: string;
     number: string;
+}
+
+export interface BookResult {
+    id: string;
+    title: string | undefined;
+    number: string | undefined;
+    summary: string | undefined;
+    releaseDate: Date | undefined;
+    coverDate: Date | undefined;
+    image: string | undefined;
+    seriesId: string | undefined;
+    providers: ProviderResult[] | undefined;
 }
 
 export interface UpdateSeries {
@@ -288,10 +307,10 @@ export interface UpdateSeries {
 }
 
 export interface MediaSettings {
-    bookNamingConvention: string;
-    comicBookStandardNamingConvention: string;
-    comicBookOneShotNamingConvention: string;
+    comicBookStandardNamingFormat: string;
+    comicBookOneShotNamingFormat: string;
     colonReplacement: string;
+    missingTokenReplacement: string;
     renameFiles: boolean;
 }
 

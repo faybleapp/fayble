@@ -9,4 +9,5 @@ public interface IComicBookFileSystemService: IFileSystemService
     Task<IEnumerable<string>> GetSeriesDirectories(string libraryPath);
     void ExtractComicCoverImage(string filePath, string mediaRoot, Guid id);
     ComicFile GetFile(string filePath);
+    Task<string> GenerateFilename(GenerateFilenameRequest request);
 }

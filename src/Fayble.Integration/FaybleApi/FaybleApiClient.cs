@@ -67,7 +67,7 @@ public class FaybleApiClient : IFaybleApiClient
         {
             _logger.LogError(
                 ex,
-                "An error occurred while retrieving series from Fayble API: '{ReasonPhrase}' | {@Details}",
+                "An error occurred while retrieving series from Fayble metadata API: '{ReasonPhrase}' | {@Details}",
                 response.ReasonPhrase,
                 new
                 {
@@ -81,5 +81,35 @@ public class FaybleApiClient : IFaybleApiClient
         var responseString = await response.Content.ReadAsStringAsync();
         var seriesResult = JsonConvert.DeserializeObject<SeriesResult>(responseString);
         return seriesResult;
+    }
+
+    public async Task<BookResult> GetBook(Guid id)
+    {
+        var client = _httpClientFactory.CreateClient();
+        var response = await client.GetAsync(
+            $"{_faybleApiConfiguration.BaseUrl}/api/book/{id}");
+
+        try
+        {
+            response.EnsureSuccessStatusCode();
+        }
+        catch (HttpRequestException ex)
+        {
+            _logger.LogError(
+                ex,
+                "An error occurred while retrieving book from Fayble metadata API: '{ReasonPhrase}' | {@Details}",
+                response.ReasonPhrase,
+                new
+                {
+                    Id = id,
+                    StatusCode = (int)response.StatusCode,
+                    Repsonse = response.ReasonPhrase
+                });
+            throw;
+        }
+
+        var responseString = await response.Content.ReadAsStringAsync();
+        var bookResult = JsonConvert.DeserializeObject<BookResult>(responseString);
+        return bookResult;
     }
 }

@@ -6,6 +6,7 @@ import { TextField } from "components/form/textField";
 import { PageContainer } from "components/pageContainer";
 import { MediaSettings } from "models/api-models";
 import { ColonReplacement } from "models/ColonReplacement";
+import { MissingTokenReplacement } from "models/MissingTokenReplacement";
 import { useEffect, useState } from "react";
 import { Button, Container, Spinner } from "react-bootstrap";
 import { SubmitHandler, useForm } from "react-hook-form";
@@ -24,7 +25,7 @@ export const Media = ({}: MediaProps) => {
   const updateMediaSettings = useUpdateMediaSettings();
 
   const validationSchema = yup.object().shape({
-    comicBookStandardNamingConvention: yup.string().trim().required("Required"),
+    comicBookStandardNamingFormat: yup.string().trim().required("Required"),
   });
 
   const form = useForm<MediaSettings>({
@@ -32,10 +33,10 @@ export const Media = ({}: MediaProps) => {
   });
 
   const comicBookStandardFormat = form.watch(
-    "comicBookStandardNamingConvention"
+    "comicBookStandardNamingFormat"
   );
 
-  const comicBookOneShotFormat = form.watch("comicBookOneShotNamingConvention");
+  const comicBookOneShotFormat = form.watch("comicBookOneShotNamingFormat");
 
   useEffect(() => {
     mediaSettings && form.reset(mediaSettings);
@@ -85,14 +86,14 @@ export const Media = ({}: MediaProps) => {
             {form.watch("renameFiles") && (
               <>
                 <TextField
-                  name="comicBookStandardNamingConvention"
+                  name="comicBookStandardNamingFormat"
                   label="Comic Book Standard Format"
                 />
                 <div className={styles.formatExample}>
                   {comicBookStandardFormatExample}
                 </div>
                 <TextField
-                  name="comicBookOneShotNamingConvention"
+                  name="comicBookOneShotNamingFormat"
                   label="Comic Book One-Shot Format"
                 />
                 <div className={styles.formatExample}>
@@ -117,6 +118,29 @@ export const Media = ({}: MediaProps) => {
                     {
                       label: "Space Dash Space",
                       value: ColonReplacement.SpaceDashSpace,
+                    },
+                  ]}
+                />
+                 <SelectField
+                  name="missingTokenReplacement"
+                  label="Missing Token Replacement"
+                  tooltip="When a token in the naming format is unavailble, this value will be used in its place"
+                  options={[
+                    {
+                      label: "Empty",
+                      value: MissingTokenReplacement.Empty,
+                    },
+                    {
+                      label: "Unknown",
+                      value: MissingTokenReplacement.Unknown,
+                    },
+                    {
+                      label: "TBA",
+                      value: MissingTokenReplacement.TBA,
+                    },
+                    {
+                      label: "TBD",
+                      value: MissingTokenReplacement.TBD,
                     },
                   ]}
                 />

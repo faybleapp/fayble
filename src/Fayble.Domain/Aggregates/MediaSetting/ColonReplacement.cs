@@ -5,5 +5,5 @@ public enum ColonReplacement
     Delete,
     Dash,
     SpaceDash,
-    SpaceDashSPace
+    SpaceDashSpace
 }

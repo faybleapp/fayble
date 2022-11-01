@@ -29,4 +29,10 @@ public class MetadataController : ControllerBase
     {
         return await _metadataService.GetSeries(id);
     }
+
+    [HttpGet("book/{id}")]
+    public async Task<BookResult> Book(Guid id)
+    {
+        return await _metadataService.GetBook(id);
+    }
 }

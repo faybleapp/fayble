@@ -13,9 +13,7 @@ export const useApiMutation = <Response, Data = null>(
     async (data): Promise<Response> => {
       switch (method) {
         case "PATCH":
-          return await (
-            await httpClient.patch(path(data), data)
-          ).data;
+          return (await httpClient.patch(path(data), data)).data;
         case "DELETE":
           return (await httpClient.delete(path(data))).data;
         default:

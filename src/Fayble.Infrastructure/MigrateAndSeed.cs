@@ -91,10 +91,10 @@ public static class MigrateAndSeed
         if (!context.MediaSettings.Any())
         {
             context.MediaSettings.AddRange(
-                new MediaSetting(MediaSettingKey.BookNamingConvention, string.Empty),
-                new MediaSetting(MediaSettingKey.ComicBookStandardNamingConvention, "{Series Name} Vol. {Series Volume} #{Book Number:000} ({Book CoverDate:MMM YYYY})"),
-                new MediaSetting(MediaSettingKey.ComicBookOneShotNamingConvention, "{Series Name} #{Book Number:000} ({Book CoverDate:MMM YYYY})"),
+                new MediaSetting(MediaSettingKey.ComicBookStandardNamingFormat, "{Series Name} Vol. {Series Volume} #{Book Number:000} ({Book CoverDate:MMM YYYY})"),
+                new MediaSetting(MediaSettingKey.ComicBookOneShotNamingFormat, "{Series Name} #{Book Number:000} ({Book CoverDate:MMM YYYY})"),
                 new MediaSetting(MediaSettingKey.ColonReplacement, ColonReplacement.SpaceDash.ToString()),
+                new MediaSetting(MediaSettingKey.MissingTokenReplacement, MissingTokenReplacement.Empty.ToString()),
                 new MediaSetting(MediaSettingKey.RenameFiles, false.ToString()));
 
         }

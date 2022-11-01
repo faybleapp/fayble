@@ -1,6 +1,5 @@
 import { SelectField } from "components/selectField";
 import { Container, Modal } from "react-bootstrap";
-
 import { useAllSeries } from "services";
 interface SelectSeriesModalProps {
   show: boolean;
@@ -41,4 +40,4 @@ export const SelectSeriesModal = ({
       <Modal.Footer></Modal.Footer>
     </Modal>
   );
-}; 
+};

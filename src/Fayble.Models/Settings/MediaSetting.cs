@@ -2,23 +2,23 @@
 
 public class MediaSettings
 {
-    public string BookNamingConvention { get; private set; }
-    public string ComicBookStandardNamingConvention { get; private set; }
-    public string ComicBookOneShotNamingConvention { get; private set; }
+    public string ComicBookStandardNamingFormat{ get; private set; }
+    public string ComicBookOneShotNamingFormat{ get; private set; }
     public string ColonReplacement { get; private set; }
+    public string MissingTokenReplacement { get; private set; }
     public bool RenameFiles { get; private set; }
 
     public MediaSettings(
-        string bookNamingConvention,
-        string comicBookStandardNamingConvention,
-        string comicBookOneShotNamingConvention,
+        string comicBookStandardNamingFormat,
+        string comicBookOneShotNamingFormat,
         string colonReplacement,
+        string missingTokenReplacement,
         bool renameFiles)
     {
-        BookNamingConvention = bookNamingConvention;
-        ComicBookStandardNamingConvention = comicBookStandardNamingConvention;
-        ComicBookOneShotNamingConvention = comicBookOneShotNamingConvention;
+        ComicBookStandardNamingFormat = comicBookStandardNamingFormat;
+        ComicBookOneShotNamingFormat = comicBookOneShotNamingFormat;
         ColonReplacement = colonReplacement;
+        MissingTokenReplacement = missingTokenReplacement;
         RenameFiles = renameFiles;
     }
 }
