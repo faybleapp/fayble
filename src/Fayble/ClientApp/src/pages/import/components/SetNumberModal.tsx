@@ -1,21 +1,25 @@
-import { Container, Modal } from "react-bootstrap";
+import { useEffect, useState } from "react";
+import { Button, Container, Modal } from "react-bootstrap";
 import styles from "./SetNumberModal.module.scss";
 
 interface SetNumberModalProps {
   show: boolean;
   number: string;
-  onClose: () => void;
-  onChange: (id: string) => void;
+  onClose: (number: string) => void;  
 }
 
 export const SetNumberModal = ({
   show,
   number,
-  onClose,
-  onChange,
+  onClose,  
 }: SetNumberModalProps) => {
+  const [newNumber, setNewNumber] = useState<string>(number);
+  useEffect(() => {
+    setNewNumber(number);
+  }, [number]);
+
   return (
-    <Modal show={show} onHide={onClose}>
+    <Modal show={show} onHide={() => onClose(newNumber)}>
       <Modal.Header closeButton>
         <Container>
           <Modal.Title>Number</Modal.Title>
@@ -24,13 +28,17 @@ export const SetNumberModal = ({
       <Modal.Body>
         <Container>
           <input
-            value={number}
+            value={newNumber}
             className={styles.numberField}
-            onChange={(e) => onChange(e.target.value)}
+            onChange={(e) => setNewNumber(e.target.value)}
           />
         </Container>
       </Modal.Body>
-      <Modal.Footer></Modal.Footer>
+      <Modal.Footer>
+        <Button variant="secondary" onClick={() => onClose(newNumber)}>
+          Close
+        </Button>
+      </Modal.Footer>
     </Modal>
   );
 };

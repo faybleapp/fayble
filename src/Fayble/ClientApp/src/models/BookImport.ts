@@ -1,4 +1,5 @@
 export interface BookImport {
+  id: string
   seriesId: string | undefined;  
   seriesMatchId: string | undefined;
   destinationFileName: string;
@@ -6,4 +7,7 @@ export interface BookImport {
   filePath: string;
   number: string | undefined;
   checked: boolean;  
+  loading: boolean;  
+  fileName: string;
+  exists: boolean;  
 }

@@ -189,6 +189,11 @@ export interface GenerateFilenameRequest {
     bookMatchId: string | undefined;
 }
 
+export interface FileExistsRequest {
+    fileName: string;
+    seriesId: string;
+}
+
 export interface ComicFile {
     number: string | undefined;
     year: number | undefined;

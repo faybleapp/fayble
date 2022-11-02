@@ -28,6 +28,10 @@
   color: red;
 }
 
+.loadingIcon{
+  color: $accent-color;
+}
+
 .successIcon {
   color: green;
 }
@@ -49,3 +53,16 @@
   }
  
 }
+
+.generatingFilename {
+  color: $secondary-font-color;  
+}
+
+.filenameLoader {	
+	color: $accent-color;
+	top: 50%;
+	right: 50%;
+  width: 15px;
+  height: 15px;
+}
+

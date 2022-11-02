@@ -10,4 +10,5 @@ public interface IComicBookFileSystemService: IFileSystemService
     void ExtractComicCoverImage(string filePath, string mediaRoot, Guid id);
     ComicFile GetFile(string filePath);
     Task<string> GenerateFilename(GenerateFilenameRequest request);
+    Task<bool> FileExists(FileExistsRequest request);
 }

@@ -1,4 +1,5 @@
 ﻿using Fayble.Models;
+using Fayble.Models.FileSystem;
 using Fayble.Models.Import;
 using Fayble.Security.Authorisation;
 using Fayble.Services.FileSystem;
@@ -29,5 +30,10 @@ public class FileSystemController : ControllerBase
     {
         return await _comicBookFileSystemService.GenerateFilename(request);
     }
-}
 
+    [HttpPost("file-exists")]
+    public async Task<ActionResult<bool>> FileExists([FromBody] FileExistsRequest request)
+    {
+        return await _comicBookFileSystemService.FileExists(request);
+    }
+}

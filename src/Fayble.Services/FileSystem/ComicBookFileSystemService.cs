@@ -135,6 +135,12 @@ public class ComicBookFileSystemService : FileSystemService, IComicBookFileSyste
         return images.Count();
     }
 
+    public async Task<bool> FileExists(FileExistsRequest request)
+    {
+        var series = await _seriesRepository.Get(request.SeriesId);
+        return series.Books.Any(b => b.File.FileName.ToLower() == request.FileName.ToLower());
+    }
+
     public async Task<string> GenerateFilename(GenerateFilenameRequest request)
     {
         var series = await _seriesRepository.Get(request.SeriesId);
@@ -165,6 +171,12 @@ public class ComicBookFileSystemService : FileSystemService, IComicBookFileSyste
         filename = filename.Replace(
             FilenameTokens.BookCoverDateLongComma,
             metadata?.CoverDate?.ToString("MMM, yyyy") ?? missingTokenReplacement);
+        filename = filename.Replace(
+            FilenameTokens.BookCoverDateFull,
+            metadata?.CoverDate?.ToString("MMMM yyyy") ?? missingTokenReplacement);
+        filename = filename.Replace(
+            FilenameTokens.BookCoverDateFullComma,
+            metadata?.CoverDate?.ToString("MMMM, yyyy") ?? missingTokenReplacement);
 
         var regex = new Regex(FilenameTokens.BookNumberPadding);
         var bookNumberTokens = regex.Matches(filename);
@@ -178,8 +190,7 @@ public class ComicBookFileSystemService : FileSystemService, IComicBookFileSyste
         filename = filename.Replace("()", string.Empty);
         filename = filename.Replace("[]", string.Empty);
         filename = filename.Trim();
-
+        
         return filename;
     }
-
 }

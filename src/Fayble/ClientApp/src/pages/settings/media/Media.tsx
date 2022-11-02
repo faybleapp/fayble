@@ -65,8 +65,10 @@ export const Media = ({}: MediaProps) => {
       );
     }
 
-    example = example?.replace("{Book CoverDate:MMM YYYY}", "March 2015");
-    example = example?.replace("{Book CoverDate:MMM, YYYY}", "March, 2015");
+    example = example?.replace("{Book CoverDate:MMM YYYY}", "Mar 2015");
+    example = example?.replace("{Book CoverDate:MMM, YYYY}", "Mar, 2015");
+    example = example?.replace("{Book CoverDate:MMMM YYYY}", "March 2015");
+    example = example?.replace("{Book CoverDate:MMMM, YYYY}", "March, 2015");
     example = example?.replace("{Book CoverDate:MM-YYYY}", "03-2015");
     example = example?.replace("{Book CoverDate:YYYY-MM}", "2015-03");
 

@@ -1,7 +1,8 @@
 import {
   faCheckCircle,
   faCircleCheck,
-  faCircleExclamation
+  faCircleExclamation,
+  faSpinner
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
@@ -22,6 +23,7 @@ import { useEffect, useState } from "react";
 import { Button, OverlayTrigger, Table, Tooltip } from "react-bootstrap";
 import { useAllSeries } from "services";
 import { useGenerateFilename } from "services/fileSystem";
+import { ImportRow } from "./components/ImportRow";
 import { MatchModal } from "./components/MatchModal";
 import { SelectSeriesModal } from "./components/SelectSeriesModal";
 import { SetImportFilenameModal } from "./components/SetImportFilenameModal";
@@ -37,14 +39,15 @@ export const ImportTable = ({ files }: ImportTableProps) => {
   const [showNumberModal, setShowNumberModal] = useState<boolean>(false);
   const [showMatchModal, setShowMatchModal] = useState<boolean>(false);
   const [queuedForImport, setQueuedForImport] = useState<Array<string>>([]);
-  const [selectedFile, setSelectedFile] = useState<string | undefined>();
+  const [selectedFile, setSelectedFile] = useState<BookImport | undefined>();
   const [selectAllStatus, setSelectAllStatus] =
     useState<IndeterminateCheckboxValue>(IndeterminateCheckboxValue.Unchecked);
   const [showImportFilenameModal, setShowImportFilenameModal] =
     useState<boolean>(false);
   const [importFiles, setImportFiles] = useState<Array<BookImport>>(
-    files.map((file) => {
+    files.map((file, index) => {
       return {
+        id: index.toString(),
         seriesId: "",
         seriesMatchId: "",
         bookId: "",
@@ -53,11 +56,25 @@ export const ImportTable = ({ files }: ImportTableProps) => {
         filePath: file.filePath,
         number: file.number || "",
         checked: false,
+        loading: false,
+        fileName: file.fileName,
+        exists: false,
       };
     })
   );
   const { data: series } = useAllSeries();
   const generateFilename = useGenerateFilename();
+
+  const updateBookImport = (updatedFile: BookImport) => {
+    setImportFiles((importFiles) =>
+      importFiles.map((file) => {
+        if (file.id === updatedFile.id) {
+          return updatedFile;
+        }
+        return file;
+      })
+    );
+  };
 
   const checkedFiles = importFiles
     .filter((f) => f.checked)
@@ -80,7 +97,7 @@ export const ImportTable = ({ files }: ImportTableProps) => {
     }
   }, [checkedFiles, importFiles]);
 
-  const columnHelper = createColumnHelper<ComicFile>();
+  const columnHelper = createColumnHelper<BookImport>();
 
   const renderSeriesSelect = (id: string) => {
     const importFile = importFiles.find((f) => f.filePath === id);
@@ -91,7 +108,7 @@ export const ImportTable = ({ files }: ImportTableProps) => {
           [styles.placeholder]: !seriesName,
         })}
         onClick={() => {
-          setSelectedFile(id);
+          setSelectedFile(importFile);
           setShowSeriesModal(true);
         }}>
         {seriesName ?? "select"}
@@ -119,6 +136,18 @@ export const ImportTable = ({ files }: ImportTableProps) => {
     ) : null;
   };
 
+  useEffect(() => {
+    selectedFile &&
+      setImportFiles((importFiles) =>
+        importFiles.map((file) => {
+          if (file.filePath === selectedFile.filePath) {
+            return selectedFile;
+          }
+          return file;
+        })
+      );
+  }, [selectedFile]);
+
   const renderHeaderCheckbox = () => {
     return (
       <IndeterminateCheckbox
@@ -141,13 +170,16 @@ export const ImportTable = ({ files }: ImportTableProps) => {
 
   const renderImportFilename = (id: string) => {
     const importFile = importFiles.find((f) => f.filePath === id);
-    return (
+
+    return importFile?.loading ? (
+      <div className={styles.generatingFilename}>Generating...</div>
+    ) : (
       <div
         className={cn(styles.selectableCell, {
           [styles.placeholder]: !importFile?.destinationFileName,
         })}
         onClick={() => {
-          setSelectedFile(id);
+          setSelectedFile(importFile);
           setShowImportFilenameModal(true);
         }}>
         {!!importFile?.destinationFileName
@@ -165,7 +197,7 @@ export const ImportTable = ({ files }: ImportTableProps) => {
           [styles.placeholder]: !importFile?.number,
         })}
         onClick={() => {
-          setSelectedFile(id);
+          setSelectedFile(importFile);
           setShowNumberModal(true);
         }}>
         {!!importFile?.number ? importFile?.number : "set"}
@@ -183,7 +215,7 @@ export const ImportTable = ({ files }: ImportTableProps) => {
           [styles.placeholder]: !importFile?.matchId,
         })}
         onClick={() => {
-          setSelectedFile(id);
+          setSelectedFile(importFile);
           setShowMatchModal(true);
         }}>
         {!!importFile?.matchId ? (
@@ -197,17 +229,28 @@ export const ImportTable = ({ files }: ImportTableProps) => {
     );
   };
 
-  const renderStatus = (id: string) => {
-    const importFile = importFiles.find((f) => f.filePath === id);
+  const renderStatus = (importFile: BookImport) => {
+    if (importFile?.loading) {
+      return (
+        <FontAwesomeIcon className={styles.loadingIcon} spin icon={faSpinner} />
+      );
+    }
+
     let error;
     let message = "";
 
-    if (queuedForImport.some((q) => q === importFile?.filePath)) {
+    if (queuedForImport.some((q) => q === importFile?.id)) {
       error = false;
       message = "Queued for import";
+    } else if (importFile?.exists) {
+      error = true;
+      message = "A file already exists with this name";
     } else if (!importFile?.seriesId) {
       error = true;
       message = "You must select a series";
+    } else if (!importFile?.number) {
+      error = true;
+      message = "You must set a number";
     } else if (!importFile?.destinationFileName) {
       error = true;
       message = "You must set a destination filename";
@@ -247,43 +290,7 @@ export const ImportTable = ({ files }: ImportTableProps) => {
     );
   };
 
-  const handleMatch = (matchId: string) => {
-    let updatedFile = importFiles.find((f) => f.filePath === selectedFile);
-    updatedFile!.matchId = matchId;
-
-    if (updatedFile && updatedFile.matchId && updatedFile.number && updatedFile.seriesId) {
-      generateFilename.mutate(
-        {
-          seriesId: updatedFile.seriesId,
-          bookMatchId: updatedFile.matchId,
-          number: updatedFile.number,
-        },
-        {
-          onSuccess: (filename) => {
-            setImportFiles(
-              importFiles.map((file) => {
-                if (file.filePath === selectedFile) {
-                  return { ...file, destinationFileName: filename };
-                }
-                return file;
-              })
-            );
-          },
-        }
-      );
-    } else {
-      setImportFiles(
-        importFiles.map((file) => {
-          if (file.filePath === selectedFile) {
-            return updatedFile!;
-          }
-          return file;
-        })
-      );
-    }
-  };
-
-  const columns: ColumnDef<ComicFile, any>[] = [
+  const columns: ColumnDef<BookImport, any>[] = [
     columnHelper.accessor((row) => row, {
       id: "check",
       header: () => renderHeaderCheckbox(),
@@ -314,12 +321,12 @@ export const ImportTable = ({ files }: ImportTableProps) => {
     columnHelper.accessor((row) => row, {
       id: "status",
       header: "",
-      cell: (info) => renderStatus(info.row.original.filePath),
+      cell: (info) => renderStatus(info.row.original),
     }),
   ];
 
   const table = useReactTable({
-    data: files,
+    data: importFiles,
     columns,
     getCoreRowModel: getCoreRowModel(),
   });
@@ -346,13 +353,7 @@ export const ImportTable = ({ files }: ImportTableProps) => {
           </thead>
           <tbody className={styles.tableBody}>
             {table.getRowModel().rows.map((row) => (
-              <tr key={row.id}>
-                {row.getVisibleCells().map((cell) => (
-                  <td className={styles.tableCell} key={cell.id}>
-                    {flexRender(cell.column.columnDef.cell, cell.getContext())}
-                  </td>
-                ))}
-              </tr>
+              <ImportRow row={row} updateBookImport={updateBookImport} />
             ))}
           </tbody>
         </Table>
@@ -361,7 +362,10 @@ export const ImportTable = ({ files }: ImportTableProps) => {
         <Button
           disabled={checkedFiles.length === 0}
           variant="secondary"
-          onClick={() => setShowSeriesModal(true)}>
+          onClick={() => {
+            setSelectedFile(undefined);
+            setShowSeriesModal(true);
+          }}>
           Select Series
         </Button>
         <Button
@@ -379,50 +383,48 @@ export const ImportTable = ({ files }: ImportTableProps) => {
           setSelectedFile(undefined);
         }}
         onSelectSeries={(seriesId) => {
-          setImportFiles(
-            importFiles.map((file) => {
-              // Process single file
-              if (selectedFile) {
-                if (file.filePath === selectedFile) {
-                  const matchedSeries = series!.find((s) => s.id === seriesId);
+          const matchedSeries = series!.find((s) => s.id === seriesId);
+          if (selectedFile) {
+            setSelectedFile(
+              (prevState) =>
+                ({
+                  ...prevState,
+                  seriesId: matchedSeries?.id,
+                  seriesMatchId: matchedSeries?.matchId,
+                  matchId: undefined,
+                } as BookImport)
+            );
+          } else {
+            setImportFiles(
+              importFiles.map((file) => {
+                if (checkedFiles.some((f) => f === file.filePath)) {
                   return {
                     ...file,
-                    seriesId: matchedSeries?.id,
+                    seriesId: seriesId,
                     seriesMatchId: matchedSeries?.matchId,
+                    matchId: undefined,
                   };
                 }
                 return file;
-              }
-              // Process checked files
-              if (checkedFiles.some((f) => f === file.filePath)) {
-                return { ...file, seriesId: seriesId };
-              }
-              return file;
-            })
-          );
+              })
+            );
+          }
+
           setShowSeriesModal(false);
-          setSelectedFile(undefined);
         }}
       />
       <SetNumberModal
-        number={
-          importFiles.find((f) => f.filePath === selectedFile)?.number || ""
-        }
+        number={selectedFile?.number || ""}
         show={showNumberModal}
-        onClose={() => {
-          setShowNumberModal(false);
-          setSelectedFile(undefined);
-        }}
-        onChange={(number) => {
-          setImportFiles(
-            importFiles.map((file) => {
-              if (file.filePath === selectedFile) {
-                return { ...file, number: number };
-              }
-              return file;
-            })
+        onClose={(number) => {
+          setSelectedFile(
+            (prevState) =>
+              ({
+                ...prevState,
+                number: number,
+              } as BookImport)
           );
-          setShowSeriesModal(false);
+          setShowNumberModal(false);
         }}
       />
 
@@ -432,38 +434,39 @@ export const ImportTable = ({ files }: ImportTableProps) => {
           setSelectedFile(undefined);
         }}
         show={showImportFilenameModal}
-        filename={
-          importFiles.find((f) => f.filePath === selectedFile)
-            ?.destinationFileName || ""
-        }
-        onChange={(fileName) => {
-          setImportFiles(
-            importFiles.map((file) => {
-              if (file.filePath === selectedFile) {
-                return { ...file, destinationFileName: fileName };
-              }
-              return file;
-            })
+        filename={selectedFile?.destinationFileName || ""}
+        onChange={(filename) => {
+          setSelectedFile(
+            (prevState) =>
+              ({
+                ...prevState,
+                destinationFileName: filename,
+              } as BookImport)
           );
         }}
       />
 
-      {importFiles.find((f) => f.filePath === selectedFile)?.seriesMatchId && (
+      {selectedFile?.seriesMatchId && (
         <MatchModal
           show={showMatchModal}
-          seriesMatchId={
-            importFiles.find((f) => f.filePath === selectedFile)!.seriesMatchId!
+          seriesMatchId={selectedFile.seriesMatchId}
+          matchId={selectedFile.matchId!}
+          filename={
+            files?.find((f) => f.filePath === selectedFile.filePath)?.fileName
           }
-          matchId={
-            importFiles.find((f) => f.filePath === selectedFile)!.matchId!
-          }
-          filename={files?.find((f) => f.filePath === selectedFile)?.fileName!}
           onClose={() => {
             setShowMatchModal(false);
             setSelectedFile(undefined);
           }}
           onMatch={(matchId) => {
-            handleMatch(matchId);
+            setSelectedFile(
+              (prevState) =>
+                ({
+                  ...prevState,
+                  matchId: matchId,
+                } as BookImport)
+            );
+            setShowMatchModal(false);
           }}
         />
       )}

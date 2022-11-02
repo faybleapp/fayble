@@ -2,10 +2,9 @@
 
 public class GenerateFilenameRequest
 {
-    public Guid SeriesId { get; private set; }
-    public string Number { get;  private set; }
-    public Guid? BookMatchId { get; set; }
-    
+    public Guid SeriesId { get; }
+    public string Number { get; }
+    public Guid? BookMatchId { get; }
 
     public GenerateFilenameRequest(Guid seriesId, string number, Guid? bookMatchId)
     {

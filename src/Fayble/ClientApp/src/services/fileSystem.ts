@@ -1,4 +1,4 @@
-import { GenerateFilenameRequest, PathValidation } from "models/api-models";
+import { FileExistsRequest, GenerateFilenameRequest, PathValidation } from "models/api-models";
 import { useApiMutation } from "./useApiMutation";
 
 export const usePathExists = () => {
@@ -12,5 +12,12 @@ export const useGenerateFilename = () => {
   return useApiMutation<string, GenerateFilenameRequest>(
     "POST",
     () => `/filesystem/generate-filename`
+  );
+};
+
+export const useFileExists = () => {  
+  return useApiMutation<boolean, FileExistsRequest>(
+    "POST",
+    () => `/filesystem/file-exists`
   );
 };

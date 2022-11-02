@@ -1,6 +1,6 @@
 import { LoadingIndicator } from "components/loadingIndicator";
 import { SelectField } from "components/selectField";
-import { Button, Container, Modal } from "react-bootstrap";
+import { Container, Modal } from "react-bootstrap";
 import { useSeriesMetadata } from "services";
 import styles from "./MatchModal.module.scss";
 
@@ -22,8 +22,7 @@ export const MatchModal = ({
   onMatch,
 }: MatchModalProps) => {
   const { data: seriesMetadata, isLoading: isLoadingMetadata } =
-    useSeriesMetadata(seriesMatchId);
-  console.log(seriesMatchId);
+    useSeriesMetadata(seriesMatchId);  
   return (
     <Modal show={show} onHide={onClose}>
       <Modal.Header closeButton>
@@ -59,10 +58,7 @@ export const MatchModal = ({
           )}
         </Container>
       </Modal.Body>
-      <Modal.Footer>
-        <Button variant="secondary" onClick={onClose}>
-          Close
-        </Button>
+      <Modal.Footer>       
       </Modal.Footer>
     </Modal>
   );
