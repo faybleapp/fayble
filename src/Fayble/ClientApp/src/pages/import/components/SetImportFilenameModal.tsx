@@ -1,21 +1,25 @@
-import { Container, Modal } from "react-bootstrap";
+import { useEffect, useState } from "react";
+import { Button, Container, Modal } from "react-bootstrap";
 import styles from "./SetImportFilenameModal.module.scss";
 
 interface SetImportFilenameModalProps {
   show: boolean;
-  filename: string;
-  onClose: () => void;
-  onChange: (id: string) => void;
+  fileName: string;
+  onClose: (number: string) => void;
 }
 
 export const SetImportFilenameModal = ({
   show,
-  filename,
+  fileName,
   onClose,
-  onChange,
 }: SetImportFilenameModalProps) => {
+  const [newFileName, setNewFileName] = useState<string>(fileName);
+
+  useEffect(() => {
+    setNewFileName(fileName);
+  }, [fileName]);
   return (
-    <Modal show={show} onHide={onClose}>
+    <Modal show={show} onHide={() => onClose(newFileName)}>
       <Modal.Header closeButton>
         <Container>
           <Modal.Title>Filename</Modal.Title>
@@ -24,13 +28,17 @@ export const SetImportFilenameModal = ({
       <Modal.Body>
         <Container>
           <input
-            value={filename}
+            value={newFileName}
             className={styles.numberField}
-            onChange={(e) => onChange(e.target.value)}
+            onChange={(e) => setNewFileName(e.target.value)}
           />
         </Container>
       </Modal.Body>
-      <Modal.Footer></Modal.Footer>
+      <Modal.Footer>
+        <Button variant="secondary" onClick={() => onClose(newFileName)}>
+          Close
+        </Button>
+      </Modal.Footer>
     </Modal>
   );
 };

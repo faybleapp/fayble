@@ -429,21 +429,18 @@ export const ImportTable = ({ files }: ImportTableProps) => {
       />
 
       <SetImportFilenameModal
-        onClose={() => {
-          setShowImportFilenameModal(false);
-          setSelectedFile(undefined);
-        }}
-        show={showImportFilenameModal}
-        filename={selectedFile?.destinationFileName || ""}
-        onChange={(filename) => {
+        onClose={(fileName) => {
           setSelectedFile(
             (prevState) =>
               ({
                 ...prevState,
-                destinationFileName: filename,
+                destinationFileName: fileName,
               } as BookImport)
           );
+          setShowImportFilenameModal(false);
         }}
+        show={showImportFilenameModal}
+        fileName={selectedFile?.destinationFileName!}
       />
 
       {selectedFile?.seriesMatchId && (
