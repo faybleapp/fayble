@@ -1,4 +1,4 @@
-import { HubConnection, HubConnectionBuilder } from "@microsoft/signalr";
+import { HubConnection, HubConnectionBuilder, HubConnectionState } from "@microsoft/signalr";
 import { BackgroundTask } from "models/api-models";
 import React, {
 	createContext, useContext,
@@ -35,7 +35,7 @@ export const BackgroundTaskContextProvider = (props: BackgroundTaskContextProvid
 	}, []);
 
 	useEffect(() => {
-		if (connection) {
+		if (connection?.state === HubConnectionState.Disconnected) {
 			connection
 				.start()
 				.then(() => {
@@ -43,6 +43,7 @@ export const BackgroundTaskContextProvider = (props: BackgroundTaskContextProvid
 						setBackgroundTasks(tasks);
 					});
 					connection.on("BackgroundTaskStarted", (task) => {
+						console.log('here!');
 						setBackgroundTasks((prevTasks) => [...prevTasks, task]);
 					});
 					connection.on("BackgroundTaskUpdated", (task) => {
