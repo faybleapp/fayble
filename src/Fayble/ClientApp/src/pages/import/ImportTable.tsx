@@ -18,11 +18,12 @@ import {
   IndeterminateCheckboxValue
 } from "components/indeterminateCheckbox";
 import { BookImport } from "models";
-import { ComicFile } from "models/api-models";
+import { ImportScanFile } from "models/api-models";
 import { BookImportStatus } from "models/BookImportStatus";
 import { useEffect, useState } from "react";
 import { Button, OverlayTrigger, Table, Tooltip } from "react-bootstrap";
 import { useAllSeries } from "services";
+import { useImportFiles } from "services/import";
 import { ImportRow } from "./components/ImportRow";
 import { MatchModal } from "./components/MatchModal";
 import { SelectSeriesModal } from "./components/SelectSeriesModal";
@@ -31,7 +32,7 @@ import { SetNumberModal } from "./components/SetNumberModal";
 import styles from "./ImportTable.module.scss";
 
 interface ImportTableProps {
-  files: ComicFile[];
+  files: ImportScanFile[];
 }
 
 export const ImportTable = ({ files }: ImportTableProps) => {
@@ -64,6 +65,7 @@ export const ImportTable = ({ files }: ImportTableProps) => {
     })
   );
   const { data: series } = useAllSeries();
+  const performImport = useImportFiles();
 
   const updateBookImport = (updatedFile: BookImport) => {
     setImportFiles((importFiles) =>
@@ -497,9 +499,7 @@ export const ImportTable = ({ files }: ImportTableProps) => {
           show={showMatchModal}
           seriesMatchId={selectedFile.seriesMatchId}
           matchId={selectedFile.matchId!}
-          filename={
-            files?.find((f) => f.filePath === selectedFile.filePath)?.fileName
-          }
+          filename={selectedFile.fileName}
           onClose={() => {
             setShowMatchModal(false);
             setSelectedFile(undefined);

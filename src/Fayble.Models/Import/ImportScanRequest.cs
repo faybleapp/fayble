@@ -1,10 +1,10 @@
 ﻿namespace Fayble.Models.Import;
 
-public class ImportScan
+public class ImportScanRequest
 {
     public string Path { get; }
 
-    public ImportScan(string path)
+    public ImportScanRequest(string path)
     {
         Path = path;
     }

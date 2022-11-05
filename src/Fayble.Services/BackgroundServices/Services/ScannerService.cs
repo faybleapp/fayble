@@ -25,7 +25,7 @@ public class ScannerService : IScannerService
     private readonly ISeriesRepository _seriesRepository;
     private readonly IUnitOfWork _unitOfWork;
     private readonly IHubContext<BackgroundTaskHub> _hubContext;
-    private Fayble.Models.BackgroundTask.BackgroundTask _backgroundTask;
+    private Models.BackgroundTask.BackgroundTask _backgroundTask;
 
     public ScannerService(
         ILogger<ScannerService> logger,
@@ -108,7 +108,6 @@ public class ScannerService : IScannerService
             await SendClientUpdate("Complete", BackgroundTaskStatus.Complete, "BackgroundTaskCompleted");
         }
     }
-
 
     private async Task ScanLibrary(Domain.Aggregates.Library.Library library)
     {
@@ -212,7 +211,7 @@ public class ScannerService : IScannerService
                 Guid.NewGuid(),
                 series.Library.Id,
                 MediaType.ComicBook,
-                newFile.Number,
+                ComicBookHelpers.ParseIssueNumber(newFile.FileName),
                 bookFile,
                 series.Id);
 

@@ -16,17 +16,15 @@ public class ImportController : ControllerBase
     }
 
     [HttpPost("scan")]
-    public async Task<IEnumerable<Models.FileSystem.ComicFile>> Scan(ImportScan import)
+    public async Task<IEnumerable<ImportScanFile>> Scan(ImportScanRequest import)
     {
         return await _importService.Scan(import.Path);
     }
 
     [HttpPost]
-    public async Task Import(List<ImportFile> import)
+    public async Task Import(List<ImportFileRequest> importFiles)
     {
-
+        await _importService.Import(importFiles);
     }
-
-
 }
 

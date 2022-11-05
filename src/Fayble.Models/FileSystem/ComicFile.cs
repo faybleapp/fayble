@@ -4,8 +4,6 @@ namespace Fayble.Models.FileSystem;
 
 public class ComicFile
 {
-    public string? Number { get; }
-    public int? Year { get; }
     public string? FileExtension { get;  }
     public string FilePath { get; }
     public string? CoverImage { get; }
@@ -16,8 +14,6 @@ public class ComicFile
     public ComicInfoXml? ComicInfoXml { get; }
 
     public ComicFile(
-        string? number,
-        int? year,
         string? fileExtension,
         string filePath,
         string? coverImage,
@@ -27,8 +23,6 @@ public class ComicFile
         DateTimeOffset fileLastModifiedDate,
         ComicInfoXml? comicInfoXml)
     {
-        Number = number;
-        Year = year;
         FileExtension = fileExtension?.ToLower().TrimStart('.');
         FilePath = filePath;
         CoverImage = coverImage;

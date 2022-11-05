@@ -104,15 +104,11 @@ public class ComicBookFileSystemService : FileSystemService, IComicBookFileSyste
         var fileName = Path.GetFileNameWithoutExtension(filePath);
         var fileSize = file.Length;
         var lastModified = file.LastWriteTimeUtc;
-        var number = ComicBookHelpers.ParseIssueNumber(fileName);
-        var year = ComicBookHelpers.ParseYear(fileName);
         var fileExtension = Path.GetExtension(filePath);
         var comicInfoXml = ReadComicInfoXml(filePath);
 
         return new ComicFile(
-                number,
-                year,
-                fileExtension,
+            fileExtension,
                 filePath,
                 null,
                 fileName,

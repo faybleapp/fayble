@@ -1,19 +1,11 @@
-﻿using System.Text.RegularExpressions;
-using Fayble.Core.Exceptions;
-using Fayble.Core.Extensions;
-using Fayble.Domain.Aggregates.MediaSetting;
+﻿using Fayble.Core.Exceptions;
+using Fayble.Core.Helpers;
 using Fayble.Domain.Enums;
 using Fayble.Domain.Repositories;
-using Fayble.Models.FileSystem;
 using Fayble.Models.Import;
-using Fayble.Models.Metadata;
-using Fayble.Models.Settings;
 using Fayble.Services.FileSystem;
 using Fayble.Services.MetadataService;
 using Fayble.Services.Settings;
-using SharpCompress.Common;
-using ColonReplacement = Fayble.Models.Settings.ColonReplacement;
-using MissingTokenReplacement = Fayble.Models.Settings.MissingTokenReplacement;
 
 namespace Fayble.Services.Import;
 
@@ -39,7 +31,7 @@ public class ImportService : IImportService
         _metadataService = metadataService;
     }
 
-    public async Task<IEnumerable<ComicFile>> Scan(string path)
+    public async Task<IEnumerable<ImportScanFile>> Scan(string path)
     {
         path = path.TrimEnd(Path.DirectorySeparatorChar) + Path.DirectorySeparatorChar;
         var existingPath = await _libraryRepository.Get(
@@ -51,10 +43,19 @@ public class ImportService : IImportService
         }
 
         var filePaths = await _comicBookFileSystemService.GetFilePaths(path, MediaType.ComicBook);
-        return filePaths.Select(filePath => _comicBookFileSystemService.GetFile(filePath)).OrderBy(f => f.FileName).ToList();
+        var files = filePaths.Select(filePath => _comicBookFileSystemService.GetFile(filePath)).OrderBy(f => f.FileName)
+            .ToList();
+
+        return files.Select(file => new ImportScanFile(
+            file.FileName,
+            file.FilePath,
+            file.PageCount,
+            file.FileSize,
+            ComicBookHelpers.ParseIssueNumber(file.FileName),
+            file.ComicInfoXml));
     }
 
-    public async Task Import (List<ImportFile> files)
+    public async Task Import (List<ImportFileRequest> importFiles)
     {
 
     }

@@ -5,6 +5,7 @@ namespace Fayble.Services.Import
 {
     public interface IImportService
     {
-        Task<IEnumerable<ComicFile>> Scan(string path);
+        Task<IEnumerable<ImportScanFile>> Scan(string path);
+        Task Import(List<ImportFileRequest> importFiles);
     }
 }

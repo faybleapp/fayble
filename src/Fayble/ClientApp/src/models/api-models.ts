@@ -194,16 +194,12 @@ export interface FileExistsRequest {
     seriesId: string;
 }
 
-export interface ComicFile {
-    number: string | undefined;
-    year: number | undefined;
-    fileExtension: string | undefined;
-    filePath: string;
-    coverImage: string | undefined;
+export interface ImportScanFile {
     fileName: string;
+    filePath: string;
     pageCount: number;
     fileSize: number;
-    fileLastModifiedDate: Date;
+    number: string;
     comicInfoXml: ComicInfoXml | undefined;
 }
 
@@ -238,11 +234,11 @@ export interface ComicInfoXml {
     ageRating: string | undefined;
 }
 
-export interface ImportScan {
+export interface ImportScanRequest {
     path: string;
 }
 
-export interface ImportFile {
+export interface ImportFileRequest {
     seriesId: string | undefined;
     destinationFileName: string;
     filePath: string;

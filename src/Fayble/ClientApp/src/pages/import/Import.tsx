@@ -1,6 +1,7 @@
 import { PageContainer } from "components/pageContainer";
 import { SanitisePath } from "helpers/pathHelpers";
-import { ComicFile } from "models/api-models";
+import { ImportScanFile } from "models/api-models";
+
 import { useState } from "react";
 import { toast } from "react-toastify";
 import { usePathExists } from "services/fileSystem";
@@ -12,7 +13,7 @@ interface ImportProps {}
 
 export const Import = ({}: ImportProps) => {
   const [isSearching, setIsSearching] = useState(false);
-  const [files, setFiles] = useState<ComicFile[]>();
+  const [files, setFiles] = useState<ImportScanFile[]>();
   const { mutate: scanImportFiles } = useScanImportFiles();
   const { mutate: validatePath } = usePathExists();
 
