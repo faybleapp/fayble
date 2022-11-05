@@ -19,10 +19,10 @@ import {
 } from "components/indeterminateCheckbox";
 import { BookImport } from "models";
 import { ComicFile } from "models/api-models";
+import { BookImportStatus } from "models/BookImportStatus";
 import { useEffect, useState } from "react";
 import { Button, OverlayTrigger, Table, Tooltip } from "react-bootstrap";
 import { useAllSeries } from "services";
-import { useGenerateFilename } from "services/fileSystem";
 import { ImportRow } from "./components/ImportRow";
 import { MatchModal } from "./components/MatchModal";
 import { SelectSeriesModal } from "./components/SelectSeriesModal";
@@ -38,7 +38,7 @@ export const ImportTable = ({ files }: ImportTableProps) => {
   const [showSeriesModal, setShowSeriesModal] = useState<boolean>(false);
   const [showNumberModal, setShowNumberModal] = useState<boolean>(false);
   const [showMatchModal, setShowMatchModal] = useState<boolean>(false);
-  const [queuedForImport, setQueuedForImport] = useState<Array<string>>([]);
+
   const [selectedFile, setSelectedFile] = useState<BookImport | undefined>();
   const [selectAllStatus, setSelectAllStatus] =
     useState<IndeterminateCheckboxValue>(IndeterminateCheckboxValue.Unchecked);
@@ -59,11 +59,11 @@ export const ImportTable = ({ files }: ImportTableProps) => {
         loading: false,
         fileName: file.fileName,
         exists: false,
+        status: BookImportStatus.None,
       };
     })
   );
   const { data: series } = useAllSeries();
-  const generateFilename = useGenerateFilename();
 
   const updateBookImport = (updatedFile: BookImport) => {
     setImportFiles((importFiles) =>
@@ -100,8 +100,12 @@ export const ImportTable = ({ files }: ImportTableProps) => {
   const columnHelper = createColumnHelper<BookImport>();
 
   const renderSeriesSelect = (id: string) => {
-    const importFile = importFiles.find((f) => f.filePath === id);
+    const importFile = importFiles.find((f) => f.id === id);
     const seriesName = series?.find((s) => s.id === importFile?.seriesId)?.name;
+
+    if (importFile?.status === BookImportStatus.QueuedForImport) {
+      return <div>{seriesName}</div>;
+    }
     return (
       <div
         className={cn(styles.selectableCell, {
@@ -116,16 +120,16 @@ export const ImportTable = ({ files }: ImportTableProps) => {
     );
   };
 
-  const renderCheckbox = (filePath: string) => {
-    return !queuedForImport.some((q) => q === filePath) ? (
+  const renderCheckbox = (importFile: BookImport) => {
+    return importFile.status !== BookImportStatus.QueuedForImport ? (
       <input
         type="checkbox"
         className={styles.checkbox}
-        checked={checkedFiles.includes(filePath)}
+        checked={importFile.checked}
         onChange={(e) => {
           setImportFiles((importFiles) =>
             importFiles.map((file) => {
-              if (file.filePath === filePath) {
+              if (file.id === importFile.id) {
                 return { ...file, checked: e.target.checked };
               }
               return file;
@@ -158,7 +162,8 @@ export const ImportTable = ({ files }: ImportTableProps) => {
               return {
                 ...file,
                 checked:
-                  selectAllStatus === IndeterminateCheckboxValue.Unchecked,
+                  selectAllStatus === IndeterminateCheckboxValue.Unchecked &&
+                  file.status !== BookImportStatus.QueuedForImport,
               };
             })
           );
@@ -169,7 +174,11 @@ export const ImportTable = ({ files }: ImportTableProps) => {
   };
 
   const renderImportFilename = (id: string) => {
-    const importFile = importFiles.find((f) => f.filePath === id);
+    const importFile = importFiles.find((f) => f.id === id);
+
+    if (importFile?.status === BookImportStatus.QueuedForImport) {
+      return <div>{importFile?.destinationFileName}</div>;
+    }
 
     return importFile?.loading ? (
       <div className={styles.generatingFilename}>Generating...</div>
@@ -190,7 +199,12 @@ export const ImportTable = ({ files }: ImportTableProps) => {
   };
 
   const renderNumber = (id: string) => {
-    const importFile = importFiles.find((f) => f.filePath === id);
+    const importFile = importFiles.find((f) => f.id === id);
+
+    if (importFile?.status === BookImportStatus.QueuedForImport) {
+      return <div>{importFile?.number}</div>;
+    }
+
     return importFile?.seriesId ? (
       <div
         className={cn(styles.selectableCell, {
@@ -208,7 +222,18 @@ export const ImportTable = ({ files }: ImportTableProps) => {
   };
 
   const renderMatch = (id: string) => {
-    const importFile = importFiles.find((f) => f.filePath === id);
+    const importFile = importFiles.find((f) => f.id === id);
+
+    if (importFile?.status === BookImportStatus.QueuedForImport) {
+      return (
+        importFile?.matchId && (
+          <div>
+            <FontAwesomeIcon icon={faCircleCheck} />
+          </div>
+        )
+      );
+    }
+
     return importFile?.seriesMatchId ? (
       <div
         className={cn(styles.selectableCell, {
@@ -236,13 +261,25 @@ export const ImportTable = ({ files }: ImportTableProps) => {
       );
     }
 
+    if (importFile.status === BookImportStatus.QueuedForImport) {
+      return (
+        <OverlayTrigger
+          placement="left"
+          overlay={<Tooltip>Queued for Import</Tooltip>}>
+          <div>
+            <FontAwesomeIcon
+              className={styles.queuedForImport}
+              icon={faCircleCheck}
+            />
+          </div>
+        </OverlayTrigger>
+      );
+    }
+
     let error;
     let message = "";
 
-    if (queuedForImport.some((q) => q === importFile?.id)) {
-      error = false;
-      message = "Queued for import";
-    } else if (importFile?.exists) {
+    if (importFile?.exists) {
       error = true;
       message = "A file already exists with this name";
     } else if (!importFile?.seriesId) {
@@ -278,15 +315,27 @@ export const ImportTable = ({ files }: ImportTableProps) => {
   };
 
   const handleImport = () => {
-    const files = importFiles.filter(
-      (f) =>
-        checkedFiles.some((cf) => cf === f.filePath) &&
-        f.destinationFileName &&
-        f.seriesId
+    const filesToImport = importFiles.filter(
+      (file) =>
+        file.checked &&
+        file.destinationFileName &&
+        file.seriesId &&
+        file.number &&
+        !file.exists
     );
-    setQueuedForImport(files.map((f) => f.filePath));
-    setImportFiles((importFiles) =>
-      importFiles.map((file) => ({ ...file, checked: false }))
+
+    setImportFiles(
+      importFiles.map((file) => {
+        return {
+          ...file,
+          checked: false,
+          status:
+            filesToImport.some((cf) => cf.id === file.id) ||
+            file.status === BookImportStatus.QueuedForImport
+              ? BookImportStatus.QueuedForImport
+              : BookImportStatus.None,
+        };
+      })
     );
   };
 
@@ -294,7 +343,7 @@ export const ImportTable = ({ files }: ImportTableProps) => {
     columnHelper.accessor((row) => row, {
       id: "check",
       header: () => renderHeaderCheckbox(),
-      cell: (info) => renderCheckbox(info.row.original.filePath),
+      cell: (info) => renderCheckbox(info.row.original),
     }),
     columnHelper.accessor((row) => row.fileName, {
       id: "filename",
@@ -303,20 +352,20 @@ export const ImportTable = ({ files }: ImportTableProps) => {
     }),
     columnHelper.accessor((row) => row, {
       header: "Series",
-      cell: (info) => renderSeriesSelect(info.row.original.filePath),
+      cell: (info) => renderSeriesSelect(info.row.original.id),
     }),
     columnHelper.accessor((row) => row, {
       header: "Number",
-      cell: (info) => renderNumber(info.row.original.filePath),
+      cell: (info) => renderNumber(info.row.original.id),
     }),
     columnHelper.accessor((row) => row, {
       id: "match",
       header: "Match",
-      cell: (info) => renderMatch(info.row.original.filePath),
+      cell: (info) => renderMatch(info.row.original.id),
     }),
     columnHelper.accessor((row) => row, {
       header: "Import Filename",
-      cell: (info) => renderImportFilename(info.row.original.filePath),
+      cell: (info) => renderImportFilename(info.row.original.id),
     }),
     columnHelper.accessor((row) => row, {
       id: "status",
