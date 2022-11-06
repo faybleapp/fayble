@@ -4,7 +4,7 @@ namespace Fayble.Models.FileSystem;
 
 public class ComicFile
 {
-    public string? FileExtension { get;  }
+    public string FileExtension { get;  }
     public string FilePath { get; }
     public string? CoverImage { get; }
     public string FileName { get; }
@@ -14,7 +14,7 @@ public class ComicFile
     public ComicInfoXml? ComicInfoXml { get; }
 
     public ComicFile(
-        string? fileExtension,
+        string fileExtension,
         string filePath,
         string? coverImage,
         string fileName,
@@ -23,7 +23,7 @@ public class ComicFile
         DateTimeOffset fileLastModifiedDate,
         ComicInfoXml? comicInfoXml)
     {
-        FileExtension = fileExtension?.ToLower().TrimStart('.');
+        FileExtension = fileExtension.ToLower().TrimStart('.');
         FilePath = filePath;
         CoverImage = coverImage;
         FileName = fileName;

@@ -1,7 +1,7 @@
 ﻿CREATE TABLE "BackgroundTask" (
     "Id" TEXT NOT NULL CONSTRAINT "PK_BackgroundTask" PRIMARY KEY,
-    "ItemId" TEXT NULL,
-    "ItemName" TEXT NULL,
+    "TaskId" TEXT NULL,
+    "TaskName" TEXT NULL,
     "Type" TEXT NOT NULL,
     "Started" TEXT NOT NULL,
     "Status" TEXT NOT NULL,

@@ -21,6 +21,6 @@ public class BackgroundTaskHub : Hub
             "BackgroundTasks",
             runningTasks.Select(
                 t =>
-                    new BackgroundTask(t.Id, t.ItemId, t.ItemName,  t.Type.ToString(), t.Status.ToString())));
+                    new BackgroundTask(t.Id, t.TaskId, t.TaskName,  t.Type.ToString(), t.Status.ToString())));
     }
 }

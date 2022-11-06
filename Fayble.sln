@@ -25,7 +25,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Fayble.Database", "src\Fayb
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Fayble.Domain.Tests", "tests\Fayble.Domain.Tests\Fayble.Domain.Tests.csproj", "{0C498EA1-1144-4B0C-A2C8-7BAAC646C4DB}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Fayble.Integration", "src\Fayble.Integration\Fayble.Integration.csproj", "{9A621D5E-E4D6-44D3-93B1-AD12FA0B4373}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Fayble.Integration", "src\Fayble.Integration\Fayble.Integration.csproj", "{9A621D5E-E4D6-44D3-93B1-AD12FA0B4373}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Fayble.EventHandlers", "src\Fayble.EventHandlers\Fayble.EventHandlers.csproj", "{1D43673D-04FA-4E34-9809-6788B67122BD}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -77,6 +79,10 @@ Global
 		{9A621D5E-E4D6-44D3-93B1-AD12FA0B4373}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{9A621D5E-E4D6-44D3-93B1-AD12FA0B4373}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{9A621D5E-E4D6-44D3-93B1-AD12FA0B4373}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1D43673D-04FA-4E34-9809-6788B67122BD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1D43673D-04FA-4E34-9809-6788B67122BD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1D43673D-04FA-4E34-9809-6788B67122BD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1D43673D-04FA-4E34-9809-6788B67122BD}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

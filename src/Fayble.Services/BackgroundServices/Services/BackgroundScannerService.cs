@@ -14,7 +14,7 @@ using System.Globalization;
 
 namespace Fayble.Services.BackgroundServices.Services;
 
-public class ScannerService : IScannerService
+public class BackgroundScannerService : IBackgroundScannerService
 {
     private readonly IBookRepository _bookRepository;
     private readonly IComicBookFileSystemService _comicBookFileSystemService;
@@ -24,17 +24,14 @@ public class ScannerService : IScannerService
     private readonly ILogger _logger;
     private readonly ISeriesRepository _seriesRepository;
     private readonly IUnitOfWork _unitOfWork;
-    private readonly IHubContext<BackgroundTaskHub> _hubContext;
-    private Models.BackgroundTask.BackgroundTask _backgroundTask;
 
-    public ScannerService(
-        ILogger<ScannerService> logger,
+    public BackgroundScannerService(
+        ILogger<BackgroundScannerService> logger,
         IUnitOfWork unitOfWork,
         IBookRepository bookRepository,
         ILibraryRepository libraryRepository,
         IComicBookFileSystemService comicBookFileSystemService,
         ISeriesRepository seriesRepository,
-        IHubContext<BackgroundTaskHub> hubContext,
         IBackgroundTaskRepository backgroundTaskRepository,
         IPersonRepository personRepository)
     {
@@ -44,69 +41,63 @@ public class ScannerService : IScannerService
         _libraryRepository = libraryRepository;
         _comicBookFileSystemService = comicBookFileSystemService;
         _seriesRepository = seriesRepository;
-        _hubContext = hubContext;
         _backgroundTaskRepository = backgroundTaskRepository;
         _personRepository = personRepository;
     }
 
-    public async Task SeriesScan(Guid seriesId, Guid taskId)
+    public async Task SeriesScan(Guid seriesId, Guid backgroundTaskId)
     {
         try
         {
-            var series = await _seriesRepository.Get(seriesId);
-            _backgroundTask = new Fayble.Models.BackgroundTask.BackgroundTask(
-                taskId,
-                seriesId,
-                series.Name,
-                BackgroundTaskType.SeriesScan.ToString(),
-                BackgroundTaskStatus.Queued.ToString());
-
-            await UpdateTaskStatus(BackgroundTaskStatus.Running);
-            await SendClientUpdate("Scanning", BackgroundTaskStatus.Running, "BackgroundTaskStarted");
             _logger.LogInformation("Scanning series: {SeriesId}", seriesId);
-            await UpdateTaskStatus(BackgroundTaskStatus.Complete);
+            await UpdateTaskStatus(backgroundTaskId, BackgroundTaskStatus.Running);
+            var series = await _seriesRepository.Get(seriesId);
+            await ScanSeries(series);
+            await UpdateTaskStatus(backgroundTaskId, BackgroundTaskStatus.Complete);
+            _logger.LogInformation("Scanning series complete: {SeriesId}", seriesId);
         }
         catch (Exception ex)
         {
             _logger.LogError(ex, "An error occurred while scanning series: {SeriesId}", seriesId);
-            await UpdateTaskStatus(BackgroundTaskStatus.Failed);
-        }
-        finally
-        {
-            _logger.LogInformation("Scanning series complete: {SeriesId}", seriesId);
-            await SendClientUpdate("Complete", BackgroundTaskStatus.Complete, "BackgroundTaskCompleted");
-            
+            await UpdateTaskStatus(backgroundTaskId, BackgroundTaskStatus.Failed);
         }
     }
 
-    public async Task LibraryScan(Guid libraryId, Guid taskId)
+    public async Task LibraryScan(Guid libraryId, Guid backgroundTaskId)
     {
         try
         {
-            var library = await _libraryRepository.Get(libraryId);
-            _backgroundTask = new Fayble.Models.BackgroundTask.BackgroundTask(
-                taskId,
-                libraryId,
-                library.Name,
-                BackgroundTaskType.LibraryScan.ToString(),
-                BackgroundTaskStatus.Queued.ToString());
-
-            await UpdateTaskStatus(BackgroundTaskStatus.Running);
-            await SendClientUpdate("Scanning", BackgroundTaskStatus.Running, "BackgroundTaskStarted");
             _logger.LogInformation("Scanning library: {LibraryId}", libraryId);
+            await UpdateTaskStatus(backgroundTaskId, BackgroundTaskStatus.Running);
+            var library = await _libraryRepository.Get(libraryId);
             await ScanLibrary(library);
-            await UpdateTaskStatus(BackgroundTaskStatus.Complete);
+            await UpdateTaskStatus(backgroundTaskId, BackgroundTaskStatus.Complete);
+            _logger.LogInformation("Scanning library complete: {LibraryId}", libraryId);
         }
         catch (Exception ex)
         {
             _logger.LogError(ex, "An error occurred while scanning library: {LibraryId}", libraryId);
-            await UpdateTaskStatus(BackgroundTaskStatus.Failed);
+            await UpdateTaskStatus(backgroundTaskId, BackgroundTaskStatus.Failed);
         }
-        finally
+    }
+
+    public async Task BookScan(Guid bookId, Guid backgroundTaskId)
+    {
+        try
         {
-            _logger.LogInformation("Scanning library complete: {LibraryId}", libraryId);
-            await SendClientUpdate("Complete", BackgroundTaskStatus.Complete, "BackgroundTaskCompleted");
+            _logger.LogInformation("Scanning book: {BookId}", bookId);
+            await UpdateTaskStatus(backgroundTaskId, BackgroundTaskStatus.Running);
+            var book = await _bookRepository.Get(bookId);
+            await ScanBook(book);
+            await UpdateTaskStatus(backgroundTaskId, BackgroundTaskStatus.Complete);
+            _logger.LogInformation("Scanning book complete: {BookId}", bookId);
         }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "An error occurred while scanning book: {BookId}", bookId);
+            await UpdateTaskStatus(backgroundTaskId, BackgroundTaskStatus.Failed);
+        }
+
     }
 
     private async Task ScanLibrary(Domain.Aggregates.Library.Library library)
@@ -122,12 +113,6 @@ public class ScannerService : IScannerService
 
     private async Task ScanSeries(Domain.Aggregates.Series.Series series)
     {
-        await ScanExistingBooks(series);
-        await ScanNewBooks(series);
-    }
-
-    private async Task ScanExistingBooks(Domain.Aggregates.Series.Series series)
-    {
         _logger.LogInformation("Scanning existing books for series: {Series}", series.Name);
 
         if (series.Books == null || !series.Books.Any())
@@ -138,55 +123,12 @@ public class ScannerService : IScannerService
 
         foreach (var book in series.Books)
         {
-            var file = new FileInfo(Path.Combine(book.Library.FolderPath, book.File.FilePath));
-            if (!file.Exists)
-            {
-                if (book.DeletedDate == null)
-                {
-                    _logger.LogInformation("File no longer exists, flagging as deleted: {File}", file.FullName);
-                    book.Delete();
-                }
-
-                continue;
-            }
-
-            if (file.LastWriteTimeUtc != book.File.FileLastModifiedDate)
-            {
-                if (book.DeletedDate != null)
-                {
-                    _logger.LogInformation("File previously flagged as deleted but is now present, restoring: {File}", file.FullName);
-                    book.Restore();
-                }
-
-                _logger.LogInformation("File modified date changed, updating: {File}", file.FullName);
-
-                var comicFile = _comicBookFileSystemService.GetFile(file.FullName);
-
-                book.File.Update(
-                    file.Length,
-                    _comicBookFileSystemService.GetHash(file.FullName),
-                    comicFile.PageCount);
-
-                if (series.Library.GetSetting<bool>(LibrarySettingKey.UseComicInfo))
-                {
-                    await UpdateFromComicInfo(book, file.FullName);
-                }
-
-                continue;
-            }
-
-            _logger.LogDebug("File not modified: {File}", file.FullName);
+            await ScanBook(book);
         }
 
-        _logger.LogInformation("Scanning existing books complete");
-        await _unitOfWork.Commit();
-    }
-
-    private async Task ScanNewBooks(Domain.Aggregates.Series.Series series)
-    {
         _logger.LogInformation("Scanning new books for series: {Series}", series.Name);
         var newFiles = await GetNewFiles(series);
-        
+
         if (!newFiles.Any())
         {
             _logger.LogDebug("No new books");
@@ -195,60 +137,111 @@ public class ScannerService : IScannerService
 
         foreach (var newFile in newFiles)
         {
-            _logger.LogDebug("Processing issue: {FilePath}", newFile.FilePath);
-
-            var bookFile = new BookFile(
-                Guid.NewGuid(),
-                newFile.FileName,
-                PathHelpers.GetRelativePath(newFile.FilePath, series.Library.FolderPath),
-                newFile.FileSize,
-                newFile.FileExtension,
-                newFile.FileLastModifiedDate,
-                newFile.PageCount,
-                _comicBookFileSystemService.GetHash(newFile.FilePath));
-
-            var book = new Domain.Aggregates.Book.Book(
-                Guid.NewGuid(),
-                series.Library.Id,
-                MediaType.ComicBook,
-                ComicBookHelpers.ParseIssueNumber(newFile.FileName),
-                bookFile,
-                series.Id);
-
-            book.SetMediaRoot(ApplicationHelpers.GetMediaDirectoryRoot(book.Id));
-
-            if (series.Library.GetSetting<bool>(LibrarySettingKey.UseComicInfo))
-            {
-                await UpdateFromComicInfo(book, newFile.FilePath);
-            }
-            
-            try
-            {
-                _logger.LogDebug("Extracting cover image from: {FilePath}", newFile.FilePath);
-                _comicBookFileSystemService.ExtractComicCoverImage(newFile.FilePath!, book.MediaRoot, book.Id);
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, "An error occurred while extracting cover image");
-            }
-
-            book.UpdateSeries(series.Id);
-
-            _bookRepository.Add(book);
-
-            _logger.LogDebug(
-                "New issue added to library: {@ComicIssue}",
-                new
-                {
-                    book.Id,
-                    book.File.FileName,
-                    book.File.FilePath,
-                    book.LibraryId
-                });
+            await AddNewBook(newFile, series);
         }
-        
-        _logger.LogDebug("Scanning new books complete");
+
+        _logger.LogDebug("Scanning series complete");
+    }
+
+
+    private async Task ScanBook(Domain.Aggregates.Book.Book book)
+    {
+        var file = new FileInfo(Path.Combine(book.Library.FolderPath, book.File.FilePath));
+        if (!file.Exists)
+        {
+            if (book.DeletedDate == null)
+            {
+                _logger.LogInformation("File no longer exists, flagging as deleted: {File}", file.FullName);
+                book.Delete();
+                await _unitOfWork.Commit();
+            }
+
+            return;
+        }
+
+        if (file.LastWriteTimeUtc != book.File.FileLastModifiedDate)
+        {
+            if (book.DeletedDate != null)
+            {
+                _logger.LogInformation(
+                    "File previously flagged as deleted but is now present, restoring: {File}",
+                    file.FullName);
+                book.Restore();
+            }
+
+            _logger.LogInformation("File modified date changed, updating: {File}", file.FullName);
+
+            var comicFile = _comicBookFileSystemService.GetFile(file.FullName);
+
+            book.File.Update(
+                file.Length,
+                _comicBookFileSystemService.GetHash(file.FullName),
+                comicFile.PageCount);
+
+            if (book.Library.GetSetting<bool>(LibrarySettingKey.UseComicInfo))
+            {
+                await UpdateFromComicInfo(book, file.FullName);
+            }
+        }
+        else
+        {
+            _logger.LogDebug("File not modified: {File}", file.FullName);
+        }
         await _unitOfWork.Commit();
+    }
+
+    private async Task AddNewBook(ComicFile newFile, Domain.Aggregates.Series.Series series)
+    {
+        _logger.LogDebug("Processing issue: {FilePath}", newFile.FilePath);
+
+        var bookFile = new BookFile(
+            Guid.NewGuid(),
+            newFile.FileName,
+            PathHelpers.GetRelativePath(newFile.FilePath, series.Library.FolderPath),
+            newFile.FileSize,
+            newFile.FileExtension,
+            newFile.FileLastModifiedDate,
+            newFile.PageCount,
+            _comicBookFileSystemService.GetHash(newFile.FilePath));
+
+        var book = new Domain.Aggregates.Book.Book(
+            Guid.NewGuid(),
+            series.Library.Id,
+            MediaType.ComicBook,
+            ComicBookHelpers.ParseIssueNumber(newFile.FileName),
+            bookFile,
+            series.Id);
+
+        book.SetMediaRoot(ApplicationHelpers.GetMediaDirectoryRoot(book.Id));
+
+        if (series.Library.GetSetting<bool>(LibrarySettingKey.UseComicInfo))
+        {
+            await UpdateFromComicInfo(book, newFile.FilePath);
+        }
+
+        try
+        {
+            _logger.LogDebug("Extracting cover image from: {FilePath}", newFile.FilePath);
+            _comicBookFileSystemService.ExtractComicCoverImage(newFile.FilePath!, book.MediaRoot, book.Id);
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "An error occurred while extracting cover image");
+        }
+
+        book.UpdateSeries(series.Id);
+
+        _bookRepository.Add(book);
+
+        _logger.LogDebug(
+            "New issue added to library: {@ComicIssue}",
+            new
+            {
+                book.Id,
+                book.File.FileName,
+                book.File.FilePath,
+                book.LibraryId
+            });
     }
 
     private async Task<List<ComicFile>> GetNewFiles(Domain.Aggregates.Series.Series series)
@@ -258,7 +251,7 @@ public class ScannerService : IScannerService
         var filePaths = await _comicBookFileSystemService.GetFilePaths(path, MediaType.ComicBook);
 
         foreach (var filePath in filePaths)
-        {            
+        {
             var exists = series.Books?.Any(
                 b => b.File.FilePath.ToLower() ==
                      PathHelpers.GetRelativePath(filePath, series.Library.FolderPath).ToLower()) ?? false;
@@ -366,7 +359,9 @@ public class ScannerService : IScannerService
         return peopleIds;
     }
 
-    private async Task<Domain.Aggregates.Series.Series> GetSeries(string seriesPath, Domain.Aggregates.Library.Library library)
+    private async Task<Domain.Aggregates.Series.Series> GetSeries(
+        string seriesPath,
+        Domain.Aggregates.Library.Library library)
     {
         _logger.LogDebug("Retrieving series for directory: {SeriesPath}", seriesPath);
         var existingSeries = (await _seriesRepository.Get(
@@ -433,22 +428,10 @@ public class ScannerService : IScannerService
 
         return newSeries;
     }
-    
-    private async Task UpdateTaskStatus(BackgroundTaskStatus status)
+    private async Task UpdateTaskStatus(Guid id, BackgroundTaskStatus status)
     {
-        var task = await _backgroundTaskRepository.Get(_backgroundTask.Id);
+        var task = await _backgroundTaskRepository.Get(id);
         task.UpdateStatus(status);
         await _unitOfWork.Commit();
-    }
-
-    private async Task SendClientUpdate(
-        string description,
-        BackgroundTaskStatus? status = null,
-        string type = "BackgroundTaskUpdated")
-    {
-        _backgroundTask.Update(description, status?.ToString());
-        await _hubContext.Clients.All.SendAsync(
-            type,
-            _backgroundTask);
     }
 }

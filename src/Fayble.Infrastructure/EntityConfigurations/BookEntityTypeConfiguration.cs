@@ -10,6 +10,7 @@ public class BookEntityTypeConfiguration : IEntityTypeConfiguration<Book>
     public void Configure(EntityTypeBuilder<Book> builder)
     {
         builder.ToTable("Book");
+        builder.Property(x => x.Id).ValueGeneratedNever();
 
         builder.HasOne(x => x.Series)
             .WithMany(x => x.Books)

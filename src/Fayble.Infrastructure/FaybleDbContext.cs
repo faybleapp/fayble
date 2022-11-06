@@ -17,6 +17,7 @@ using Fayble.Domain.Aggregates.Tag;
 using Fayble.Domain.Aggregates.User;
 using Fayble.Domain.Entities;
 using Fayble.Security.Models;
+using MediatR;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
@@ -42,10 +43,12 @@ public class FaybleDbContext : IdentityDbContext<User, UserRole, Guid>, IFaybleD
     public DbSet<MediaSetting> MediaSettings { get; set; }
 
     private readonly IUser _userIdentity;
+    private readonly IMediator _mediator;
 
-    public FaybleDbContext(DbContextOptions options, IUser userIdentity) : base(options)
+    public FaybleDbContext(DbContextOptions options, IUser userIdentity, IMediator mediator) : base(options)
     {
         _userIdentity = userIdentity;
+        _mediator = mediator;
     }
 
     public FaybleDbContext()
@@ -55,13 +58,33 @@ public class FaybleDbContext : IdentityDbContext<User, UserRole, Guid>, IFaybleD
     public override int SaveChanges()
     {
         SetMetadata();
-        return base.SaveChanges();
+        return SaveChangesAsync().Result;
     }
 
-    public override Task<int> SaveChangesAsync(CancellationToken cancellationToken = new())
+    public override async Task<int> SaveChangesAsync(CancellationToken cancellationToken = new())
     {
         SetMetadata();
-        return base.SaveChangesAsync(cancellationToken);
+
+        if (_mediator != null)
+        {
+            var domainEntities = ChangeTracker.Entries<Entity>()
+                .Select(e => e.Entity)
+                .Where(e => e.DomainEvents.Any())
+                .ToArray();
+
+            var domainEvents = domainEntities
+                .SelectMany(e => e?.DomainEvents)
+                .ToArray();
+
+            domainEntities.ToList().ForEach(entity => entity.ClearDomainEvents());
+
+            foreach (var domainEvent in domainEvents)
+            {
+                await _mediator.Publish(domainEvent, cancellationToken);
+            }
+        }
+
+        return await base.SaveChangesAsync(cancellationToken);
     }
 
     private void SetMetadata()

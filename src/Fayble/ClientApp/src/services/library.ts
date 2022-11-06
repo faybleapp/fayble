@@ -61,3 +61,18 @@ export const useDeleteLibrary = (id: string) => {
 		}
 	);
 };
+
+export const useScanlibrary = (id: string) => {	
+	return useApiMutation<null, null>(
+		"POST",
+		() => `/libraries/scan/${id}`,
+		{
+			onSuccess: () => {
+				toast.success("Library scan queued")
+			},
+			onError: () => {
+				toast.error("An error occurred while queueing library scan");
+			},
+		}
+	);
+}

@@ -29,9 +29,9 @@ export interface RefreshTokenRequest {
 
 export interface BackgroundTask {
     id: string;
-    itemId: string | undefined;
-    itemName: string | undefined;
-    status: string | undefined;
+    taskId: string;
+    taskName: string;
+    status: string;
     description: string | undefined;
     type: string;
 }
@@ -239,10 +239,11 @@ export interface ImportScanRequest {
 }
 
 export interface ImportFileRequest {
-    seriesId: string | undefined;
+    seriesId: string;
     destinationFileName: string;
     filePath: string;
     number: string;
+    matchId: string | undefined;
 }
 
 export interface SeriesSearchResult {

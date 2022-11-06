@@ -11,5 +11,6 @@ public class BookFileEntityTypeConfiguration : IEntityTypeConfiguration<BookFile
     {
         builder.ToTable("BookFile");
         builder.HasKey(x => x.Id);
+        builder.Property(x => x.Id).ValueGeneratedNever();
     }
 }

@@ -1,8 +1,10 @@
 ﻿using Fayble.Core.Exceptions;
 using Fayble.Core.Helpers;
+using Fayble.Domain;
 using Fayble.Domain.Enums;
 using Fayble.Domain.Repositories;
 using Fayble.Models.Import;
+using Fayble.Services.BackgroundServices;
 using Fayble.Services.FileSystem;
 using Fayble.Services.MetadataService;
 using Fayble.Services.Settings;
@@ -16,19 +18,25 @@ public class ImportService : IImportService
     private readonly ISettingsService _settingsService;
     private readonly ISeriesRepository _seriesRepository;
     private readonly IMetadataService _metadataService;
+    private readonly IUnitOfWork _unitOfWork;
+    private readonly IBackgroundTaskService _backgroundTaskService;
 
     public ImportService(
         IComicBookFileSystemService comicBookFileSystemService,
         ILibraryRepository libraryRepository,
         ISettingsService settingsService,
         ISeriesRepository seriesRepository,
-        IMetadataService metadataService)
+        IMetadataService metadataService,
+        IUnitOfWork unitOfWork,
+        IBackgroundTaskService backgroundTaskService)
     {
         _comicBookFileSystemService = comicBookFileSystemService;
         _libraryRepository = libraryRepository;
         _settingsService = settingsService;
         _seriesRepository = seriesRepository;
         _metadataService = metadataService;
+        _unitOfWork = unitOfWork;
+        _backgroundTaskService = backgroundTaskService;
     }
 
     public async Task<IEnumerable<ImportScanFile>> Scan(string path)
@@ -57,8 +65,9 @@ public class ImportService : IImportService
 
     public async Task Import (List<ImportFileRequest> importFiles)
     {
-
+        foreach (var importFile in importFiles)
+        {
+            await _backgroundTaskService.QueueImport(importFile);
+        }
     }
-
-  
 }

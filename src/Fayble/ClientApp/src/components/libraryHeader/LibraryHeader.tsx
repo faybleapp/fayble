@@ -1,15 +1,15 @@
 import {
-	faEdit,
-	faList,
-	faSearchPlus,
-	faTh
+  faEdit,
+  faList,
+  faSearchPlus,
+  faTh
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import cn from "classnames";
 import { Breadcrumb } from "components/breadcrumb";
-import { BackgroundTaskType, BreadcrumbItem, ViewType } from "models/ui-models";
+import { BreadcrumbItem, ViewType } from "models/ui-models";
 import { NavDropdown, OverlayTrigger, Tooltip } from "react-bootstrap";
-import { useRunBackgroundTask } from "services";
+import { useRunBackgroundTask, useScanlibrary } from "services";
 import styles from "./LibraryHeader.module.scss";
 
 interface LibraryHeaderProps {
@@ -28,6 +28,7 @@ export const LibraryHeader = ({
   libraryId,
 }: LibraryHeaderProps) => {
   const runBackgroundTask = useRunBackgroundTask();
+  const scanLibrary = useScanlibrary(libraryId);
 
   const scan = () => {
     // if (scanTask.running && scanTask.libraryId === props.libraryId) {
@@ -35,11 +36,11 @@ export const LibraryHeader = ({
     // 	return;
     // }
     // runTask(props.libraryId, TaskType.LibraryScan);
-
-    runBackgroundTask.mutate({
-      itemId: libraryId,
-      taskType: BackgroundTaskType[BackgroundTaskType.LibraryScan],
-    });
+    scanLibrary.mutate(null);
+    // runBackgroundTask.mutate({
+    //   itemId: libraryId,
+    //   taskType: BackgroundTaskType[BackgroundTaskType.LibraryScan],
+    // });
   };
 
   return (

@@ -22,9 +22,10 @@ public class ImportController : ControllerBase
     }
 
     [HttpPost]
-    public async Task Import(List<ImportFileRequest> importFiles)
+    public async Task<IActionResult> Import(List<ImportFileRequest> importFiles)
     {
         await _importService.Import(importFiles);
+        return Accepted();
     }
 }
 

@@ -1,4 +1,4 @@
-import { ImportScanFile, ImportScanRequest } from "models/api-models";
+import { ImportFileRequest, ImportScanFile } from "models/api-models";
 import { useQueryClient } from "react-query";
 import { useApiMutation } from "./useApiMutation";
 
@@ -16,5 +16,5 @@ export const useScanImportFiles = () => {
 };
 
 export const useImportFiles = () => {
-  return useApiMutation<null, ImportScanRequest[]>("POST", () => `/import`);
+  return useApiMutation<null, ImportFileRequest[]>("POST", () => `/import`);
 };

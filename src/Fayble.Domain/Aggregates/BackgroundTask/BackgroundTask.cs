@@ -1,11 +1,13 @@
 ﻿using Fayble.Domain.Entities;
+using Fayble.Domain.Events;
 
 namespace Fayble.Domain.Aggregates.BackgroundTask;
 public class BackgroundTask : IdentifiableEntity<Guid>, IAggregateRoot
 {
-    public Guid? ItemId { get; private set; }
+    public string TaskId { get; private set; }
 
-    public string ItemName { get; private set; }
+    public string TaskName { get; private set; }
+
     public BackgroundTaskType Type { get; private set; }
 
     public DateTimeOffset Started { get; private set; }
@@ -16,18 +18,21 @@ public class BackgroundTask : IdentifiableEntity<Guid>, IAggregateRoot
 
     private BackgroundTask() { }
 
-    public BackgroundTask(Guid? itemId, string itemName, BackgroundTaskType type, Guid? startedBy = null)
+    public BackgroundTask(string taskId, string taskName, BackgroundTaskType type, Guid? startedBy = null)
     {
-        ItemId = itemId;
-        ItemName = itemName;
+        TaskId = taskId;
+        TaskName = taskName;
         Type = type;
         StartedBy = startedBy;
         Started = DateTimeOffset.UtcNow;
         Status = BackgroundTaskStatus.Queued;
+
+        AddDomainEvent(new BackgroundTaskCreated(Id, TaskId, TaskName, Type, Status));
     }
 
     public void UpdateStatus(BackgroundTaskStatus status)
     {
         Status = status;
+        AddDomainEvent(new BackgroundTaskUpdated(Id, TaskId, TaskName, Type, Status));
     }
 }

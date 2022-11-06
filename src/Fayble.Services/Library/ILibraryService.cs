@@ -8,4 +8,5 @@ public interface ILibraryService
     Task<Models.Library.Library> Update(Guid id, Models.Library.Library library);
     Task Delete(Guid id);
     Task<IEnumerable<Models.Series.Series>?> GetSeries(Guid libraryId);
+    Task Scan(Guid libraryId);
 }

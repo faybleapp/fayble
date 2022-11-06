@@ -1,5 +1,6 @@
 import { flexRender, Row } from "@tanstack/react-table";
 import { BookImport } from "models";
+import { BookImportStatus } from "models/BookImportStatus";
 import { useMemo } from "react";
 import { toast } from "react-toastify";
 import { useFileExists, useGenerateFilename } from "services/fileSystem";
@@ -19,7 +20,7 @@ export const ImportRow = ({ row, updateBookImport }: ImportRowProps) => {
 
     updateBookImport({
       ...file,
-      loading: true,
+      status: BookImportStatus.Loading,
     });
     generateFilename.mutate(
       {
@@ -32,14 +33,14 @@ export const ImportRow = ({ row, updateBookImport }: ImportRowProps) => {
           updateBookImport({
             ...file,
             destinationFileName: filename,
-            loading: false,
+            status: BookImportStatus.None,
           });
         },
         onError: () => {
           toast.error("An error occurred while generating filename");
           updateBookImport({
             ...file,
-            loading: false,
+            status: BookImportStatus.None,
           });
         },
       }
