@@ -1,8 +1,7 @@
 {
   "name": "client-app",
   "version": "0.1.0",
-  "private": true,
-  "proxy": "https://localhost:5001",
+  "private": true,  
   "dependencies": {
     "@fortawesome/free-regular-svg-icons": "^6.2.0",
     "@fortawesome/free-solid-svg-icons": "^6.2.0",
@@ -35,16 +34,17 @@
     "@types/react": "^18.0.7",
     "@types/react-dom": "^18.0.0",
     "@types/react-show-more-text": "^1.4.2",
-    "react-scripts": "^5.0.1",
+    "@vitejs/plugin-react": "^2.2.0",
     "sass": "^1.56.0",
-    "typescript": "^4.8.4"
+    "typescript": "^4.8.4",
+    "vite": "^3.2.2",
+    "vite-plugin-svgr": "^2.2.2",
+    "vite-tsconfig-paths": "^3.5.2"
   },
-  "scripts": {
-    "prestart": "node aspnetcore-https && node aspnetcore-react",
-    "start": "react-scripts start",
-    "build": "react-scripts build",
-    "test": "react-scripts test",
-    "eject": "react-scripts eject"
+  "scripts": {   
+    "start": "vite",
+    "build": "tsc && vite build",
+    "serve": "vite preview"
   },
   "eslintConfig": {
     "extends": [
