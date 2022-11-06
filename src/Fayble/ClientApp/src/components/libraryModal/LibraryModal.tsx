@@ -18,7 +18,7 @@ interface LibraryModalProps {
 }
 
 const initialLibraryState: Library = {
-	id: undefined,
+	id: "",
 	name: "",
 	libraryType: "ComicBook",
 	folderPath: "",
@@ -33,9 +33,9 @@ export const LibraryModal = ({ show, library, close }: LibraryModalProps) => {
 	const [activeTabKey, setActiveTabKey] = useState<string>("1");
 	
 	const navigate = useNavigate();
-	const deleteLibrary = useDeleteLibrary();
+	const deleteLibrary = useDeleteLibrary(library?.id || "");
 	const createLibrary = useCreateLibrary();
-	const updateLibrary = useUpdateLibrary();	
+	const updateLibrary = useUpdateLibrary(library?.id || "" );	
 	const form = useForm<Library>({
 		defaultValues: !library ? initialLibraryState : library,
 	});
@@ -52,7 +52,7 @@ export const LibraryModal = ({ show, library, close }: LibraryModalProps) => {
 	};
 
 	const remove: SubmitHandler<Library> = (library) => {
-		deleteLibrary.mutate([library.id!, null], {
+		deleteLibrary.mutate(null, {
 			onSuccess: () => {
 				close();
 				navigate("/");
@@ -61,7 +61,7 @@ export const LibraryModal = ({ show, library, close }: LibraryModalProps) => {
 	};
 
 	const create: SubmitHandler<Library> = (library) => {
-		createLibrary.mutate([null, library], {
+		createLibrary.mutate(library!, {
 			onSuccess: () => {
 				close();
 			},
@@ -69,7 +69,7 @@ export const LibraryModal = ({ show, library, close }: LibraryModalProps) => {
 	};
 
 	const update: SubmitHandler<Library> = (library) => {
-		updateLibrary.mutate([library.id!, library], {
+		updateLibrary.mutate(library!, {
 			onSuccess: () => {
 				close();
 			},

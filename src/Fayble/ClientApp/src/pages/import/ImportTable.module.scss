@@ -1,0 +1,73 @@
+@import "../../scss/variables";
+
+.importTable {
+  margin-top: 30px;
+}
+
+.selectableCell {
+  &:hover {
+    color: $accent-color;
+    cursor: pointer;
+  }
+}
+
+.placeholder {
+  color: $secondary-font-color;
+}
+
+.editableCell {
+  outline: 0;
+  // border-width: 0 0 1px;
+  border: none;
+
+  flex-grow: 1;
+  background-color: transparent;
+}
+
+.errorIcon {
+  color: red;
+}
+
+.loadingIcon{
+  color: $accent-color;
+}
+
+.successIcon {
+  color: green;
+}
+
+.importIcon {
+  color: green;
+}
+
+.queuedForImport {
+  color: green;
+}
+
+
+.checkbox {
+  cursor: pointer;
+}
+
+.tableButtons {
+  display: flex;
+  margin-bottom: 40px;
+ 
+  .importButton {
+    margin-left: auto;
+  }
+ 
+}
+
+.generatingFilename {
+  color: $secondary-font-color;  
+}
+
+.filenameLoader {	
+	color: $accent-color;
+	top: 50%;
+	right: 50%;
+  width: 15px;
+  height: 15px;
+}
+

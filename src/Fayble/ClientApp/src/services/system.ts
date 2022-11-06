@@ -6,7 +6,7 @@ import { useApiQuery } from "./useApiQuery";
 
 export const useFirstRun = () => {
 	const queryClient = useQueryClient();
-	return useApiMutation<null, null, FirstRun>(
+	return useApiMutation<null, FirstRun>(
 		"POST",
 		() => `/system/first-run`,
 		{

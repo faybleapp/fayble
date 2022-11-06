@@ -1,11 +1,10 @@
-﻿using System.Text;
-using AspNetCoreRateLimit;
+﻿using AspNetCoreRateLimit;
 using Fayble;
 using Fayble.Core.Helpers;
-using Fayble.Database;
 using Fayble.Domain;
 using Fayble.Domain.Aggregates.User;
 using Fayble.Domain.Repositories;
+using Fayble.EventHandlers.BackgroundTasks;
 using Fayble.Infrastructure;
 using Fayble.Infrastructure.Repositories;
 using Fayble.Integration.FaybleApi;
@@ -16,18 +15,20 @@ using Fayble.Services.BackgroundServices;
 using Fayble.Services.BackgroundServices.Services;
 using Fayble.Services.Book;
 using Fayble.Services.FileSystem;
+using Fayble.Services.Import;
 using Fayble.Services.Library;
 using Fayble.Services.MetadataService;
 using Fayble.Services.Person;
 using Fayble.Services.Publisher;
 using Fayble.Services.Series;
+using Fayble.Services.Settings;
 using Fayble.Services.System;
 using Fayble.Services.Tag;
+using MediatR;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
@@ -35,7 +36,8 @@ using Newtonsoft.Json.Serialization;
 using Serilog;
 using Serilog.Core.Enrichers;
 using Serilog.Events;
-using Database = Fayble.Database.Database;
+using System.Reflection;
+using System.Text;
 
 
 IConfiguration configuration = new ConfigurationBuilder()
@@ -140,6 +142,8 @@ builder.Services.AddSignalR(
         options.EnableDetailedErrors = true;
     });
 
+builder.Services.AddMediatR(typeof(BackgroundTaskUpdatedEventHandler).Assembly);
+
 builder.Services.AddOpenApiDocument();
 builder.Services.AddHttpContextAccessor();
 builder.Services.AddHostedService<QueuedHostedService>();
@@ -160,11 +164,11 @@ builder.Services.AddScoped<IRefreshTokenRepository, RefreshTokenRepository>();
 builder.Services.AddScoped<IPublisherRepository, PublisherRepository>();
 builder.Services.AddScoped<IBookTagRepository, BookTagRepository>();
 builder.Services.AddScoped<IPersonRepository, PersonRepository>();
+builder.Services.AddScoped<IMediaSettingRepository, MediaSettingRepository>();
 
 // Register Services
 builder.Services.AddScoped<ILibraryService, LibraryService>();
 builder.Services.AddScoped<ISeriesService, SeriesService>();
-builder.Services.AddScoped<IScannerService, ScannerService>();
 builder.Services.AddScoped<IComicBookFileSystemService, ComicBookFileSystemService>();
 builder.Services.AddScoped<Fayble.Security.Services.Authentication.IAuthenticationService, Fayble.Security.Services.Authentication.AuthenticationService>();
 builder.Services.AddScoped<IPublisherService, PublisherService>();
@@ -173,6 +177,12 @@ builder.Services.AddScoped<ITagService, TagService>();
 builder.Services.AddScoped<ISystemService, SystemService>();
 builder.Services.AddScoped<IPersonService, PersonService>();
 builder.Services.AddScoped<IMetadataService, MetadataService>();
+builder.Services.AddScoped<IImportService, ImportService>();
+builder.Services.AddScoped<ISettingsService, SettingsService>();
+
+// Background Sevices
+builder.Services.AddScoped<IBackgroundScannerService, BackgroundScannerService>();
+builder.Services.AddScoped<IBackgroundImportService, BackgroundImportService>();
 
 // Integration
 builder.Services.AddScoped<IFaybleApiClient, FaybleApiClient>();

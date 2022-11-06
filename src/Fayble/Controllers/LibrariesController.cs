@@ -60,5 +60,10 @@ public class LibrariesController : ControllerBase
         return NoContent();
     }
 
-    
+    [HttpPost("scan/{id}")]
+    public async Task<IActionResult> Scan(Guid id)
+    {
+        await _libraryService.Scan(id);
+        return Accepted();
+    }
 }

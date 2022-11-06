@@ -16,14 +16,14 @@ interface BookModalProps {
 }
 
 export const BookModal = ({ book, show, close }: BookModalProps) => {
-  const updateBook = useUpdateBook();
+  const updateBook = useUpdateBook(book.id);
 
   const form = useForm<Book>({
     defaultValues: book,
   });
 
   const handleSubmit: SubmitHandler<Book> = (values) => {
-    updateBook.mutate([values.id, values], {
+    updateBook.mutate(values, {
       onSuccess: () => {
         close();
       },

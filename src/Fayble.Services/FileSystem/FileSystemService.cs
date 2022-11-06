@@ -14,12 +14,12 @@ namespace Fayble.Services.FileSystem
             _fileTypeRepository = fileTypeRepository;
         }
 
-        public async Task<IEnumerable<string>> GetFiles(string directory, MediaType mediaType)
+        public async Task<IEnumerable<string>> GetFilePaths(string directory, MediaType mediaType)
         {
             var extensions = (await _fileTypeRepository.Get(x => x.MediaType == mediaType))
                 .Select(x => x.FileExtension).ToList();
 
-            return Directory.EnumerateFiles(directory, "*.*").Where(
+            return Directory.EnumerateFiles(directory, "*.*", SearchOption.AllDirectories).Where(
                 f => extensions.Contains(Path.GetExtension(f).Replace(".", "").ToLowerInvariant()));
         }
 

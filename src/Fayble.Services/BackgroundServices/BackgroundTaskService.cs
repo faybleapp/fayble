@@ -1,6 +1,7 @@
 ﻿using Fayble.Domain;
 using Fayble.Domain.Aggregates.BackgroundTask;
 using Fayble.Domain.Repositories;
+using Fayble.Models.Import;
 using Fayble.Services.BackgroundServices.Services;
 using Microsoft.AspNetCore.SignalR;
 using Microsoft.Extensions.DependencyInjection;
@@ -10,7 +11,9 @@ namespace Fayble.Services.BackgroundServices;
 
 public interface IBackgroundTaskService
 {
-    Task Run(Guid itemId, BackgroundTaskType taskType);
+    Task QueueSeriesScan(Guid seriesId);
+    Task QueueImport(ImportFileRequest request);
+    Task QueueLibraryScan(Guid libraryId);
 }
 
 public class BackgroundTaskService : IBackgroundTaskService
@@ -42,66 +45,67 @@ public class BackgroundTaskService : IBackgroundTaskService
         _seriesRepository = seriesRepository;
     }
 
-    public async Task Run(Guid itemId, BackgroundTaskType taskType)
-    {
-        var existing = await CheckForExisting(itemId, taskType);
-        if (existing)
-        {
-            _logger.LogInformation("Existing {TaskType} task for {ItemId} already running or queued", taskType, itemId);
-            return;
-        }
 
-        switch (taskType)
-        {
-            case BackgroundTaskType.LibraryScan:
-                await LibraryScan(itemId);
-                break;
-            case BackgroundTaskType.SeriesScan:
-                await SeriesScan(itemId);
-                break;
-            default:
-                return;
-        }
-    }
-
-    private async Task LibraryScan(Guid libraryId)
+    public async Task QueueLibraryScan(Guid libraryId)
     {
         var library = await _libraryRepository.Get(libraryId);
-        var taskId = await CreateTask(library.Id, library.Name, BackgroundTaskType.LibraryScan);
+        var taskId = await CreateTask(library.Id.ToString(), library.Name, BackgroundTaskType.LibraryScan);
         
         await _queue.QueueBackgroundWorkItemAsync(
             async token =>
             {
                 using var scope = _serviceScopeFactory.CreateScope();
                 var scopedServices = scope.ServiceProvider;
-                var comicLibraryScanner = scopedServices.GetService<IScannerService>()!;
+                var comicLibraryScanner = scopedServices.GetService<IBackgroundScannerService>()!;
                 await comicLibraryScanner.LibraryScan(libraryId, taskId);
             });
     }
-    private async Task SeriesScan(Guid seriesId)
+    public async Task QueueSeriesScan(Guid seriesId)
     {
-       var library = await _seriesRepository.Get(seriesId);
-       var taskId = await CreateTask(library.Id, library.Name, BackgroundTaskType.LibraryScan);
+       var series = await _seriesRepository.Get(seriesId);
+       var taskId = await CreateTask(series.Id.ToString(), series.Name, BackgroundTaskType.LibraryScan);
        await _queue.QueueBackgroundWorkItemAsync(
             async token =>
             {
                 using var scope = _serviceScopeFactory.CreateScope();
                 var scopedServices = scope.ServiceProvider;
-                var comicLibraryScanner = scopedServices.GetService<IScannerService>()!;
+                var comicLibraryScanner = scopedServices.GetService<IBackgroundScannerService>()!;
                 await comicLibraryScanner.SeriesScan(seriesId, taskId);
             });
     }
 
-    private async Task<bool> CheckForExisting(Guid itemId, BackgroundTaskType taskType)
+    public async Task QueueImport(ImportFileRequest request)
+    {
+        var existing = await CheckForExisting(request.DestinationFileName, BackgroundTaskType.BookImport);
+
+        if (existing)
+        {
+            _logger.LogInformation("Existing {TaskType} task for {ItemId} already running or queued", BackgroundTaskType.BookImport.ToString(), request.DestinationFileName);
+            return;
+        }
+
+        var backgroundTaskId = await CreateTask(request.DestinationFileName, request.DestinationFileName, BackgroundTaskType.LibraryScan);
+
+        await _queue.QueueBackgroundWorkItemAsync(
+            async token =>
+            {
+                using var scope = _serviceScopeFactory.CreateScope();
+                var scopedServices = scope.ServiceProvider;
+                var importService = scopedServices.GetService<IBackgroundImportService>()!;
+                await importService.Import(request, backgroundTaskId);
+            });
+    }
+
+    private async Task<bool> CheckForExisting(string taskId, BackgroundTaskType taskType)
     {
         return (await _backgroundTaskRepository.Get(
-            t => t.ItemId == itemId && t.Type == taskType &&
+            t => t.TaskId == taskId && t.Type == taskType &&
                  (t.Status == BackgroundTaskStatus.Queued || t.Status == BackgroundTaskStatus.Running))).Any();
     }
 
-    private async Task<Guid> CreateTask(Guid itemId, string itemName, BackgroundTaskType taskType)
+    private async Task<Guid> CreateTask(string taskId, string taskName, BackgroundTaskType taskType)
     {
-        var task = _backgroundTaskRepository.Add(new BackgroundTask(itemId, itemName, taskType));
+        var task = _backgroundTaskRepository.Add(new BackgroundTask(taskId, taskName, taskType));
         await _unitOfWork.Commit();
         return task.Id;
     }

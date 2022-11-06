@@ -8,13 +8,16 @@ using Fayble.Domain.Aggregates.BackgroundTask;
 using Fayble.Domain.Aggregates.Book;
 using Fayble.Domain.Aggregates.FileType;
 using Fayble.Domain.Aggregates.Library;
+using Fayble.Domain.Aggregates.MediaSetting;
 using Fayble.Domain.Aggregates.Publisher;
 using Fayble.Domain.Aggregates.Series;
 using Fayble.Domain.Aggregates.SystemConfiguration;
+using Fayble.Domain.Aggregates.SystemSetting;
 using Fayble.Domain.Aggregates.Tag;
 using Fayble.Domain.Aggregates.User;
 using Fayble.Domain.Entities;
 using Fayble.Security.Models;
+using MediatR;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
@@ -37,12 +40,15 @@ public class FaybleDbContext : IdentityDbContext<User, UserRole, Guid>, IFaybleD
     public DbSet<SystemSetting> SystemConfiguration { get; set; }
     public DbSet<BackgroundTask> BackgroundTasks { get; set; }
     public DbSet<BookTag> BookTags { get; set; }
+    public DbSet<MediaSetting> MediaSettings { get; set; }
 
     private readonly IUser _userIdentity;
+    private readonly IMediator _mediator;
 
-    public FaybleDbContext(DbContextOptions options, IUser userIdentity) : base(options)
+    public FaybleDbContext(DbContextOptions options, IUser userIdentity, IMediator mediator) : base(options)
     {
         _userIdentity = userIdentity;
+        _mediator = mediator;
     }
 
     public FaybleDbContext()
@@ -52,13 +58,33 @@ public class FaybleDbContext : IdentityDbContext<User, UserRole, Guid>, IFaybleD
     public override int SaveChanges()
     {
         SetMetadata();
-        return base.SaveChanges();
+        return SaveChangesAsync().Result;
     }
 
-    public override Task<int> SaveChangesAsync(CancellationToken cancellationToken = new())
+    public override async Task<int> SaveChangesAsync(CancellationToken cancellationToken = new())
     {
         SetMetadata();
-        return base.SaveChangesAsync(cancellationToken);
+
+        if (_mediator != null)
+        {
+            var domainEntities = ChangeTracker.Entries<Entity>()
+                .Select(e => e.Entity)
+                .Where(e => e.DomainEvents.Any())
+                .ToArray();
+
+            var domainEvents = domainEntities
+                .SelectMany(e => e?.DomainEvents)
+                .ToArray();
+
+            domainEntities.ToList().ForEach(entity => entity.ClearDomainEvents());
+
+            foreach (var domainEvent in domainEvents)
+            {
+                await _mediator.Publish(domainEvent, cancellationToken);
+            }
+        }
+
+        return await base.SaveChangesAsync(cancellationToken);
     }
 
     private void SetMetadata()

@@ -3,21 +3,19 @@ import { useQueryClient } from "react-query";
 import { useApiQuery } from "services/useApiQuery";
 import { useApiMutation } from "./useApiMutation";
 
+export const useAllSeries = () => useApiQuery<Series[]>(["series"], `/series`);
+
 export const useSeries = (id: string) =>
-	useApiQuery<Series>(["series", id], `/series/${id}`);
+  useApiQuery<Series>(["series", id], `/series/${id}`);
 
 export const useSeriesBooks = (id: string) =>
-	useApiQuery<Book[]>(["series", id, "books"], `/series/${id}/books`);
+  useApiQuery<Book[]>(["series", id, "books"], `/series/${id}/books`);
 
-export const useUpdateSeries = () => {
-	const queryClient = useQueryClient();
-	return useApiMutation<Series, string, Series>(
-		"PATCH",
-		(id) => `/series/${id}`,
-		{
-			onSuccess: (_, [variables, data]) => {
-				queryClient.invalidateQueries("series");
-			},
-		}
-	);
+export const useUpdateSeries = (id: string) => {
+  const queryClient = useQueryClient();
+  return useApiMutation<Series, Series>("PATCH", () => `/series/${id}`, {
+    onSuccess: () => {
+      queryClient.invalidateQueries("series");
+    },
+  });
 };

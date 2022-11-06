@@ -1,6 +1,6 @@
 ﻿namespace Fayble.Domain.Entities;
 
-public abstract class IdentifiableEntity<TId>
+public abstract class IdentifiableEntity<TId> : Entity
 {
     protected IdentifiableEntity()
     {

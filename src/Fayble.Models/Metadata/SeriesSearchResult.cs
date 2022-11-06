@@ -12,6 +12,7 @@ public class SeriesSearchResult
     public string? Publisher { get; }
     public int IssueCount { get; }
     public string? Image { get; }
+    public string? Thumbnail => Image?.Replace("/original/", "/scale_avatar/");
     public int LevenshteinDistance { get; }
 
 

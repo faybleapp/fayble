@@ -1,12 +1,13 @@
 ﻿
 using System.Text.RegularExpressions;
+using Fayble.Domain.Aggregates.MediaSetting;
 
 namespace Fayble.Core.Extensions;
 public static class StringExtensions
 {
-    public static string RemoveIllegalCharacters(this string text)
+    public static string RemoveIllegalCharacters(this string text, string colonReplacement)
     {
-        text = text.Replace(":", " -");
+        text = text.Replace(":", colonReplacement);
         text = text.Replace("/", " - ");
 
         var invalidChars = Path.GetInvalidFileNameChars();
@@ -46,5 +47,4 @@ public static class StringExtensions
 
         return text;
     }
-
 }

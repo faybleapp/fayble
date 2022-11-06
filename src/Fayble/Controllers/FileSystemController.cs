@@ -1,4 +1,8 @@
-﻿using Fayble.Security.Authorisation;
+﻿using Fayble.Models;
+using Fayble.Models.FileSystem;
+using Fayble.Models.Import;
+using Fayble.Security.Authorisation;
+using Fayble.Services.FileSystem;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -8,9 +12,28 @@ namespace Fayble.Controllers;
 [Authorize(Policy = Policies.Administrator)]
 public class FileSystemController : ControllerBase
 {
-    [HttpGet("pathexists")]
-    public bool PathExists(string path)
+    private readonly IComicBookFileSystemService _comicBookFileSystemService;
+
+    public FileSystemController(IComicBookFileSystemService comicBookFileSystemService)
     {
-        return Directory.Exists(path);
+        _comicBookFileSystemService = comicBookFileSystemService;
+    }
+
+    [HttpPost("pathexists")]
+    public bool PathExists(PathValidation pathValidation)
+    {
+        return Directory.Exists(pathValidation.Path);
+    }
+
+    [HttpPost("generate-filename")]
+    public async Task<ActionResult<string>> GenerateFilename([FromBody] GenerateFilenameRequest request)
+    {
+        return await _comicBookFileSystemService.GenerateFilename(request);
+    }
+
+    [HttpPost("file-exists")]
+    public async Task<ActionResult<bool>> FileExists([FromBody] FileExistsRequest request)
+    {
+        return await _comicBookFileSystemService.FileExists(request);
     }
 }

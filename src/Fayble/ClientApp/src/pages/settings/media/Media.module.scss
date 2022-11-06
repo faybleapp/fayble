@@ -1,0 +1,12 @@
+@import "../../../scss/variables";
+
+.saveButton {
+	float: right;
+}
+
+.formatExample {
+	margin-top: -10px;
+	margin-bottom: 20px;
+	color: $secondary-font-color;
+	font-size: 13px;
+}

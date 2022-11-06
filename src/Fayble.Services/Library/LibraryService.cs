@@ -2,6 +2,7 @@
 using Fayble.Domain.Aggregates.Library;
 using Fayble.Domain.Enums;
 using Fayble.Domain.Repositories;
+using Fayble.Services.BackgroundServices;
 using Fayble.Services.Series;
 using Microsoft.Extensions.Logging;
 
@@ -13,19 +14,21 @@ public class LibraryService : ILibraryService
     private readonly ILibraryRepository _libraryRepository;
     private readonly ISeriesRepository _seriesRepository;
     private readonly IUnitOfWork _unitOfWork;
-    
+    private readonly IBackgroundTaskService _backgroundTaskService;
 
 
     public LibraryService(
         ILogger<LibraryService> logger,
         ILibraryRepository libraryRepository,
         IUnitOfWork unitOfWork,
-        ISeriesRepository seriesRepository)
+        ISeriesRepository seriesRepository,
+        IBackgroundTaskService backgroundTaskService)
     {
         _logger = logger;
         _libraryRepository = libraryRepository;
         _unitOfWork = unitOfWork;
         _seriesRepository = seriesRepository;
+        _backgroundTaskService = backgroundTaskService;
     }
 
     public async Task<Models.Library.Library> Get(Guid libraryId)
@@ -85,5 +88,10 @@ public class LibraryService : ILibraryService
         //TODO: Pass through current user.
         return (await _seriesRepository.Get()).Where(x => x.LibraryId == libraryId)
             ?.Select(x => x.ToModel());
+    }
+
+    public async Task Scan(Guid libraryId)
+    {
+        await _backgroundTaskService.QueueLibraryScan(libraryId);
     }
 }

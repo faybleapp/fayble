@@ -6,10 +6,7 @@ using SharpCompress.Archives;
 namespace Fayble.Core.Helpers;
 
 public class ComicBookHelpers
-{
-
-   
-
+{  
     public static string ParseIssueNumber(string fileName)
     {
         var number = "";

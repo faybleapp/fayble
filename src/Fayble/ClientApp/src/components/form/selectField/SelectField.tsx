@@ -1,9 +1,10 @@
 import cn from "classnames";
 import { FieldLock } from "components/fieldLock";
+import { Tooltip } from "components/tooltip";
 import {
-    LockableField,
-    OptionTypeBase,
-    SelectFieldOption
+  LockableField,
+  OptionTypeBase,
+  SelectFieldOption
 } from "models/ui-models";
 import { Form, InputGroup } from "react-bootstrap";
 import { Controller, useFormContext } from "react-hook-form";
@@ -20,6 +21,7 @@ interface SelectFieldProps extends LockableField {
   searchable?: boolean;
   value?: string;
   placeholder?: string;
+  tooltip?: string;
   options: SelectFieldOption[] | [];
 }
 
@@ -31,6 +33,7 @@ export const SelectField = ({
   className,
   clearable,
   searchable,
+  tooltip,
   options,
 }: SelectFieldProps) => {
   const {
@@ -82,7 +85,10 @@ export const SelectField = ({
 
   return (
     <Form.Group className="mb-3">
-      {label && <Form.Label>{label}</Form.Label>}
+      <div className={styles.labelContainer}>
+        {label && <Form.Label>{label}</Form.Label>}
+        {tooltip && <Tooltip tooltip={tooltip} />}
+      </div>
       <InputGroup>
         <Controller
           name={name}

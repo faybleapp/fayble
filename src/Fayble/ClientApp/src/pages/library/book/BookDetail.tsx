@@ -17,11 +17,11 @@ export const BookDetail = (props: BookDetailProps) => {
 		setBook(props.book);
 	}, [props.book]);
 
-	const updateBook = useUpdateBook();
+	const updateBook = useUpdateBook(book.id);
 
 	const ratingChanged = (rating: number) => {
 		const updatedBook = { ...book, rating: rating };
-		updateBook.mutate([book.id, updatedBook]);
+		updateBook.mutate(updatedBook);
 		setBook(updatedBook);
 	};
 

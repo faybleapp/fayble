@@ -1,7 +1,7 @@
 ﻿CREATE TABLE "BackgroundTask" (
     "Id" TEXT NOT NULL CONSTRAINT "PK_BackgroundTask" PRIMARY KEY,
-    "ItemId" TEXT NULL,
-    "ItemName" TEXT NULL,
+    "TaskId" TEXT NULL,
+    "TaskName" TEXT NULL,
     "Type" TEXT NOT NULL,
     "Started" TEXT NOT NULL,
     "Status" TEXT NOT NULL,
@@ -56,8 +56,8 @@ CREATE TABLE "Role" (
     "ConcurrencyStamp" TEXT NULL
 );
 
-CREATE TABLE "SystemConfiguration" (
-    "Id" TEXT NOT NULL CONSTRAINT "PK_SystemConfiguration" PRIMARY KEY,
+CREATE TABLE "SystemSetting" (
+    "Id" TEXT NOT NULL CONSTRAINT "PK_SystemSetting" PRIMARY KEY,
     "Value" TEXT NULL
 );
 
@@ -80,11 +80,16 @@ CREATE TABLE "User" (
 );
 
 CREATE TABLE "LibrarySetting" (
-    "Setting" TEXT NOT NULL,
+    "Id" TEXT NOT NULL,
     "LibraryId" TEXT NOT NULL,
     "Value" TEXT NULL,
-    CONSTRAINT "PK_LibrarySetting" PRIMARY KEY ("Setting", "LibraryId"),
+    CONSTRAINT "PK_LibrarySetting" PRIMARY KEY ("Id", "LibraryId"),
     CONSTRAINT "FK_LibrarySetting_Library_LibraryId" FOREIGN KEY ("LibraryId") REFERENCES "Library" ("Id") ON DELETE CASCADE
+);
+
+CREATE TABLE "MediaSetting" (
+    "Id" TEXT NOT NULL CONSTRAINT "PK_MediaSetting" PRIMARY KEY,
+    "Value" TEXT NULL
 );
 
 CREATE TABLE "Series" (
@@ -213,7 +218,7 @@ CREATE TABLE "BookFile" (
     "FileName" TEXT NULL,
     "FilePath" TEXT NULL,
     "FileSize" INTEGER NOT NULL,
-    "FileType" TEXT NULL,
+    "FileExtension" TEXT NULL,
     "FileHash" TEXT NULL,
     "PageCount" INTEGER NOT NULL,
     "FileLastModifiedDate" TEXT NOT NULL,

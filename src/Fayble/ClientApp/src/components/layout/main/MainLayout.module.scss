@@ -1,0 +1,32 @@
+@import "../../../scss/variables";
+
+.container {
+	display: flex;
+	height: 100%;
+	flex-direction: column;
+}
+.body {
+	height: calc(100% - 56px);
+	display: flex;
+	flex-direction: row;
+}
+.main {
+	height: 100%;
+	display: flex;
+	flex-direction: column;
+	flex: 1;
+	min-width: 0;
+}
+
+.sidebar.open {
+	flex: 0 0 $sidebar-open-width;
+}
+
+.sidebar.closed {
+	flex: 0 0 $sidebar-closed-width;
+}
+
+.pageContent {
+	overflow: auto;
+	flex: 1;
+}

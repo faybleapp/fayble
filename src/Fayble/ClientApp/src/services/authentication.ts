@@ -5,7 +5,7 @@ import { useApiMutation } from "./useApiMutation";
 
 export const useLogin = () => {
     const queryClient = useQueryClient();
-    return useApiMutation<AuthenticationResult, null, LoginCredentials>("POST", () => `/authentication/login`,
+    return useApiMutation<AuthenticationResult, LoginCredentials>("POST", () => `/authentication/login`,
     {
         onSuccess: (result) => {              
            setAuthConfig(result);

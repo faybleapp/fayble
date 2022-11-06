@@ -45,7 +45,7 @@ export const BackgroundTaskSidebar = ({
 											{task.type
 												.replace(/([A-Z])/g, " $1")
 												.trim()}
-											: {task.itemName}
+											: {task.taskName}
 										</div>
 										{task.description && (
 											<div

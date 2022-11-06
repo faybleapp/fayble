@@ -1,0 +1,19 @@
+.container {
+  display: flex;
+  flex-direction: row;
+
+  width: 100%;
+}
+
+.pathInput {
+  outline: 0;
+  border-width: 0 0 1px;
+  border-color: white;
+  flex-grow: 1;
+  background-color: transparent;
+}
+
+.searchButton {
+  margin-left: 10px;
+  width: 75px;
+}

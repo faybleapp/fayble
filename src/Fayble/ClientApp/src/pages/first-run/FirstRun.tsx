@@ -35,15 +35,12 @@ export const FirstRun = () => {
 
   const handleSubmit: SubmitHandler<FirstRunModel> = (values) => {
     firstRun.mutate(
-      [
-        null,
-        {
-          ownerCredentials: {
-            username: values.username,
-            password: values.password,
-          },
+      {
+        ownerCredentials: {
+          username: values.username,
+          password: values.password,
         },
-      ],
+      },
       {
         onSuccess: () => navigate("/login"),
       }

@@ -1,111 +1,119 @@
-import { faChevronDown, faChevronUp } from "@fortawesome/free-solid-svg-icons";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+// @ts-nocheck
+import {
+  ColumnDef,
+  createColumnHelper,
+  flexRender,
+  getCoreRowModel,
+  useReactTable
+} from "@tanstack/react-table";
 import { Series } from "models/api-models";
 import React from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import { Column, useSortBy, useTable } from "react-table";
-import styles from "./SeriesList.module.scss";
 
 interface SeriesListProps {
-	items: Series[];
+  items: Series[];
 }
 
 export const SeriesList = ({ items }: SeriesListProps) => {
-	const { libraryId } = useParams<{ libraryId: string }>();
-	const navigate = useNavigate();
+  const { libraryId } = useParams<{ libraryId: string }>();
+  const navigate = useNavigate();
 
-	const columns: Column<Series>[] = React.useMemo(
-		() => [
-			{
-				Header: "Name",
-				accessor: "name",
-				isSortable: true,
-			},
-			{
-				Header: "Year",
-				accessor: "year",
-				isSortable: true,
-			},
-			{
-				Header: "Volume",
-				accessor: "volume",
-				isSortable: true,
-			},
-			{
-				Header: "Book Count",
-				accessor: "bookCount",
-				isSortable: true,
-			},
-		],
-		[]
-	);
+  const columnHelper = createColumnHelper<Series>();
 
-	const data = React.useMemo(() => items, [items]);
+  //   const columns: Column<Series>[] = React.useMemo(
+  //     () => [
+  //       {
+  //         Header: "Name",
+  //         accessor: "name",
+  //         isSortable: true,
+  //       },
+  //       {
+  //         Header: "Year",
+  //         accessor: "year",
+  //         isSortable: true,
+  //       },
+  //       {
+  //         Header: "Volume",
+  //         accessor: "volume",
+  //         isSortable: true,
+  //       },
+  //       {
+  //         Header: "Book Count",
+  //         accessor: "bookCount",
+  //         isSortable: true,
+  //       },
+  //     ],
+  //     []
+  //   );
 
-	const tableInstance = useTable({ columns, data }, useSortBy);
+  
+  const columns: ColumnDef<Series, any>[] = [    
+    columnHelper.accessor("year", {
+      header: "Name",
+      cell: (info) => info.renderValue(),
+      footer: (info) => info.column.id,
+    }),
+  ];
+  const rerender = React.useReducer(() => ({}), {})[1];
+  const data = React.useMemo(() => items, [items]);
 
-	const { getTableProps, getTableBodyProps, headerGroups, rows, prepareRow } =
-		tableInstance;
+  const table = useReactTable({
+    data,
+    columns,
+    getCoreRowModel: getCoreRowModel(),
+  });
 
-	return (
-		<table {...getTableProps()} className={styles.table}>
-			<thead>
-				{headerGroups.map((headerGroup) => (
-					<tr {...headerGroup.getHeaderGroupProps()}>
-						{headerGroup.headers.map((column) => (
-							<th
-								className={styles.header}
-								{...column.getHeaderProps(
-									column.getSortByToggleProps()
-								)}>
-								{column.render("Header")}
-								<span>
-									{column.isSorted ? (
-										column.isSortedDesc ? (
-											<FontAwesomeIcon
-												icon={faChevronDown}
-												className={styles.sortIcon}
-												size="sm"
-											/>
-										) : (
-											<FontAwesomeIcon
-												icon={faChevronUp}
-												className={styles.sortIcon}
-												size="sm"
-											/>
-										)
-									) : (
-										""
-									)}
-								</span>
-							</th>
-						))}
-					</tr>
-				))}
-			</thead>
-			<tbody {...getTableBodyProps()}>
-				{rows.map((row) => {
-					prepareRow(row);
-					return (
-						<tr {...row.getRowProps()} className={styles.row} onClick={() => navigate(`/library/${libraryId}/series/${row.original.id}`)}>
-							{row.cells.map((cell) => {
-								return (
-									<td
-										className={styles.cell}
-										{...cell.getCellProps()}
-										style={{
-											padding: "10px",
-											border: "solid 1px gray",
-											background: "papayawhip",
-										}}>
-										{cell.render("Cell")}
-									</td>
-								);
-							})}
-						</tr>
-					);
-				})}
-			</tbody>
-		</table>
-	);
+  return (
+    <div className="p-2">
+      <table>
+        <thead>
+          {table.getHeaderGroups().map((headerGroup) => (
+            <tr key={headerGroup.id}>
+              {headerGroup.headers.map((header) => (
+                <th key={header.id}>
+                  {header.isPlaceholder
+                    ? null
+                    : flexRender(
+                        header.column.columnDef.header,
+                        header.getContext()
+                      )}
+                </th>
+              ))}
+            </tr>
+          ))}
+        </thead>
+        <tbody>
+          {table.getRowModel().rows.map((row) => (
+            <tr key={row.id}>
+              {row.getVisibleCells().map((cell) => (
+                <td key={cell.id}>
+                  {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                </td>
+              ))}
+            </tr>
+          ))}
+        </tbody>
+        <tfoot>
+          {table.getFooterGroups().map((footerGroup) => (
+            <tr key={footerGroup.id}>
+              {footerGroup.headers.map((header) => (
+                <th key={header.id}>
+                  {header.isPlaceholder
+                    ? null
+                    : flexRender(
+                        header.column.columnDef.footer,
+                        header.getContext()
+                      )}
+                </th>
+              ))}
+            </tr>
+          ))}
+        </tfoot>
+      </table>
+      <div className="h-4" />
+      <button onClick={() => rerender()} className="border p-2">
+        Rerender
+      </button>
+    </div>
+  );
 };

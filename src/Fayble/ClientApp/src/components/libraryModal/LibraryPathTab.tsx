@@ -1,15 +1,15 @@
-import { SanitisePaths } from "helpers/pathHelpers";
+import { SanitisePath } from "helpers/pathHelpers";
 import React, { useState } from "react";
 import { Button, Form, InputGroup } from "react-bootstrap";
 import { useFormContext } from "react-hook-form";
 import { toast } from "react-toastify";
-import { useHttpClient } from "services/httpClient";
+import { usePathExists } from "services/fileSystem";
 import styles from "./LibraryPathsTab.module.scss";
 
 export const LibraryPathTab = () => {
   const [isValidatingPath, setValidatingPath] = useState(false);
   const [newPath, setNewPath] = useState("");
-  const client = useHttpClient();
+  const { mutate: validatePath } = usePathExists();
 
   const {
     register,
@@ -25,34 +25,32 @@ export const LibraryPathTab = () => {
     setValue("folderPath", "", { shouldDirty: true });
   };
 
-  const pathExists = async (path: string) => {
-    return (await client.get<boolean>(`/filesystem/pathexists?path=${path}`))
-      .data;
-  };
-
   const addPath = async () => {
     setValidatingPath(true);
 
-    const sanitisedPath = SanitisePaths(newPath);
+    const sanitisedPath = SanitisePath(newPath);
 
-    let valid = false;
-    try {
-      valid = await pathExists(sanitisedPath);
-    } catch (error) {
-      toast.error("An error occured while validating path");
-      setValidatingPath(false);
-      return;
-    }
+    validatePath(
+      { path: sanitisedPath },
+      {
+        onSuccess: (exists) => {
+          if (!exists) {
+            toast.error("Path does not exist or is not accessible");
+            setValidatingPath(false);
+            return;
+          } else {
+            setValue("folderPath", newPath, { shouldDirty: true });
 
-    if (!valid) {
-      toast.error("Path does not exist or is not accessible");
-      setValidatingPath(false);
-      return;
-    }
-    setValue("folderPath", newPath, { shouldDirty: true });
-
-    setNewPath("");
-    setValidatingPath(false);
+            setNewPath("");
+            setValidatingPath(false);
+          }
+        },
+        onError: () => {
+          toast.error("Path does not exist or is not accessible");
+          setValidatingPath(false);
+        },
+      }
+    );
   };
 
   return (

@@ -35,7 +35,7 @@ public class SeriesService : ISeriesService
     public async Task<IEnumerable<Models.Series.Series>?> GetAll()
     {
         //TODO: Pass through current user.
-        return (await _seriesRepository.Get())?.Select(x => x.ToModel(Guid.NewGuid()));
+        return (await _seriesRepository.Get())?.Select(x => x.ToModel(Guid.NewGuid())).OrderBy(s => s.Name);
     }
 
     public async Task<IEnumerable<Models.Book.Book>?> GetBooks(Guid seriesId)

@@ -16,11 +16,11 @@ export const SeriesDetail = (props: SeriesDetailProps) => {
 		setSeries(props.series);
 	}, [props.series]);
 
-	const updateSeries = useUpdateSeries();
+	const updateSeries = useUpdateSeries(series.id);
 
 	const ratingChanged = (rating: number) => {
 		const updatedSeries = { ...series, rating: rating };
-		updateSeries.mutate([series.id, updatedSeries]);
+		updateSeries.mutate(updatedSeries);
 		setSeries(updatedSeries);
 	};
 

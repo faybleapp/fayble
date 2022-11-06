@@ -18,7 +18,7 @@ public class Series : AuditableEntity<Guid>, IAggregateRoot
     public bool Locked { get; private set; }
     public Guid? MatchId { get; private set; }
     public DateTimeOffset? LastMetadataUpdate { get; private set; }
-    public virtual ICollection<Book.Book> Books { get; private set; }
+
     public SeriesFieldLocks FieldLocks { get; private set; }
 
     public Guid? ParentSeriesId { get; private set; }
@@ -27,8 +27,11 @@ public class Series : AuditableEntity<Guid>, IAggregateRoot
     public virtual Publisher.Publisher Publisher { get; private set; }
     public Guid? FormatId { get; private set; }
     public virtual Format.Format Format { get; private set; }
-    public Guid? LibraryId { get; private set; }
+    public Guid LibraryId { get; private set; }
     public virtual Library.Library Library { get; private set; }
+
+    private readonly List<Book.Book> _books = new();
+    public virtual ICollection<Book.Book> Books => _books;
 
 
     private Series()
@@ -86,5 +89,10 @@ public class Series : AuditableEntity<Guid>, IAggregateRoot
     public bool IsRead(Guid userId)
     {
         return Books?.Where(x => !x.ReadHistory.Any(y => y.UserId == userId)).Any() == false;
+    }
+
+    public void AddBook(Book.Book book)
+    {
+        _books.Add(book);
     }
 }

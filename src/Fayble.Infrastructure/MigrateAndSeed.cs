@@ -1,7 +1,9 @@
 ﻿using Fayble.Core.Helpers;
 using Fayble.Domain.Aggregates.FileType;
+using Fayble.Domain.Aggregates.MediaSetting;
 using Fayble.Domain.Aggregates.Publisher;
 using Fayble.Domain.Aggregates.SystemConfiguration;
+using Fayble.Domain.Aggregates.SystemSetting;
 using Fayble.Domain.Aggregates.User;
 using Fayble.Domain.Enums;
 using Fayble.Security.Models;
@@ -84,6 +86,17 @@ public static class MigrateAndSeed
                     Name = UserRoles.User,
                     NormalizedName = UserRoles.User.ToUpper()
                 });
+        }
+
+        if (!context.MediaSettings.Any())
+        {
+            context.MediaSettings.AddRange(
+                new MediaSetting(MediaSettingKey.ComicBookStandardNamingFormat, "{Series Name} Vol. {Series Volume} #{Book Number:000} ({Book CoverDate:MMM YYYY})"),
+                new MediaSetting(MediaSettingKey.ComicBookOneShotNamingFormat, "{Series Name} #{Book Number:000} ({Book CoverDate:MMM YYYY})"),
+                new MediaSetting(MediaSettingKey.ColonReplacement, ColonReplacement.SpaceDash.ToString()),
+                new MediaSetting(MediaSettingKey.MissingTokenReplacement, MissingTokenReplacement.Empty.ToString()),
+                new MediaSetting(MediaSettingKey.RenameFiles, false.ToString()));
+
         }
     }
 }

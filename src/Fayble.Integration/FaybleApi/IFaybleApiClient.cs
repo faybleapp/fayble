@@ -6,4 +6,5 @@ public interface IFaybleApiClient
 {
     Task<IEnumerable<SeriesSearchResult>> SearchSeries(string name, int? year, string? providerId);
     Task<SeriesResult> GetSeries(Guid id);
+    Task<BookResult> GetBook(Guid id);
 }

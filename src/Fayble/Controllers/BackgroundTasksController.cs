@@ -31,7 +31,7 @@ public class BackgroundTasksController : ControllerBase
     public async Task<IActionResult> Run(BackgroundTaskRequest backgroundTaskRequest)
     {
         var taskType = Enum.Parse<BackgroundTaskType>(backgroundTaskRequest.TaskType);
-        await _backgroundTaskService.Run(backgroundTaskRequest.ItemId, taskType);
+       // await _backgroundTaskService.qu(backgroundTaskRequest.ItemId, taskType);y
         return Accepted();
     }
 }

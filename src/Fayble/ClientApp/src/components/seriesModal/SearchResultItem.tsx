@@ -16,7 +16,7 @@ export const SearchResultItem = ({
       className={styles.searchResult}
       onClick={() => onSelect(searchResult.id)}>
       <div className={styles.coverContainer}>
-        <Image className={styles.cover} src={searchResult.image || ""} />
+        <Image className={styles.cover} src={searchResult.thumbnail || ""} />
       </div>
       <div className={styles.detailsContainer}>
         <h6>{searchResult.name}</h6>
