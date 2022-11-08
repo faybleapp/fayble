@@ -11,6 +11,9 @@
     <SpaProxyServerUrl>https://localhost:3000</SpaProxyServerUrl>
     <SpaProxyLaunchCommand>npm start</SpaProxyLaunchCommand>
     <ImplicitUsings>enable</ImplicitUsings>
+    <UserSecretsId>f75812f6-22e6-48e2-a7c1-3250bde64ed7</UserSecretsId>
+    <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
+    <DockerfileContext>..\..</DockerfileContext>
   </PropertyGroup>
 
   <ItemGroup>
@@ -28,6 +31,7 @@
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
+    <PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.17.0" />
     <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
     <PackageReference Include="NSwag.AspNetCore" Version="13.17.0" />
     <PackageReference Include="NSwag.MSBuild" Version="13.17.0">
@@ -61,6 +65,10 @@
     <ProjectReference Include="..\Fayble.Services\Fayble.Services.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Properties\PublishProfiles\" />
+  </ItemGroup>
+
 	<!-- NSwag -->
 	<PropertyGroup Condition="'$(Configuration)' == 'Debug'">
 		<CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
@@ -87,7 +95,7 @@
 
     <!-- Include the newly-built files in the publish output -->
     <ItemGroup>
-      <DistFiles Include="$(SpaRoot)build\**" />
+      <DistFiles Include="$(SpaRoot)dist\**" />
       <ResolvedFileToPublish Include="@(DistFiles->'%(FullPath)')" Exclude="@(ResolvedFileToPublish)">
         <RelativePath>wwwroot\%(RecursiveDir)%(FileName)%(Extension)</RelativePath>
         <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>

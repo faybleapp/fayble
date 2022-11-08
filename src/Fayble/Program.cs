@@ -44,11 +44,6 @@ IConfiguration configuration = new ConfigurationBuilder()
     .AddJsonFile("appsettings.json")
     .Build();
 
-if (!string.IsNullOrEmpty(configuration["AppDirectoryOverride"]))
-{
-    ApplicationHelpers.AppDirectoryOverride = configuration["AppDirectoryOverride"];
-}
-
 Log.Logger = new LoggerConfiguration()
     .WriteTo.Console()
     .Enrich.With(new PropertyEnricher("MachineName", Environment.MachineName))

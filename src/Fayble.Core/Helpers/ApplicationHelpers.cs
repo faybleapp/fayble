@@ -1,17 +1,13 @@
-﻿using System.Reflection;
-using System.Runtime.InteropServices;
-using Fayble.Core.Enums;
-using Microsoft.Extensions.Logging;
-using Serilog;
+﻿using Fayble.Core.Enums;
 using Serilog.Core;
 using Serilog.Events;
+using System.Reflection;
 
 namespace Fayble.Core.Helpers;
 
 public static class ApplicationHelpers
 {
     public static LoggingLevelSwitch LogLevel = new();
-    public static string? AppDirectoryOverride = null;
 
     public static Application GetApplication()
     {
@@ -25,19 +21,17 @@ public static class ApplicationHelpers
 
     public static string GetAppDirectory()
     {
-        var folder = AppDirectoryOverride ?? Environment.GetFolderPath(
-            RuntimeInformation.IsOSPlatform(OSPlatform.Windows)
-                ? Environment.SpecialFolder.CommonApplicationData
-                : Environment.SpecialFolder.UserProfile);
+        //https://learn.microsoft.com/en-us/dotnet/api/system.environment.specialfolder?view=net-7.0
+        var folder =  IsDocker()
+            ? "/config" :  Path.Combine(Environment.GetFolderPath(
+            Environment.SpecialFolder.CommonApplicationData), "Fayble");
 
-        var fullPath = Path.Combine(folder!, "Fayble");
-
-        if (!Directory.Exists(fullPath))
+        if (!Directory.Exists(folder))
         {
-            Directory.CreateDirectory(fullPath);
+            Directory.CreateDirectory(folder);
         }
 
-        return fullPath;
+        return folder;
     }
 
     public static string GetMediaDirectoryRoot(Guid id)
@@ -109,6 +103,8 @@ public static class ApplicationHelpers
 
         return configFolder;
     }
+
+    public static bool IsDocker() => Environment.GetEnvironmentVariable("DOTNET_RUNNING_IN_CONTAINER") == "true";
 
     public static void SetLogLevel(LogEventLevel logLevel)
     {
