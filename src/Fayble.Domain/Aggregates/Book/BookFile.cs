@@ -9,10 +9,12 @@ public class BookFile : IdentifiableEntity<Guid>
     public long FileSize { get; private set; }
     public string FileExtension { get; private set; }
     public string FileHash { get; private set;  }
-    public int PageCount { get; private set; }
     public DateTimeOffset FileLastModifiedDate { get; private set; }
     public Guid BookId { get; private set; }
     public virtual Book Book { get; private set; }
+
+    private readonly List<BookPage> _pages = new();
+    public virtual IReadOnlyCollection<BookPage> Pages => _pages;
 
     public BookFile(){}
 
@@ -23,22 +25,22 @@ public class BookFile : IdentifiableEntity<Guid>
         long fileSize,
         string fileExtension, 
         DateTimeOffset fileLastModifiedDate,
-        int pageCount,
-        string fileHash): base(id)
+        string fileHash,
+        IEnumerable<BookPage> pages) : base(id)
     {
         FileName = fileName;
         FilePath = filePath;
         FileSize = fileSize;
         FileExtension = fileExtension;
         FileLastModifiedDate = fileLastModifiedDate;
-        PageCount = pageCount;
         FileHash = fileHash;
+        
+        _pages.AddRange(pages);
     }
 
-    public void Update(long fileSize, string fileHash, int pageCount)
+    public void Update(long fileSize, string fileHash)
     {
         FileSize = fileSize;
         FileHash = fileHash;
-        PageCount = pageCount;
     }
 }

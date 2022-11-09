@@ -4,11 +4,11 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace Fayble.Infrastructure.EntityConfigurations;
 
-public class BookFileEntityTypeConfiguration : IEntityTypeConfiguration<BookFile>
+public class BookPageEntityTypeConfiguration : IEntityTypeConfiguration<BookPage>
 {
-    public void Configure(EntityTypeBuilder<BookFile> builder)
+    public void Configure(EntityTypeBuilder<BookPage> builder)
     {
-        builder.ToTable("BookFile");
+        builder.ToTable("BookPage");
         builder.HasKey(x => x.Id);
         builder.Property(x => x.Id).ValueGeneratedNever();
     }

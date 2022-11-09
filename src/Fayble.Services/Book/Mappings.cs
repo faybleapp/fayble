@@ -16,7 +16,7 @@ public static class Mappings
             entity.Id,
             entity.Title,
             entity.Summary,
-            entity.File.PageCount,
+            entity.File.Pages.Count,
             entity.File.FileName,
             entity.File.FileExtension,
             Math.Round(Convert.ToDouble(entity.File.FileSize / 1024) / 1024, 2),

@@ -118,12 +118,13 @@ public class BackgroundScannerService : IBackgroundScannerService
         if (series.Books == null || !series.Books.Any())
         {
             _logger.LogDebug("No existing books");
-            return;
         }
-
-        foreach (var book in series.Books)
+        else
         {
-            await ScanBook(book);
+            foreach (var book in series.Books)
+            {
+                await ScanBook(book);
+            }
         }
 
         _logger.LogInformation("Scanning new books for series: {Series}", series.Name);
@@ -175,8 +176,7 @@ public class BackgroundScannerService : IBackgroundScannerService
 
             book.File.Update(
                 file.Length,
-                _comicBookFileSystemService.GetHash(file.FullName),
-                comicFile.PageCount);
+                _comicBookFileSystemService.GetHash(file.FullName));
 
             if (book.Library.GetSetting<bool>(LibrarySettingKey.UseComicInfo))
             {
@@ -187,12 +187,22 @@ public class BackgroundScannerService : IBackgroundScannerService
         {
             _logger.LogDebug("File not modified: {File}", file.FullName);
         }
+
         await _unitOfWork.Commit();
     }
 
     private async Task AddNewBook(ComicFile newFile, Domain.Aggregates.Series.Series series)
     {
         _logger.LogDebug("Processing issue: {FilePath}", newFile.FilePath);
+
+        var pages = newFile.Pages.Select(p => new BookPage(
+            Guid.NewGuid(),
+            p.Width,
+            p.Height,
+            p.FileName,
+            p.FileSize,
+            p.Number,
+            p.MediaType));
 
         var bookFile = new BookFile(
             Guid.NewGuid(),
@@ -201,8 +211,8 @@ public class BackgroundScannerService : IBackgroundScannerService
             newFile.FileSize,
             newFile.FileExtension,
             newFile.FileLastModifiedDate,
-            newFile.PageCount,
-            _comicBookFileSystemService.GetHash(newFile.FilePath));
+            _comicBookFileSystemService.GetHash(newFile.FilePath), 
+            pages);
 
         var book = new Domain.Aggregates.Book.Book(
             Guid.NewGuid(),

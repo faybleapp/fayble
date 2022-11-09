@@ -219,11 +219,23 @@ CREATE TABLE "BookFile" (
     "FilePath" TEXT NULL,
     "FileSize" INTEGER NOT NULL,
     "FileExtension" TEXT NULL,
-    "FileHash" TEXT NULL,
-    "PageCount" INTEGER NOT NULL,
+    "FileHash" TEXT NULL,    
     "FileLastModifiedDate" TEXT NOT NULL,
     "BookId" TEXT NOT NULL,
     CONSTRAINT "FK_BookFile_Book_BookId" FOREIGN KEY ("BookId") REFERENCES "Book" ("Id") ON DELETE CASCADE
+);
+
+CREATE TABLE BookPage (
+    "Id" TEXT NOT NULL CONSTRAINT "PK_BookPage" PRIMARY KEY,
+    "Width" INTEGER NOT NULL,
+    "Height" INTEGER NOT NULL,
+    "FileName" TEXT NOT NULL,
+    "FileSize" INTEGER NOT NULL,    
+    "FileHash" TEXT NULL,
+    "Number" INTEGER NOT NULL,    
+    "MediaType" TEXT NOT NULL,
+    "BookFileId" TEXT NOT NULL,
+    CONSTRAINT "FK_BookPage_BookFile_BookFileId" FOREIGN KEY ("BookFileId") REFERENCES "BookFile" ("Id") ON DELETE CASCADE
 );
 
 CREATE TABLE "BookPerson" (
