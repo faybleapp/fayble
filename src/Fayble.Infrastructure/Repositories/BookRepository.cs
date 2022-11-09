@@ -20,6 +20,7 @@ public class BookRepository : RepositoryBase<FaybleDbContext, Book, Guid>, IBook
             .Include(b => b.Tags)
             .Include(b => b.FieldLocks)
             .Include(b => b.File)
+            .ThenInclude(b => b.Pages)
             .Include(b => b.People)
             .ThenInclude(p => p.Person)
             .Include(b => b.File);

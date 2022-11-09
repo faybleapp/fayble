@@ -1,4 +1,5 @@
-#See https://aka.ms/containerfastmode to understand how Visual Studio uses this Dockerfile to build your images for faster debugging.
+# Navigate to src folder and run:  docker build -t fayble -f Fayble/Dockerfile .
+
 
 FROM mcr.microsoft.com/dotnet/aspnet:6.0 AS base
 WORKDIR /app

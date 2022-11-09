@@ -1,4 +1,4 @@
-﻿using Fayble.Domain.Aggregates.Library;
+using Fayble.Domain.Aggregates.Library;
 using Fayble.Domain.Aggregates.Tag;
 using Fayble.Domain.Entities;
 using Fayble.Domain.Enums;
@@ -31,6 +31,7 @@ public class Book : AuditableEntity<Guid>, IAggregateRoot
 
     private readonly List<ReadHistory> _readHistory = new ();
     public virtual IReadOnlyCollection<ReadHistory> ReadHistory => _readHistory;
+
     private readonly List<BookPerson> _people= new();
     public virtual IReadOnlyCollection<BookPerson> People => _people;
 

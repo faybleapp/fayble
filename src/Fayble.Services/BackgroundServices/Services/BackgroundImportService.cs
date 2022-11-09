@@ -46,6 +46,15 @@ public class BackgroundImportService : IBackgroundImportService
                 series.FolderPath,
                 $"{importFile.DestinationFileName}.{file.FileExtension}");
 
+            var pages = file.Pages.Select(p => new BookPage(
+                Guid.NewGuid(),
+                p.Width,
+                p.Height,
+                p.FileName,
+                p.FileSize,
+                p.Number,
+                p.MediaType));
+
             var bookFile = new BookFile(
                 Guid.NewGuid(),
                 importFile.DestinationFileName,
@@ -53,8 +62,8 @@ public class BackgroundImportService : IBackgroundImportService
                 file.FileSize,
                 file.FileExtension,
                 file.FileLastModifiedDate,
-                file.PageCount,
-                _comicBookFileSystemService.GetHash(file.FilePath));
+                _comicBookFileSystemService.GetHash(file.FilePath),
+                pages);
 
             var book = new Domain.Aggregates.Book.Book(
                 Guid.NewGuid(),

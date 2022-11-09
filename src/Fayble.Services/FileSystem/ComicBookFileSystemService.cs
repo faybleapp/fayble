@@ -13,8 +13,12 @@ using Fayble.Models.Settings;
 using Fayble.Services.MetadataService;
 using Fayble.Services.Settings;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
 using SharpCompress.Archives;
+using SharpCompress.Common;
+using SharpCompress.Readers;
 using SixLabors.ImageSharp;
+using SixLabors.ImageSharp.Formats;
 
 namespace Fayble.Services.FileSystem;
 
@@ -100,7 +104,6 @@ public class ComicBookFileSystemService : FileSystemService, IComicBookFileSyste
     {
         var file = new FileInfo(filePath);
 
-        var pageCount = GetPageCount(filePath);
         var fileName = Path.GetFileNameWithoutExtension(filePath);
         var fileSize = file.Length;
         var lastModified = file.LastWriteTimeUtc;
@@ -109,26 +112,36 @@ public class ComicBookFileSystemService : FileSystemService, IComicBookFileSyste
 
         return new ComicFile(
             fileExtension,
-                filePath,
-                null,
-                fileName,
-                pageCount,
-                fileSize,
-                lastModified,
-                comicInfoXml);
+            filePath,
+            null,
+            fileName,
+            fileSize,
+            lastModified,
+            comicInfoXml,
+            GetPages(filePath));
     }
 
-    private int GetPageCount(string filePath)
+    private List<ComicPage> GetPages(string filePath)
     {
-        using var archive = ArchiveFactory.Open(filePath);
-        var images =
+        var pages = new List<ComicPage>();
+        var archive = ArchiveFactory.Open(filePath);
+        var imageEntries =
             archive.Entries.Where(
                 x =>
                     x.Key.ToLower().EndsWith(".jpg") ||
                     x.Key.ToLower().EndsWith(".jpeg") ||
                     x.Key.ToLower().EndsWith(".png") ||
-                    x.Key.ToLower().EndsWith(".bmp"));
-        return images.Count();
+                    x.Key.ToLower().EndsWith(".bmp")).OrderBy(x => x.Key);
+
+        var index = 1;
+        foreach (var imageEntry in imageEntries)
+        {
+            using var img = Image.Load(imageEntry.OpenEntryStream(), out IImageFormat imageFormat);
+            pages.Add(new ComicPage(img.Width, img.Height, imageEntry.Key, imageEntry.Size, index, imageFormat.DefaultMimeType));
+            index++;
+        }
+
+        return pages;
     }
 
     public async Task<bool> FileExists(FileExistsRequest request)

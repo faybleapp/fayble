@@ -57,7 +57,7 @@ public class ImportService : IImportService
         return files.Select(file => new ImportScanFile(
             file.FileName,
             file.FilePath,
-            file.PageCount,
+            file.Pages.Count,
             file.FileSize,
             ComicBookHelpers.ParseIssueNumber(file.FileName),
             file.ComicInfoXml));
