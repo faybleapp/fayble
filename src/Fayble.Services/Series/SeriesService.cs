@@ -1,7 +1,9 @@
-﻿using Fayble.Core.Extensions;
+﻿using System.Runtime.CompilerServices;
+using Fayble.Core.Extensions;
 using Fayble.Domain;
 using Fayble.Domain.Repositories;
 using Fayble.Models.Series;
+using Fayble.Services.BackgroundServices;
 using Fayble.Services.Book;
 using Microsoft.Extensions.Logging;
 
@@ -13,23 +15,26 @@ public class SeriesService : ISeriesService
     private readonly IUnitOfWork _unitOfWork;
     private readonly IBookRepository _bookRepository;
     private readonly ISeriesRepository _seriesRepository;
+    private readonly IBackgroundTaskService _backgroundTaskService;
 
     public SeriesService(
         ILogger<SeriesService> logger,
         IUnitOfWork unitOfWork,
         ISeriesRepository seriesRepository,
-        IBookRepository bookRepository)
+        IBookRepository bookRepository,
+        IBackgroundTaskService backgroundTaskService)
     {
         _logger = logger;
         _unitOfWork = unitOfWork;
         _seriesRepository = seriesRepository;
         _bookRepository = bookRepository;
+        _backgroundTaskService = backgroundTaskService;
     }
 
 
-    public async Task<Models.Series.Series?> Get(Guid id)
+    public async Task<Models.Series.Series?> Get(Guid seriesId)
     {
-        return (await _seriesRepository.Get(id))?.ToModel(Guid.NewGuid());
+        return (await _seriesRepository.Get(seriesId))?.ToModel(Guid.NewGuid());
     }
 
     public async Task<IEnumerable<Models.Series.Series>?> GetAll()
@@ -44,9 +49,9 @@ public class SeriesService : ISeriesService
             ?.Select(x => x.ToModel());
     }
 
-    public async Task<Models.Series.Series> Update(Guid id, UpdateSeries series)
+    public async Task<Models.Series.Series> Update(Guid seriesId, UpdateSeries series)
     {
-        var entity = await _seriesRepository.Get(id);
+        var entity = await _seriesRepository.Get(seriesId);
 
         entity.Update(
             series.Name,
@@ -66,6 +71,16 @@ public class SeriesService : ISeriesService
 
         await _unitOfWork.Commit();
 
+        if (entity.MatchId != null)
+        {
+            await RefreshMetadata(seriesId);
+        }
+
         return entity.ToModel();
+    }
+
+    public async Task RefreshMetadata(Guid seriesId)
+    {
+        await _backgroundTaskService.QueueSeriesScan(seriesId);
     }
 }
