@@ -64,6 +64,7 @@ public class LibraryService : ILibraryService
             });
 
         _logger.LogInformation("Created library: {LibraryName}", library.Name);
+        await Scan(entity.Id);
     }
 
     public async Task<Models.Library.Library> Update(Guid id, Models.Library.Library library)
