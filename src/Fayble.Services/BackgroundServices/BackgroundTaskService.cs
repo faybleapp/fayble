@@ -14,6 +14,7 @@ public interface IBackgroundTaskService
     Task QueueSeriesScan(Guid seriesId);
     Task QueueImport(ImportFileRequest request);
     Task QueueLibraryScan(Guid libraryId);
+    Task QueueSeriesMetadataRefresh(Guid seriesId);
 }
 
 public class BackgroundTaskService : IBackgroundTaskService
@@ -93,6 +94,20 @@ public class BackgroundTaskService : IBackgroundTaskService
                 var scopedServices = scope.ServiceProvider;
                 var importService = scopedServices.GetService<IBackgroundImportService>()!;
                 await importService.Import(request, backgroundTaskId);
+            });
+    }
+
+    public async Task QueueSeriesMetadataRefresh(Guid seriesId)
+    {
+        var series = await _seriesRepository.Get(seriesId);
+        var taskId = await CreateTask(series.Id.ToString(), series.Name, BackgroundTaskType.SeriesMetadataRefresh);
+        await _queue.QueueBackgroundWorkItemAsync(
+            async token =>
+            {
+                using var scope = _serviceScopeFactory.CreateScope();
+                var scopedServices = scope.ServiceProvider;
+                var metadataService = scopedServices.GetService<IBackgroundMetadataService>()!;
+                await metadataService.RefreshSeriesMetadata(seriesId, taskId);
             });
     }
 

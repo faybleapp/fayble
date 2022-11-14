@@ -18,9 +18,7 @@ public class Series : AuditableEntity<Guid>, IAggregateRoot
     public bool Locked { get; private set; }
     public Guid? MatchId { get; private set; }
     public DateTimeOffset? LastMetadataUpdate { get; private set; }
-
     public SeriesFieldLocks FieldLocks { get; private set; }
-
     public Guid? ParentSeriesId { get; private set; }
     public virtual Series ParentSeries { get; }
     public Guid? PublisherId { get; private set; }
@@ -74,6 +72,24 @@ public class Series : AuditableEntity<Guid>, IAggregateRoot
         PublisherId = publisherId;
         ParentSeriesId = parentSeriesId;
         MatchId = matchId;
+    }
+
+    public void UpdateFromMetadata(string name, string summary, int year)
+    {
+        if (!string.IsNullOrEmpty(name) && !FieldLocks.Name)
+        {
+            Name = name;
+        }
+
+        if (!string.IsNullOrEmpty(summary) && !FieldLocks.Summary)
+        {
+            Summary = summary;
+        }
+
+        if (!FieldLocks.Year)
+        {
+            Year = year;
+        }
     }
 
     public void SetMediaRoot(string mediaRoot)

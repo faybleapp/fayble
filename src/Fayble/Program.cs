@@ -175,19 +175,18 @@ builder.Services.AddScoped<IMetadataService, MetadataService>();
 builder.Services.AddScoped<IImportService, ImportService>();
 builder.Services.AddScoped<ISettingsService, SettingsService>();
 
-// Background Sevices
-builder.Services.AddScoped<IBackgroundScannerService, BackgroundScannerService>();
-builder.Services.AddScoped<IBackgroundImportService, BackgroundImportService>();
-
 // Integration
 builder.Services.AddScoped<IFaybleApiClient, FaybleApiClient>();
+
+// Background Services
+builder.Services.AddSingleton<IBackgroundTaskQueue, BackgroundTaskQueue>();
+builder.Services.AddScoped<IBackgroundScannerService, BackgroundScannerService>();
+builder.Services.AddScoped<IBackgroundImportService, BackgroundImportService>();
+builder.Services.AddScoped<IBackgroundMetadataService, BackgroundMetadataService>();
 
 // Configuration
 builder.Services.Configure<AuthenticationConfiguration>(builder.Configuration.GetSection("Authentication"));
 builder.Services.Configure<FaybleApiConfiguration>(builder.Configuration.GetSection("FaybleApi"));
-
-// Register Background Services
-builder.Services.AddSingleton<IBackgroundTaskQueue, BackgroundTaskQueue>();
 
 // Register Rate Limiting
 builder.Services.AddMemoryCache();

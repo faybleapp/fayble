@@ -263,7 +263,8 @@ export interface SeriesResult {
     id: string;
     name: string;
     image: string;
-    description: string;
+    description: string | undefined;
+    descriptionWithoutTags: string | undefined;
     summary: string;
     startYear: number;
     providers: ProviderResult[];

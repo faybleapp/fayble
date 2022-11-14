@@ -1,17 +1,27 @@
 import ComicVine from "assets/logos/providers/ComicVine.png";
 import { Image } from "components/image";
+import { LoadingButton } from "components/loadingButton";
 import { LoadingIndicator } from "components/loadingIndicator";
 import { Button, Container, Form, InputGroup } from "react-bootstrap";
 import { useSeriesMetadata } from "services";
 import styles from "./SeriesMatch.module.scss";
 
 interface SeriesMatchProps {
-  seriesId: string;
-  unMatchSeries: () => void;
+  seriesMatchId: string;
+  isRefreshingMetadata: boolean;
+  showRefreshMetadata: boolean;
+  onUnMatchSeries: () => void;
+  onRefreshMetadata: () => void;
 }
 
-export const SeriesMatch = ({ seriesId, unMatchSeries }: SeriesMatchProps) => {
-  const { data: matchedSeries, isLoading } = useSeriesMetadata(seriesId);
+export const SeriesMatch = ({
+  seriesMatchId,
+  isRefreshingMetadata,
+  showRefreshMetadata,
+  onUnMatchSeries,
+  onRefreshMetadata,
+}: SeriesMatchProps) => {
+  const { data: matchedSeries, isLoading } = useSeriesMetadata(seriesMatchId);
 
   return (
     <Container>
@@ -50,13 +60,25 @@ export const SeriesMatch = ({ seriesId, unMatchSeries }: SeriesMatchProps) => {
                 }
               />
             </InputGroup>
-            <Button
-              className={styles.unmatchButton}
-              variant="primary"
-              size="sm"
-              onClick={unMatchSeries}>
-              Unmatch
-            </Button>
+            <div className={styles.buttonContainer}>
+              <Button
+                className={styles.unmatchButton}
+                variant="secondary"
+                size="sm"
+                onClick={onUnMatchSeries}>
+                Unmatch
+              </Button>
+              {showRefreshMetadata && (
+                <LoadingButton
+                  isLoading={isRefreshingMetadata}
+                  className={styles.refreshButton}
+                  variant="primary"
+                  text="Refresh Metadata"
+                  loadingText="Queuing..."
+                  onClick={onRefreshMetadata}
+                />
+              )}
+            </div>
           </div>
         </div>
       )}

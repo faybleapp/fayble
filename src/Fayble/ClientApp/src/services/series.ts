@@ -19,3 +19,16 @@ export const useUpdateSeries = (id: string) => {
     },
   });
 };
+
+export const useRefreshMetadata = (id: string) => {
+  const queryClient = useQueryClient();
+  return useApiMutation<null, null>(
+    "POST",
+    () => `/series/${id}/refresh-metadata`,
+    {
+      onSuccess: () => {
+        queryClient.invalidateQueries(["series", id]);
+      },
+    }
+  );
+};

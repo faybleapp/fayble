@@ -37,7 +37,6 @@ public class SeriesController : ControllerBase
         return await _seriesService.GetBooks(id);
     }
 
-
     [HttpPatch("{id}")]
     [Authorize(Policy = Policies.Administrator)]
     public async Task<ActionResult<Series>> Update(Guid id, [FromBody] UpdateSeries series)
@@ -45,4 +44,10 @@ public class SeriesController : ControllerBase
         return await _seriesService.Update(id, series);
     }
 
+    [HttpPost("{id}/refresh-metadata")]
+    public async Task<ActionResult> RefreshMetadata(Guid id)
+    {
+        await _seriesService.RefreshMetadata(id);
+        return Accepted();
+    }
 }

@@ -21,14 +21,14 @@ public class MetadataService : IMetadataService
         return await _faybleClient.SearchSeries(name, year, providerId);
     }
 
-    public async Task<SeriesResult> GetSeries(Guid id)
+    public async Task<SeriesResult> GetSeries(Guid sereisMatchId)
     {
-        return await _faybleClient.GetSeries(id);
+        return await _faybleClient.GetSeries(sereisMatchId);
     }
 
-    public async Task<BookResult> GetBook(Guid id)
+    public async Task<BookResult> GetBook(Guid bookMatchId)
     {
-        return await _faybleClient.GetBook(id);
+        return await _faybleClient.GetBook(bookMatchId);
     }
 
     private int? ParseYear(string searchQuery)
