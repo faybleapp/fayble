@@ -1,4 +1,5 @@
-﻿using Fayble.Domain;
+﻿using System.Runtime.InteropServices;
+using Fayble.Domain;
 using Fayble.Domain.Aggregates.BackgroundTask;
 using Fayble.Domain.Repositories;
 using Fayble.Models.BackgroundTask;
@@ -7,7 +8,7 @@ using Microsoft.Extensions.Logging;
 
 namespace Fayble.Services.BackgroundServices.Services;
 
-public class BackgroundMetadataService
+public class BackgroundMetadataService : IBackgroundMetadataService
 {
     private readonly IBackgroundTaskRepository _backgroundTaskRepository;
     private readonly ISeriesRepository _seriesRepository;
@@ -38,8 +39,9 @@ public class BackgroundMetadataService
                 return;
             }
 
-            var metadata = await _metadataService.GetSeries(seriesId);
-            series.UpdateFromMetadata(metadata.Name, metadata.Summary, metadata.StartYear);
+            var metadata = await _metadataService.GetSeries((Guid)series.MatchId);
+            series.UpdateFromMetadata(metadata.Name, metadata.DescriptionWithoutTags, metadata.StartYear);
+            await _unitOfWork.Commit();
             await UpdateTaskStatus(backgroundTaskId, BackgroundTaskStatus.Complete);
         }
         catch (Exception ex)

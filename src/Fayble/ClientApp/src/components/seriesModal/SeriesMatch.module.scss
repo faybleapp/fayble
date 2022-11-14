@@ -26,8 +26,21 @@
 }
 
 .detailsContainer {
-  flex-grow: 1;
+  flex-grow: 1;  
 }
+
+.buttonContainer {
+  display: flex;    
+  width: 100%;    
+  
+}
+
+
 .unmatchButton {
-  width: 100%;
+  margin-right: 5px;
+    flex: 1;
+}
+.refreshButton {
+  flex: 1;
+  margin-left: 5px;
 }

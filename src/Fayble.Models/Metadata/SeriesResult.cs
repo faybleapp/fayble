@@ -7,7 +7,8 @@ public class SeriesResult
     public string Id { get; }
     public string Name { get; }
     public string Image { get; }
-    public string Description { get; }
+    public string? Description { get; }
+    public string? DescriptionWithoutTags { get; }
     public string Summary { get; }
     public int StartYear { get; }
     public List<ProviderResult> Providers { get; }
@@ -18,7 +19,7 @@ public class SeriesResult
         string name,
         int startYear,
         string image,
-        string description,
+        string? description,
         string summary,
         List<ProviderResult> providers,
         IEnumerable<BookSummaryResult>? books)
@@ -31,5 +32,6 @@ public class SeriesResult
         Image = image;
         StartYear = startYear;
         Summary = summary;
+        DescriptionWithoutTags = description?.RemoveHtmlTags();
     }
 }

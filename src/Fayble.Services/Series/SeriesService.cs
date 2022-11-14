@@ -53,6 +53,8 @@ public class SeriesService : ISeriesService
     {
         var entity = await _seriesRepository.Get(seriesId);
 
+        var refreshRequired = entity.MatchId != series.MatchId;
+
         entity.Update(
             series.Name,
             series.Year,
@@ -71,7 +73,7 @@ public class SeriesService : ISeriesService
 
         await _unitOfWork.Commit();
 
-        if (entity.MatchId != null)
+        if (refreshRequired)
         {
             await RefreshMetadata(seriesId);
         }
@@ -81,6 +83,6 @@ public class SeriesService : ISeriesService
 
     public async Task RefreshMetadata(Guid seriesId)
     {
-        await _backgroundTaskService.QueueSeriesScan(seriesId);
+        await _backgroundTaskService.QueueSeriesMetadataRefresh(seriesId);
     }
 }

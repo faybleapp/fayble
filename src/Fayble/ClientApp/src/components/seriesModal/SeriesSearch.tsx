@@ -58,11 +58,10 @@ export const SeriesSearch = ({
       <InputGroup className={styles.container}>
         <Form.Control
           name="searchQuery"
-          onKeyPress={(event: React.KeyboardEvent) => {
-            if (event.key === 'Enter') {
+          onKeyDown={(event: React.KeyboardEvent) => {
+            if (event.key === "Enter") {
               event.preventDefault();
               handleSearch();
-
             }
           }}
           value={searchQuery}
@@ -89,7 +88,11 @@ export const SeriesSearch = ({
       </InputGroup>
       <div className={styles.searchResults}>
         {searchResults.map((result) => (
-          <SearchResultItem searchResult={result} onSelect={handleSelect} />
+          <SearchResultItem
+            key={result.id}
+            searchResult={result}
+            onSelect={handleSelect}
+          />
         ))}
       </div>
     </div>

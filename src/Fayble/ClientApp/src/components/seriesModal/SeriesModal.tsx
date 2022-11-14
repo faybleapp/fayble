@@ -1,14 +1,14 @@
 import { yupResolver } from "@hookform/resolvers/yup";
 import { Form } from "components/form";
+import { LoadingButton } from "components/loadingButton";
 import { ModalTabs } from "components/modalTabs";
 import { Series } from "models/api-models";
-import { Button, Container, Modal, Spinner, Tab } from "react-bootstrap";
+import { Button, Container, Modal, Tab } from "react-bootstrap";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { useUpdateSeries } from "services";
 import * as yup from "yup";
 import { SeriesDetailsTab } from "./SeriesDetailsTab";
 import { SeriesMetadataTab } from "./SeriesMetadataTab";
-import styles from "./SeriesModal.module.scss";
 
 interface SeriesModalProps {
   series: Series;
@@ -34,7 +34,7 @@ export const SeriesModal = ({ series, show, close }: SeriesModalProps) => {
     defaultValues: series,
     resolver: yupResolver(validationSchema),
   });
-
+   
   const handleSubmit: SubmitHandler<Series> = (values) => {
     updateSeries.mutate(values, {
       onSuccess: () => {
@@ -67,31 +67,18 @@ export const SeriesModal = ({ series, show, close }: SeriesModalProps) => {
           </ModalTabs>
         </Form>
       </Modal.Body>
-
       <Modal.Footer>
         <Button variant="secondary" onClick={close}>
           Close
         </Button>
-        <Button
+        <LoadingButton
           variant="primary"
           onClick={form.handleSubmit(handleSubmit)}
-          disabled={updateSeries.isLoading || !form.formState.isDirty}>
-          {updateSeries.isLoading ? (
-            <>
-              <Spinner
-                className={styles.spinner}
-                as="span"
-                animation="border"
-                size="sm"
-                role="status"
-                aria-hidden="true"
-              />
-              Saving...
-            </>
-          ) : (
-            "Save Changes"
-          )}
-        </Button>
+          disabled={updateSeries.isLoading || !form.formState.isDirty}
+          isLoading={updateSeries.isLoading}
+          loadingText="Saving..."
+          text="Save Changes"
+        />       
       </Modal.Footer>
     </Modal>
   );
