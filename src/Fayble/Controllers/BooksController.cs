@@ -37,4 +37,11 @@ public class BooksController : ControllerBase
     {
         return await _bookService.GetRelated(id);
     }
+
+    [HttpPost("{id}/refresh-metadata")]
+    public async Task<ActionResult> RefreshMetadata(Guid id)
+    {
+        await _bookService.RefreshMetadata(id);
+        return Accepted();
+    }
 }

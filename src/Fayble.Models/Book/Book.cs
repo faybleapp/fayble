@@ -1,7 +1,4 @@
-﻿using Fayble.Domain.Aggregates.Book;
-using Fayble.Domain.Entities;
-
-namespace Fayble.Models.Book;
+﻿namespace Fayble.Models.Book;
 
 public class Book
 {
@@ -19,6 +16,7 @@ public class Book
     public bool Read { get; private set; }
     public DateTimeOffset Created { get; private set; }
     public DateTimeOffset Modified { get; private set; }
+    public Guid? MatchId { get; }
     public string Number { get; private set; }
     public string Language { get; private set; }
     public Series.Series? Series { get; private set; }
@@ -55,8 +53,8 @@ public class Book
         bool isDeleted,
         string mediaRoot,
         IEnumerable<BookPerson>? people,
-        BookFieldLocks fieldLocks
-        )
+        BookFieldLocks fieldLocks,
+        Guid? matchId)
     {
         Id = id;
         Title = title;
@@ -81,5 +79,6 @@ public class Book
         MediaRoot = mediaRoot;
         People = people;
         FieldLocks = fieldLocks;
+        MatchId = matchId;
     }
 }

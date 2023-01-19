@@ -6,6 +6,7 @@ using Fayble.Domain.Aggregates.Library;
 using Fayble.Domain.Aggregates.Person;
 using Fayble.Domain.Enums;
 using Fayble.Domain.Repositories;
+using Fayble.Models.BackgroundTask;
 using Fayble.Models.FileSystem;
 using Fayble.Services.FileSystem;
 using Microsoft.AspNetCore.SignalR;
@@ -22,8 +23,10 @@ public class BackgroundScannerService : IBackgroundScannerService
     private readonly IBackgroundTaskRepository _backgroundTaskRepository;
     private readonly IPersonRepository _personRepository;
     private readonly ILogger _logger;
+    private readonly IHubContext<BackgroundTaskHub> _hubContext;
     private readonly ISeriesRepository _seriesRepository;
     private readonly IUnitOfWork _unitOfWork;
+    private Guid _taskId;
 
     public BackgroundScannerService(
         ILogger<BackgroundScannerService> logger,
@@ -33,7 +36,8 @@ public class BackgroundScannerService : IBackgroundScannerService
         IComicBookFileSystemService comicBookFileSystemService,
         ISeriesRepository seriesRepository,
         IBackgroundTaskRepository backgroundTaskRepository,
-        IPersonRepository personRepository)
+        IPersonRepository personRepository,
+        IHubContext<BackgroundTaskHub> hubContext)
     {
         _logger = logger;
         _unitOfWork = unitOfWork;
@@ -43,23 +47,25 @@ public class BackgroundScannerService : IBackgroundScannerService
         _seriesRepository = seriesRepository;
         _backgroundTaskRepository = backgroundTaskRepository;
         _personRepository = personRepository;
+        _hubContext = hubContext;
     }
 
     public async Task SeriesScan(Guid seriesId, Guid backgroundTaskId)
     {
         try
         {
+            _taskId = backgroundTaskId;
             _logger.LogInformation("Scanning series: {SeriesId}", seriesId);
-            await UpdateTaskStatus(backgroundTaskId, BackgroundTaskStatus.Running);
+            await UpdateTaskStatus(BackgroundTaskStatus.Running);
             var series = await _seriesRepository.Get(seriesId);
             await ScanSeries(series);
-            await UpdateTaskStatus(backgroundTaskId, BackgroundTaskStatus.Complete);
+            await UpdateTaskStatus(BackgroundTaskStatus.Complete);
             _logger.LogInformation("Scanning series complete: {SeriesId}", seriesId);
         }
         catch (Exception ex)
         {
             _logger.LogError(ex, "An error occurred while scanning series: {SeriesId}", seriesId);
-            await UpdateTaskStatus(backgroundTaskId, BackgroundTaskStatus.Failed);
+            await UpdateTaskStatus(BackgroundTaskStatus.Failed);
         }
     }
 
@@ -67,17 +73,18 @@ public class BackgroundScannerService : IBackgroundScannerService
     {
         try
         {
+            _taskId = backgroundTaskId;
             _logger.LogInformation("Scanning library: {LibraryId}", libraryId);
-            await UpdateTaskStatus(backgroundTaskId, BackgroundTaskStatus.Running);
+            await UpdateTaskStatus(BackgroundTaskStatus.Running);
             var library = await _libraryRepository.Get(libraryId);
             await ScanLibrary(library);
-            await UpdateTaskStatus(backgroundTaskId, BackgroundTaskStatus.Complete);
+            await UpdateTaskStatus(BackgroundTaskStatus.Complete);
             _logger.LogInformation("Scanning library complete: {LibraryId}", libraryId);
         }
         catch (Exception ex)
         {
             _logger.LogError(ex, "An error occurred while scanning library: {LibraryId}", libraryId);
-            await UpdateTaskStatus(backgroundTaskId, BackgroundTaskStatus.Failed);
+            await UpdateTaskStatus(BackgroundTaskStatus.Failed);
         }
     }
 
@@ -85,17 +92,18 @@ public class BackgroundScannerService : IBackgroundScannerService
     {
         try
         {
+            _taskId = backgroundTaskId;
             _logger.LogInformation("Scanning book: {BookId}", bookId);
-            await UpdateTaskStatus(backgroundTaskId, BackgroundTaskStatus.Running);
+            await UpdateTaskStatus(BackgroundTaskStatus.Running);
             var book = await _bookRepository.Get(bookId);
             await ScanBook(book);
-            await UpdateTaskStatus(backgroundTaskId, BackgroundTaskStatus.Complete);
+            await UpdateTaskStatus(BackgroundTaskStatus.Complete);
             _logger.LogInformation("Scanning book complete: {BookId}", bookId);
         }
         catch (Exception ex)
         {
             _logger.LogError(ex, "An error occurred while scanning book: {BookId}", bookId);
-            await UpdateTaskStatus(backgroundTaskId, BackgroundTaskStatus.Failed);
+            await UpdateTaskStatus(BackgroundTaskStatus.Failed);
         }
 
     }
@@ -171,8 +179,7 @@ public class BackgroundScannerService : IBackgroundScannerService
             }
 
             _logger.LogInformation("File modified date changed, updating: {File}", file.FullName);
-
-            var comicFile = _comicBookFileSystemService.GetFile(file.FullName);
+            
 
             book.File.Update(
                 file.Length,
@@ -194,7 +201,6 @@ public class BackgroundScannerService : IBackgroundScannerService
     private async Task AddNewBook(ComicFile newFile, Domain.Aggregates.Series.Series series)
     {
         _logger.LogDebug("Processing issue: {FilePath}", newFile.FilePath);
-
         var pages = newFile.Pages.Select(p => new BookPage(
             Guid.NewGuid(),
             p.Width,
@@ -337,7 +343,7 @@ public class BackgroundScannerService : IBackgroundScannerService
             comicInfo?.Title,
             comicInfo?.Number,
             comicInfo?.Summary,
-            DateOnly.TryParseExact(
+            DateTime.TryParseExact(
                 $"{comicInfo?.Year}-{comicInfo?.Month}-{comicInfo?.Day}",
                 "yyyy-M-dd",
                 CultureInfo.InvariantCulture,
@@ -438,9 +444,9 @@ public class BackgroundScannerService : IBackgroundScannerService
 
         return newSeries;
     }
-    private async Task UpdateTaskStatus(Guid id, BackgroundTaskStatus status)
+    private async Task UpdateTaskStatus(BackgroundTaskStatus status)
     {
-        var task = await _backgroundTaskRepository.Get(id);
+        var task = await _backgroundTaskRepository.Get(_taskId);
         task.UpdateStatus(status);
         await _unitOfWork.Commit();
     }

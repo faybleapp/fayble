@@ -20,7 +20,7 @@ export const useUpdateSeries = (id: string) => {
   });
 };
 
-export const useRefreshMetadata = (id: string) => {
+export const useRefreshSeriesMetadata = (id: string) => {
   const queryClient = useQueryClient();
   return useApiMutation<null, null>(
     "POST",

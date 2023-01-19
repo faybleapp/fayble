@@ -12,14 +12,21 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace Fayble.Infrastructure;
 
-public static class MigrateAndSeed
+public static class DatabaseStartup
 {
-    public static void MigrateAndSeedDatabase(this IApplicationBuilder app)
+    public static void PrepareDatabase(this IApplicationBuilder app)
     {
         using var serviceScope = app.ApplicationServices.GetRequiredService<IServiceScopeFactory>().CreateScope();
         using var context = serviceScope.ServiceProvider.GetService<FaybleDbContext>();
-        Database.Database.Migrate(); 
+        Database.Database.Migrate();
+        context?.ClearBackgroundTasks();
         context?.Seed();
+    }
+
+    private static void ClearBackgroundTasks(this FaybleDbContext context)
+    {
+        context.RemoveRange(context.BackgroundTasks);
+        context.SaveChanges();
     }
 
     private static void Seed(this FaybleDbContext context)

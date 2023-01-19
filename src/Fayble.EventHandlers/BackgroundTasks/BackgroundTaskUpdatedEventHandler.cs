@@ -21,7 +21,7 @@ public class BackgroundTaskUpdatedEventHandler : INotificationHandler<Domain.Eve
     {
         _logger.LogInformation("Handling {Event} event", nameof(BackgroundTaskUpdatedEventHandler));
         await _hubContext.Clients.All.SendAsync(
-            nameof(BackgroundTaskUpdatedEventHandler),
+            "BackgroundTaskUpdated",
             new BackgroundTask(
                 notification.Id,
                 notification.TaskId,

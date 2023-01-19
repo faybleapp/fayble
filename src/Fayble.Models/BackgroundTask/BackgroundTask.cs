@@ -25,11 +25,4 @@ public class BackgroundTask
         Status = status;
         Description = description;
     }
-
-    public void Update(string description, string? status = null)
-    {
-        if (status != null) Status = status;
-
-        Description = description;
-    }
 }

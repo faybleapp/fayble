@@ -1,4 +1,5 @@
-﻿using System.Runtime.InteropServices;
+﻿using System;
+using System.Runtime.InteropServices;
 using Fayble.Domain;
 using Fayble.Domain.Aggregates.BackgroundTask;
 using Fayble.Domain.Repositories;
@@ -14,15 +15,23 @@ public class BackgroundMetadataService : IBackgroundMetadataService
     private readonly ISeriesRepository _seriesRepository;
     private readonly IUnitOfWork _unitOfWork;
     private readonly IMetadataService _metadataService;
+    private readonly IBookRepository _bookRepository;
     private readonly ILogger _logger;
 
-    public BackgroundMetadataService(IBackgroundTaskRepository backgroundTaskRepository, IUnitOfWork unitOfWork, ILogger<BackgroundMetadataService> logger, ISeriesRepository seriesRepository, IMetadataService metadataService)
+    public BackgroundMetadataService(
+        IBackgroundTaskRepository backgroundTaskRepository,
+        IUnitOfWork unitOfWork,
+        ILogger<BackgroundMetadataService> logger,
+        ISeriesRepository seriesRepository,
+        IMetadataService metadataService,
+        IBookRepository bookRepository)
     {
         _backgroundTaskRepository = backgroundTaskRepository;
         _unitOfWork = unitOfWork;
         _logger = logger;
         _seriesRepository = seriesRepository;
         _metadataService = metadataService;
+        _bookRepository = bookRepository;
     }
 
     public async Task RefreshSeriesMetadata(Guid seriesId, Guid backgroundTaskId)
@@ -46,7 +55,38 @@ public class BackgroundMetadataService : IBackgroundMetadataService
         }
         catch (Exception ex)
         {
-            _logger.LogInformation(ex, "An error occurred while refreshing metadata for seires; {SeriesId}", seriesId);
+            _logger.LogInformation(ex, "An error occurred while refreshing metadata for series; {SeriesId}", seriesId);
+            await UpdateTaskStatus(backgroundTaskId, BackgroundTaskStatus.Failed);
+        }
+    }
+
+    public async Task RefreshBookMetadata(Guid bookId, Guid backgroundTaskId)
+    {
+        try
+        {
+            await UpdateTaskStatus(backgroundTaskId, BackgroundTaskStatus.Running);
+            _logger.LogInformation("Refreshing metadata for book: {BookId}", bookId);
+            var book = await _bookRepository.Get(bookId);
+
+            if (book.MatchId == null)
+            {
+                _logger.LogInformation("Book is not matched.");
+                return;
+            }
+
+            var metadata = await _metadataService.GetBook((Guid) book.MatchId);
+            book.UpdateFromMetadata(
+                metadata.Title,
+                metadata.Number,
+                metadata.Summary,
+                metadata.CoverDate,
+                //TODO: Update tags and people
+                null,
+                null);
+        }
+        catch (Exception ex)
+        {
+            _logger.LogInformation(ex, "An error occurred while refreshing metadata for book; {BookId}", bookId);
             await UpdateTaskStatus(backgroundTaskId, BackgroundTaskStatus.Failed);
         }
     }

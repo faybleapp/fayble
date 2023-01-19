@@ -15,6 +15,7 @@ public class
     public string? CoverDate { get; }
     public string? Language { get; }
     public string? Review { get; }
+    public Guid? MatchId { get; }
     public string[] Tags { get; }
     public BookFieldLocks FieldLocks { get; }
     public List<BookPerson> People { get; }
@@ -30,6 +31,7 @@ public class
         string? title,
         string? language,
         string? review,
+        Guid? matchId,
         string[] tags,
         List<BookPerson> people,
         BookFieldLocks fieldLocks)
@@ -47,6 +49,7 @@ public class
         Tags = tags;
         People = people;
         FieldLocks = fieldLocks;
+        MatchId = matchId;
     }
 
 

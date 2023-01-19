@@ -24,7 +24,7 @@ public class BackgroundTaskCreatedEventHandler : INotificationHandler<Background
     {
         _logger.LogInformation("Handling {Event} event", nameof(BackgroundTaskCreatedEventHandler));
         await _hubContext.Clients.All.SendAsync(
-            nameof(BackgroundTaskCreatedEventHandler),
+            "BackgroundTaskCreated",
             new BackgroundTask(
                 notification.Id,
                 notification.TaskId,

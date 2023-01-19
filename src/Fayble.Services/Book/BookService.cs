@@ -1,6 +1,5 @@
 ﻿using Fayble.Core.Extensions;
 using Fayble.Domain;
-using Fayble.Domain.Aggregates;
 using Fayble.Domain.Aggregates.Person;
 using Fayble.Domain.Aggregates.Tag;
 using Fayble.Domain.Enums;
@@ -54,6 +53,7 @@ public class BookService : IBookService
             book.Language,
             DateOnly.TryParseExact(book.ReleaseDate, "yyyy-MM-dd", out var releaseDate) ? releaseDate : null,
             DateOnly.TryParseExact(book.CoverDate, "yyyy-MM", out var coverDate) ? coverDate : null,
+            book.MatchId,
             tags, 
             people);
 
