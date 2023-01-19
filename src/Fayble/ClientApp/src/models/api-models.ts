@@ -56,6 +56,7 @@ export interface Book {
     read: boolean;
     created: Date;
     modified: Date;
+    matchId: string | undefined;
     number: string;
     language: string;
     series: Series | undefined;
@@ -165,6 +166,7 @@ export interface UpdateBook {
     coverDate: string | undefined;
     language: string | undefined;
     review: string | undefined;
+    matchId: string | undefined;
     tags: string[];
     fieldLocks: BookFieldLocks;
     people: BookPerson[];

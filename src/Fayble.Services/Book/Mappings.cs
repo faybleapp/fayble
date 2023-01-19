@@ -1,6 +1,4 @@
-﻿using Fayble.Domain.Aggregates.Book;
-using Fayble.Models.Book;
-using Fayble.Services.Library;
+﻿using Fayble.Services.Library;
 using Fayble.Services.Publisher;
 using Fayble.Services.Series;
 using BookFieldLocks = Fayble.Models.Book.BookFieldLocks;
@@ -35,7 +33,8 @@ public static class Mappings
             entity.DeletedDate != null,
             entity.MediaRoot,
             entity.People?.Select(p => p.ToModel()),
-            entity.FieldLocks.ToModel());
+            entity.FieldLocks.ToModel(),
+            entity.MatchId);
     }
 
     public static BookFieldLocks ToModel(this Domain.Aggregates.Book.BookFieldLocks entity)

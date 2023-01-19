@@ -51,7 +51,7 @@ public class ImportService : IImportService
         }
 
         var filePaths = await _comicBookFileSystemService.GetFilePaths(path, MediaType.ComicBook);
-        var files = filePaths.Select(filePath => _comicBookFileSystemService.GetFile(filePath)).OrderBy(f => f.FileName)
+        var files = filePaths.Select(filePath => _comicBookFileSystemService.GetFile(filePath, false)).OrderBy(f => f.FileName)
             .ToList();
 
         return files.Select(file => new ImportScanFile(

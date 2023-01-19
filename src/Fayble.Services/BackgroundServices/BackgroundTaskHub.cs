@@ -1,5 +1,6 @@
 ﻿using Fayble.Domain.Aggregates.BackgroundTask;
 using Fayble.Domain.Repositories;
+using Fayble.Models.BackgroundTask;
 using Microsoft.AspNetCore.SignalR;
 using BackgroundTask = Fayble.Models.BackgroundTask.BackgroundTask;
 
@@ -23,4 +24,4 @@ public class BackgroundTaskHub : Hub
                 t =>
                     new BackgroundTask(t.Id, t.TaskId, t.TaskName,  t.Type.ToString(), t.Status.ToString())));
     }
-}
+}   

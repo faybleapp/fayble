@@ -65,26 +65,27 @@ public class FaybleDbContext : IdentityDbContext<User, UserRole, Guid>, IFaybleD
     {
         SetMetadata();
 
-        if (_mediator != null)
+        var result = await base.SaveChangesAsync(cancellationToken);
+
+        if (_mediator == null) return result;
+
+        var domainEntities = ChangeTracker.Entries<Entity>()
+            .Select(e => e.Entity)
+            .Where(e => e.DomainEvents.Any())
+            .ToArray();
+
+        var domainEvents = domainEntities
+            .SelectMany(e => e?.DomainEvents)
+            .ToArray();
+
+        domainEntities.ToList().ForEach(entity => entity.ClearDomainEvents());
+
+        foreach (var domainEvent in domainEvents)
         {
-            var domainEntities = ChangeTracker.Entries<Entity>()
-                .Select(e => e.Entity)
-                .Where(e => e.DomainEvents.Any())
-                .ToArray();
-
-            var domainEvents = domainEntities
-                .SelectMany(e => e?.DomainEvents)
-                .ToArray();
-
-            domainEntities.ToList().ForEach(entity => entity.ClearDomainEvents());
-
-            foreach (var domainEvent in domainEvents)
-            {
-                await _mediator.Publish(domainEvent, cancellationToken);
-            }
+            await _mediator.Publish(domainEvent, cancellationToken);
         }
 
-        return await base.SaveChangesAsync(cancellationToken);
+        return result;
     }
 
     private void SetMetadata()

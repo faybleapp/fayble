@@ -46,6 +46,7 @@ CREATE TABLE "Publisher" (
     "Name" TEXT NULL,
     "Description" TEXT NULL,
     "MediaRoot" TEXT NULL,
+    "MatchId" TEXT NULL,
     "LastMetadataUpdate" TEXT NOT NULL
 );
 
@@ -191,6 +192,7 @@ CREATE TABLE "Book" (
     "ReleaseDate" TEXT NULL,
     "CoverDate" TEXT NULL,
     "MediaType" TEXT NOT NULL,
+    "MatchId" TEXT NULL,
     "SeriesId" TEXT NULL,
     "LibraryId" TEXT NULL,
     "PublisherId" TEXT NULL,

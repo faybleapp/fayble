@@ -5,5 +5,6 @@ public enum BackgroundTaskType
     LibraryScan,
     SeriesScan,
     BookImport,
-    SeriesMetadataRefresh
+    SeriesMetadataRefresh,
+    BookMetadataRefresh
 }

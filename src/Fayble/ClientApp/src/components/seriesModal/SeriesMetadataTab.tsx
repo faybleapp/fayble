@@ -2,7 +2,7 @@ import { Series } from "models/api-models";
 import { Container } from "react-bootstrap";
 import { useFormContext, useWatch } from "react-hook-form";
 import { toast } from "react-toastify";
-import { useRefreshMetadata } from "services";
+import { useRefreshSeriesMetadata } from "services";
 import { SeriesMatch } from "./SeriesMatch";
 import { SeriesSearch } from "./SeriesSearch";
 interface SeriesMetadataTabProps {
@@ -13,7 +13,7 @@ export const SeriesMetadataTab = ({ series }: SeriesMetadataTabProps) => {
   const { control, setValue, formState } = useFormContext();
   const matchedSeriesId = useWatch({ control, name: "matchId" });
   const { mutate: refreshMetadata, isLoading: isRefreshingMetadata } =
-    useRefreshMetadata(series.id);
+    useRefreshSeriesMetadata(series.id);
 
   const handleRefreshMetadata = () => {
     refreshMetadata(null, {
@@ -30,7 +30,6 @@ export const SeriesMetadataTab = ({ series }: SeriesMetadataTabProps) => {
 
   const setMatchId = (id?: string) => {
     setValue("matchId", id, { shouldDirty: true });
-    
   };
 
   return (
@@ -38,7 +37,9 @@ export const SeriesMetadataTab = ({ series }: SeriesMetadataTabProps) => {
       {matchedSeriesId ? (
         <SeriesMatch
           isRefreshingMetadata={isRefreshingMetadata}
-          showRefreshMetadata={!formState.dirtyFields?.matchId && series.matchId != undefined}
+          showRefreshMetadata={
+            !formState.dirtyFields?.matchId && series.matchId != undefined
+          }
           seriesMatchId={matchedSeriesId}
           onRefreshMetadata={handleRefreshMetadata}
           onUnMatchSeries={() => setMatchId(undefined)}

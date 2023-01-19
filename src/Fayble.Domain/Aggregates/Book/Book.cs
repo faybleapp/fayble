@@ -1,4 +1,3 @@
-using Fayble.Domain.Aggregates.Library;
 using Fayble.Domain.Aggregates.Tag;
 using Fayble.Domain.Entities;
 using Fayble.Domain.Enums;
@@ -16,6 +15,7 @@ public class Book : AuditableEntity<Guid>, IAggregateRoot
     public DateTime? ReleaseDate { get; private set; }
     public DateTime? CoverDate { get; private set; }
     public MediaType MediaType { get; private set; }
+    public Guid? MatchId { get; private set; }
     public BookFile File { get; private set; }
     public Guid? SeriesId { get; private set; }
     public Series.Series Series { get; set; }
@@ -63,6 +63,7 @@ public class Book : AuditableEntity<Guid>, IAggregateRoot
         string language,
         DateOnly? releaseDate,
         DateOnly? coverDate,
+        Guid? matchId,
         ICollection<BookTag> tags,
         IEnumerable<BookPerson> people)
     {
@@ -74,6 +75,7 @@ public class Book : AuditableEntity<Guid>, IAggregateRoot
         ReleaseDate = releaseDate?.ToDateTime(TimeOnly.MinValue);
         CoverDate = coverDate?.ToDateTime(TimeOnly.MinValue);
         Tags = tags;
+        MatchId = matchId;
         
         if (people != null)
         {
@@ -86,7 +88,7 @@ public class Book : AuditableEntity<Guid>, IAggregateRoot
         string? title,
         string? number,
         string? summary,
-        DateOnly? coverDate,
+        DateTime? coverDate,
         ICollection<BookTag>? tags,
         IEnumerable<BookPerson>? people)
     {
@@ -102,12 +104,12 @@ public class Book : AuditableEntity<Guid>, IAggregateRoot
 
         if (!string.IsNullOrEmpty(summary))
         {
-            Summary = Summary;
+            Summary = summary;
         }
 
         if (coverDate != null)
         {
-            CoverDate = coverDate?.ToDateTime(TimeOnly.MinValue); ;
+            CoverDate = coverDate;
         }
 
         if (tags != null)

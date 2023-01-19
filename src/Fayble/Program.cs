@@ -36,7 +36,6 @@ using Newtonsoft.Json.Serialization;
 using Serilog;
 using Serilog.Core.Enrichers;
 using Serilog.Events;
-using System.Reflection;
 using System.Text;
 
 
@@ -136,6 +135,17 @@ builder.Services.AddSignalR(
     {
         options.EnableDetailedErrors = true;
     });
+
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("CorsPolicy", policy =>
+    {
+        policy.AllowAnyHeader()
+            .AllowAnyMethod()
+            .WithOrigins("https://localhost:5001", "https://localhost:3000")
+            .AllowCredentials();
+    });
+});
 
 builder.Services.AddMediatR(typeof(BackgroundTaskUpdatedEventHandler).Assembly);
 
@@ -240,6 +250,7 @@ app.UseExceptionHandler(
             });
     });
 
+app.UseCors("CorsPolicy");
 app.MapHub<BackgroundTaskHub>("/hubs/backgroundtasks");
 
 app.UseStaticFiles();
@@ -260,7 +271,7 @@ app.UseAuthentication();
 
 app.UseAuthorization();
 
-app.MigrateAndSeedDatabase();
+app.PrepareDatabase();
 
 app.Run();
 

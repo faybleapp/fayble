@@ -15,6 +15,7 @@ public interface IBackgroundTaskService
     Task QueueImport(ImportFileRequest request);
     Task QueueLibraryScan(Guid libraryId);
     Task QueueSeriesMetadataRefresh(Guid seriesId);
+    Task QueueBookMetadataRefresh(Guid bookId);
 }
 
 public class BackgroundTaskService : IBackgroundTaskService
@@ -26,6 +27,7 @@ public class BackgroundTaskService : IBackgroundTaskService
     private readonly IUnitOfWork _unitOfWork;
     private readonly ILibraryRepository _libraryRepository;
     private readonly ISeriesRepository _seriesRepository;
+    private readonly IBookRepository _bookRepository;
 
     public BackgroundTaskService(
         ILogger<BackgroundTaskService> logger,
@@ -35,7 +37,8 @@ public class BackgroundTaskService : IBackgroundTaskService
         IHubContext<BackgroundTaskHub> hubContext,
         IBackgroundTaskRepository backgroundTaskRepository,
         ILibraryRepository libraryRepository,
-        ISeriesRepository seriesRepository)
+        ISeriesRepository seriesRepository,
+        IBookRepository bookRepository)
     {
         _logger = logger;
         _queue = queue;
@@ -44,6 +47,7 @@ public class BackgroundTaskService : IBackgroundTaskService
         _backgroundTaskRepository = backgroundTaskRepository;
         _libraryRepository = libraryRepository;
         _seriesRepository = seriesRepository;
+        _bookRepository = bookRepository;
     }
 
 
@@ -109,6 +113,20 @@ public class BackgroundTaskService : IBackgroundTaskService
                 var metadataService = scopedServices.GetService<IBackgroundMetadataService>()!;
                 await metadataService.RefreshSeriesMetadata(seriesId, taskId);
             });
+    }
+
+    public async Task QueueBookMetadataRefresh(Guid bookId)
+    {
+        var book = await _bookRepository.Get(bookId);
+        var taskId = await CreateTask(book.Id.ToString(), book.Number, BackgroundTaskType.BookMetadataRefresh);
+        //await _queue.QueueBackgroundWorkItemAsync(
+        //    async token =>
+        //    {
+        //        using var scope = _serviceScopeFactory.CreateScope();
+        //        var scopedServices = scope.ServiceProvider;
+        //        var metadataService = scopedServices.GetService<IBackgroundMetadataService>()!;
+        //        await metadataService.RefreshSeriesMetadata(seriesId, taskId);
+        //    });
     }
 
     private async Task<bool> CheckForExisting(string taskId, BackgroundTaskType taskType)

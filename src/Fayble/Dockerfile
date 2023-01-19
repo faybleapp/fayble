@@ -35,6 +35,9 @@ COPY . .
 WORKDIR "/src/Fayble"
 RUN dotnet build "Fayble.csproj" -c Release -o /app/build
 
+WORKDIR "/src/Fayble"
+RUN dotnet build "Fayble.csproj" -c Release -o /app/build
+
 FROM build AS publish
 RUN dotnet publish "Fayble.csproj" -c Release -o /app/publish /p:UseAppHost=false
 

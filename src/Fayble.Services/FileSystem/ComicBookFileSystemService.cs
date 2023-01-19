@@ -1,11 +1,7 @@
-﻿using System.Text.RegularExpressions;
-using System.Xml;
-using System.Xml.Serialization;
-using Fayble.Core.Extensions;
+﻿using Fayble.Core.Extensions;
 using Fayble.Core.Helpers;
 using Fayble.Domain.Enums;
 using Fayble.Domain.Repositories;
-using Fayble.Infrastructure.Repositories;
 using Fayble.Models.FileSystem;
 using Fayble.Models.Import;
 using Fayble.Models.Metadata;
@@ -13,12 +9,12 @@ using Fayble.Models.Settings;
 using Fayble.Services.MetadataService;
 using Fayble.Services.Settings;
 using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Options;
 using SharpCompress.Archives;
-using SharpCompress.Common;
-using SharpCompress.Readers;
 using SixLabors.ImageSharp;
 using SixLabors.ImageSharp.Formats;
+using System.Text.RegularExpressions;
+using System.Xml;
+using System.Xml.Serialization;
 
 namespace Fayble.Services.FileSystem;
 
@@ -100,8 +96,9 @@ public class ComicBookFileSystemService : FileSystemService, IComicBookFileSyste
         return deserializer.Deserialize(new StringReader(xDoc.InnerXml)) as ComicInfoXml;
     }
 
-    public ComicFile GetFile(string filePath)
+    public ComicFile GetFile(string filePath, bool getPages = true)
     {
+        _logger.LogDebug($"Retrieving file: {filePath}");
         var file = new FileInfo(filePath);
 
         var fileName = Path.GetFileNameWithoutExtension(filePath);
@@ -118,7 +115,7 @@ public class ComicBookFileSystemService : FileSystemService, IComicBookFileSyste
             fileSize,
             lastModified,
             comicInfoXml,
-            GetPages(filePath));
+            getPages ? GetPages(filePath) : new List<ComicPage>());
     }
 
     private List<ComicPage> GetPages(string filePath)

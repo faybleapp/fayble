@@ -6,6 +6,7 @@ import { SubmitHandler, useForm } from "react-hook-form";
 import { useUpdateBook } from "services/book";
 import { BookDetailsTab } from "./BookDetailsTab";
 import { BookFileInfoTab } from "./BookFileInfoTab";
+import { BookMatchTab } from "./BookMatchTab";
 import styles from "./BookModal.module.scss";
 import { BookPeopleTab } from "./BookPeopleTab";
 
@@ -48,7 +49,9 @@ export const BookModal = ({ book, show, close }: BookModalProps) => {
             <Tab eventKey="people" title="People">
               <BookPeopleTab />
             </Tab>
-            <Tab eventKey="metadata" title="Metadata"></Tab>
+            <Tab eventKey="metadata" title="Metadata">
+              <BookMatchTab book={book}/>
+            </Tab>
             <Tab eventKey="fileInfo" title="File Info">
               <BookFileInfoTab book={book} />
             </Tab>
